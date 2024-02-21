@@ -13,5 +13,5 @@ public class DomeinController {
         Speler nieuweSpeler = new Speler(gebruikersnaam, geboortejaar);
         spelerRepository.voegToe(nieuweSpeler);
     }
-
+//test
 }
