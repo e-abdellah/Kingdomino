@@ -5,6 +5,7 @@ import java.io.File;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
+
 public class Connectie {
 
     private static final int MYSQL_PORT = 3306, SSH_PORT = 22;
