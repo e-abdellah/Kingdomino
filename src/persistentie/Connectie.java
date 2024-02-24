@@ -1,12 +1,81 @@
 package persistentie;
 
+import java.io.File;
+
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+
 public class Connectie {
 
-    /*
-     * INFO: Hieronder dien je uiteraard het schema, de username en het paswoord nog aan te passen.
-     * => ID340733_g26.db.webhosting.be
-     * => ID340733_g26
-     * => rummikub26
-     */
-    public static final String JDBC_URL = "jdbc:mysql://ID340733_g26.db.webhosting.be?serverTimezone=UTC&useLegacyDatetimeCode=false&user=ID340733_g26&password=rummikub26";
+    private static final int MYSQL_PORT = 3306, SSH_PORT = 22;
+    private static String SSH_PRIVATE_KEY_PATH;
+    private static final  String MYSQL_DB="ID429772_g36";
+    private static final  String MYSQL_USER="ID429772_g36";
+    private static final String MYSQL_SERVER_URL = MYSQL_USER+".db.webhosting.be";
+    private static final  String MYSQL_PWD="sdpgroep36";
+    private static final  int RANDOM_LOCAL_PORT = 44444;
+    public static final String MYSQL_JDBC = "jdbc:mysql://localhost:" + RANDOM_LOCAL_PORT + "/" + MYSQL_DB + "?user=" + MYSQL_USER + "&password=" + MYSQL_PWD;
+    private final String SSH_SERVER_URL = "ssh.sdp1groep36.be", SSH_USER="sdp1groep36be";
+
+    public static final String JDBC_URL = "jdbc:mysql://ID429772_g36.db.webhosting.be?serverTimezone=UTC&useLegacyDatetimeCode=false&user=ID429772_g36&password=sdpgroep36";
+
+
+    private int allocatedLocalPort = 0;
+
+    private Session sshSession;
+
+    public Connectie() {
+        createSshConnection();
+    }
+
+    public static void setSshPrivateKeyPath(String sshPrivateKeyPath) {
+        SSH_PRIVATE_KEY_PATH = sshPrivateKeyPath;
+    }
+    public void closeConnection(){
+        if (this.sshSession != null) {
+            this.sshSession.disconnect();
+        }
+    }
+
+    private void createSshConnection() {
+        // Nieuwe ssh connectie opzetten indien er nog geen is
+        if (this.sshSession == null) {
+            try {
+                JSch jsch = new JSch();
+                this.sshSession = jsch.getSession(SSH_USER, SSH_SERVER_URL, SSH_PORT);
+                //this.sshSession.setPassword(SSH_PWD);
+
+                File file = new File(SSH_PRIVATE_KEY_PATH);
+                jsch.addIdentity(file.getAbsolutePath());
+                java.util.Properties config = new java.util.Properties();
+                config.put("StrictHostKeyChecking", "no");
+                config.put("ConnectionAttempts", "3");
+                this.sshSession.setConfig(config);
+
+                System.out.println("Establishing SSH connection using username and password...");
+                // 10 sec timeout
+                this.sshSession.connect(10000);
+                System.out.println("SSH connection established!");
+                System.out.println("  Details: ");
+                System.out.println("    User: " + SSH_USER);
+                System.out.println("    Server:Port: " + SSH_SERVER_URL + ":" + SSH_PORT);
+
+                this.allocatedLocalPort = this.sshSession.setPortForwardingL(RANDOM_LOCAL_PORT, MYSQL_SERVER_URL, MYSQL_PORT);
+                System.out.println("  Forwarded port on " + MYSQL_SERVER_URL + ": " + allocatedLocalPort + " -> " + MYSQL_PORT);
+            } catch (Exception e){
+                System.out.println("Could not establish SSH connection!");
+                e.printStackTrace();
+            }
+        }
+        else {
+            if (!this.sshSession.isConnected()) {
+                try {
+                    System.out.println("Reopening ssh connection...");
+                    this.sshSession.connect();
+                } catch (Exception e) {
+                    System.err.print(e);
+                }
+            }
+        }
+    }
 }

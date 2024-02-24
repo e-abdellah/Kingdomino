@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class SpelerMapper {
 
-    private static final String INSERT_SPELER = "INSERT INTO ID340733_g26.Speler (gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld)"
+    private static final String INSERT_SPELER = "INSERT INTO ID429772_g36.Speler (gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld)"
             + "VALUES (?, ?, ?, ?)";
             
     public void voegToe(Speler speler) 
