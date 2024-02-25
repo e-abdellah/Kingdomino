@@ -20,8 +20,6 @@ public class Speler
     	setAantalGewonnen(aantalGewonnen);
     	setAantalGespeeld(aantalGespeeld);
     }
-    
-    
 
 	public String getGebruikersnaam() {
 		return gebruikersnaam;
