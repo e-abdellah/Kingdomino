@@ -35,8 +35,8 @@ public class Main extends Application
 //                System.out.println("Failed to connect to database: " + e.getMessage());
 //            }
 
-
-        Parent root = FXMLLoader.load(getClass().getResource("/gui/welkom.FXML"));
+//    	welkomController root2 = new welkomController();
+        Parent root = FXMLLoader.load(getClass().getResource("/gui/Welkom.FXML"));
         Scene myScene = new Scene(root);
         primaryStage.setScene(myScene);
         primaryStage.setTitle("Splendor Registratie");

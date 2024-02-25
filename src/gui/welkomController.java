@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domein.Speler;
+import javafx.event.Event;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +23,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -31,6 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.util.Locale;
+import java.util.Optional;
 
 
 public class welkomController extends Pane {
@@ -63,11 +67,15 @@ public class welkomController extends Pane {
     private Label labelBirthdate = new Label();
     @FXML
     private Label labelUsername  = new Label();
+    private Label lblBoodschap;
+    private Button buttons[] , btnStop;
     
     public void initialize() {
         voegSpelerToeButton.setVisible(false);
         verwijderSpelerButton.setVisible(false);
         volgendeButton.setVisible(false);
+//        buildGui();
+//        addEventHandlers();
         
     }
     
@@ -345,9 +353,60 @@ public class welkomController extends Pane {
         alert.showAndWait();
     }
     
-    @FXML
-    private void handleAfsluiten(ActionEvent event) {
-        // Voeg hier code toe om de applicatie af te sluiten
-        System.exit(0); // Of gebruik Platform.exit() voor JavaFX-toepassingen
+//    private void buildGui()
+//    {
+//        lblBoodschap = new Label();
+//        buttons = new Button[4];
+//
+//        this.add(lblBoodschap, 0, 0, buttons.length, 1);
+//        btnStop = new Button("Stop");
+//        this.add(btnStop, 0, 2, buttons.length, 1);
+//        btnStop.setMaxWidth(Double.MAX_VALUE);
+//
+//        for (int i = 0; i < buttons.length; i++) // <1>
+//        {
+//            buttons[i] = new Button(String.format("    %d    ", i + 1));
+//            this.add(buttons[i], i, 1);
+//        }
+//
+//        this.setAlignment(Pos.CENTER);
+//    }
+//    
+//    private void addEventHandlers()
+//    {
+//        for (Button button: buttons) // <2>
+//        {
+//            button.setOnAction(event -> lblBoodschap.setText(String.format("Geklikt op %s", 
+//                                            ((Button) event.getSource()).getText().trim())));
+//        }
+//
+//        btnStop.setOnAction(this::quit); // <3>
+//
+//        this.setOnMouseClicked(new EventHandler<MouseEvent>() // <4>
+//        {
+//            @Override
+//            public void handle(MouseEvent event)
+//            {
+//                System.out.println("x = " + event.getSceneX());
+//                System.out.println("y = " + event.getSceneY());
+//            } 
+//        }
+//        );
+//    }
+//    
+    public void handleAfsluiten(Event event) // <5>
+    {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Bevestig");
+        alert.setContentText("Wil je de applicatie afsluiten?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK)
+        {
+            System.out.println("We sluiten het venster en dus... ook de applicatie");
+            Platform.exit();
+        } else // Cancel
+        {
+            event.consume();
+        }
     }
 }
