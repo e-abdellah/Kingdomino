@@ -25,6 +25,7 @@ module projectMetFXML {
 	requires java.sql;
 	requires org.junit.jupiter.api;
 	requires org.junit.jupiter.params;
+	requires jsch;
 
 	exports main to javafx.graphics;
     exports domein;
