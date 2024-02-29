@@ -23,14 +23,14 @@ module projectMetFXML {
 	requires javafx.graphics;
 	requires javafx.fxml;
 	requires java.sql;
-	requires org.junit.jupiter.api;
+//	requires org.junit.jupiter.api;
 	requires org.junit.jupiter.params;
 	requires jsch;
 
 	exports main to javafx.graphics;
-    exports domein;
-    exports gui;
+	exports domein;
+	exports gui;
+	exports exceptions;
 
 	opens gui to javafx.fxml;
 }
-
