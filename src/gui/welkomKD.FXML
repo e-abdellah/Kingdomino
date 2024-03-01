@@ -3,10 +3,9 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="805.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="805.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button fx:id="volgendeBtn" layoutX="705.0" layoutY="579.0" mnemonicParsing="false" text="volgende" />
+      <Button fx:id="volgendeBtn" layoutX="705.0" layoutY="579.0" mnemonicParsing="false" onAction="#o" text="volgende" />
       <Button fx:id="afsluitenBtn" layoutX="632.0" layoutY="579.0" mnemonicParsing="false" text="afsluiten" />
    </children>
 </AnchorPane>
