@@ -10,8 +10,6 @@ public class StartUp {
 
 		new KingdominoApp(new DomeinController()).startSpel();
 
-		if (args.length == 1) {
-			Connectie.setSshPrivateKeyPath(args[0]);
-		}
+		if (args.length == 1) {Connectie.setSshPrivateKeyPath(args[0]);}
 	}
 }

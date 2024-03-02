@@ -9,17 +9,15 @@ public class Connectie {
 
 	private static final int MYSQL_PORT = 3306, SSH_PORT = 22;
 	private static String SSH_PRIVATE_KEY_PATH;
+
 	private static final String MYSQL_DB = "ID429772_g36";
 	private static final String MYSQL_USER = "ID429772_g36";
-	private static final String MYSQL_SERVER_URL = MYSQL_USER + ".db.webhosting.be";
+	private static final String MYSQL_SERVER_URL = "ID429772_g36.db.webhosting.be";
 	private static final String MYSQL_PWD = "sdpgroep36";
 	private static final int RANDOM_LOCAL_PORT = 44444;
 	public static final String MYSQL_JDBC = "jdbc:mysql://localhost:" + RANDOM_LOCAL_PORT + "/" + MYSQL_DB + "?user="
 			+ MYSQL_USER + "&password=" + MYSQL_PWD;
 	private final String SSH_SERVER_URL = "ssh.sdp1groep36.be", SSH_USER = "sdp1groep36be";
-
-	public static final String JDBC_URL = "jdbc:mysql://ID429772_g36.db.webhosting.be?serverTimezone=UTC&useLegacyDatetimeCode=false&user=ID429772_g36&password=sdpgroep36";
-
 	private int allocatedLocalPort = 0;
 
 	private Session sshSession;
@@ -28,9 +26,7 @@ public class Connectie {
 		createSshConnection();
 	}
 
-	public static void setSshPrivateKeyPath(String sshPrivateKeyPath) {
-		SSH_PRIVATE_KEY_PATH = sshPrivateKeyPath;
-	}
+	public static void setSshPrivateKeyPath(String sshPrivateKeyPath) { SSH_PRIVATE_KEY_PATH = sshPrivateKeyPath;}
 
 	public void closeConnection() {
 		if (this.sshSession != null) {
