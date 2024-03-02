@@ -4,7 +4,8 @@ public class Speler {
 	private String gebruikersnaam;
 	private int geboortejaar;
 	private int aantalGewonnen, aantalGespeeld;
-	private static final int MAX_GEBOORTEJAAR = 1924, MIN_GEBOORTEJAAR = 2018;
+	protected static final int MAX_GEBOORTEJAAR = 1924;
+	protected static final int MIN_GEBOORTEJAAR = 2018;
 
 	private int starttegel = 1;
 	private int koning = 1;

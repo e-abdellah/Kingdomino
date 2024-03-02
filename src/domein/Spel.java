@@ -12,6 +12,10 @@ public class Spel {
 		setDominotegels(dominotegels);
 	}
 
+	public Spel(List<Speler> aantalSpelers) {
+		setAantalSpelers(aantalSpelers);
+	}
+
 	public List<Speler> getAantalSpelers() {
 		return aantalSpelers;
 	}
