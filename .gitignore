@@ -1,8 +1,8 @@
 /bin/
 src/persistentie/Connectie.java
-/.classpath
-/.project
-/.settings/
+.classpath
+.project
+.settings/
 *.classpath
 *.project
 *.settings/
