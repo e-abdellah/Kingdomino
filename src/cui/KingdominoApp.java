@@ -19,7 +19,7 @@ public class KingdominoApp {
 	}
 
 	public void startSpel() {
-		System.out.println("Welkom bij het spel!");
+		System.out.println("Welkom bij KingDomino!");
 
 		int aantalSpelers = vraagAantalSpelers();
 		List<Speler> spelers = new ArrayList<>();
@@ -37,7 +37,7 @@ public class KingdominoApp {
 	private int vraagAantalSpelers() {
 		int aantalSpelers;
 		do {
-			System.out.println("Hoeveel spelers willen spelen? (3 of 4)");
+			System.out.println("Hoeveel spelers willen er spelen? (3 of 4)");
 			aantalSpelers = sc.nextInt();
 		} while (aantalSpelers != 3 && aantalSpelers != 4);
 		return aantalSpelers;
@@ -48,7 +48,7 @@ public class KingdominoApp {
 		System.out.print("Geef de spelersnaam: ");
 		String naam = sc.nextLine(); // Lees de naam van de speler
 
-		System.out.print("Geef de geboortejaar: ");
+		System.out.print("Geef het geboortejaar: ");
 		int geboortejaar = sc.nextInt(); // Lees het geboortejaar
 
 		dc.registreerSpeler(naam, geboortejaar); // Registreer de speler
