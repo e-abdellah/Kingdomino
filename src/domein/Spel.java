@@ -21,9 +21,9 @@ public class Spel {
 	}
 
 	private void setAantalSpelers(List<Speler> aantalSpelers) {
-		if (aantalSpelers.size() < 3 || aantalSpelers.size() > 4)
-			throw new IllegalArgumentException(
-					"Het aantal spelers moet minstens 3 spelers en maximum 4 spelers bevatten");
+//		if (aantalSpelers.size() < 3 || aantalSpelers.size() > 4)
+//			throw new IllegalArgumentException(
+//					"Het aantal spelers moet minstens 3 spelers en maximum 4 spelers bevatten");
 		this.aantalSpelers = aantalSpelers;
 	}
 
