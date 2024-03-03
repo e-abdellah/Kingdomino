@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import domein.DomeinController;
-import domein.Spel;
 import domein.Speler;
 
 public class KingdominoApp {
@@ -20,23 +19,36 @@ public class KingdominoApp {
 		this.spelers = new ArrayList<>();
 	}
 
-	public void startSpel() {
-		System.out.println("Welkom bij KingDomino!");
+	public void start() {
+		String[] menuKeuzes = { "Registreer nieuwe speler", "Start nieuwe spel", "Afsluiten" };
+		int keuze = maakMenuKeuze(menuKeuzes, "Wat kies je? ");
+		while (keuze != 3) {
+			switch (keuze) {
+			case 1 -> registreerSpeler();
+			case 2 -> startSpel();
+//			case 3 -> Afsluiten();
 
-		int aantalSpelers = vraagAantalSpelers();
-		for (int i = 0; i < aantalSpelers; i++) {
-			voegSpelerToe(); // Speler toevoegen aan de lijst
+			}
+			keuze = sc.nextInt();
 		}
+		System.out.printf("%nTot een volgende keer!");
+	}
 
-		if (spelers.size() < 3 || spelers.size() > 4) {
-			System.out.println("Het aantal spelers moet minstens 3 spelers en maximum 4 spelers bevatten");
-			return; // We kunnen het spel niet starten, stop hier
-		}
+	private void startSpel() {
+		// TODO
+	}
 
-		Spel spel = new Spel(spelers); // Maak het Spel-object alleen als het juiste aantal spelers is toegevoegd
-		// spel.initialiseerSpel();
-
-		// Nu kan het spel worden gestart
+	private int maakMenuKeuze(String[] keuzes, String hoofding) {
+		int keuze = 0;
+		do {
+			System.out.printf("%n%s%n", hoofding);
+			for (int i = 0; i < keuzes.length; i++) {
+				System.out.printf("%d. %s%n", i + 1, keuzes[i]);
+			}
+			System.out.print("Jouw keuze: ");
+			keuze = sc.nextInt();
+		} while (keuze < 1 || keuze > keuzes.length);
+		return keuze;
 	}
 
 	private int vraagAantalSpelers() {
@@ -48,11 +60,7 @@ public class KingdominoApp {
 		return aantalSpelers;
 	}
 
-	private void voegSpelerToe() {
-		if (spelers.size() >= 4) {
-			System.out.println("Maximaal aantal spelers bereikt!");
-			return;
-		}
+	private void registreerSpeler() {
 
 		sc.nextLine(); // Consumeer de newline
 		System.out.print("Geef de spelersnaam: ");
@@ -62,6 +70,8 @@ public class KingdominoApp {
 		int geboortejaar = sc.nextInt(); // Lees het geboortejaar
 
 		dc.registreerSpeler(naam, geboortejaar); // Registreer de speler
+
+		System.out.println("U bent succesvol geregistreert");
 	}
 
 }
