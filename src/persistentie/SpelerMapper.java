@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static persistentie.Connectie.MYSQL_JDBC;
+
 public class SpelerMapper {
 
     private static final String INSERT_SPELER = "INSERT INTO ID429772_g36.Speler (gebruikersnaam, geboortejaar, aantalGewonnen, aantalGespeeld)"
@@ -16,7 +18,8 @@ public class SpelerMapper {
     public void voegToe(Speler speler)
     {
         Connectie ssh = new Connectie();
-        try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
+
+        try (Connection conn = DriverManager.getConnection(MYSQL_JDBC);
              PreparedStatement query = conn.prepareStatement(INSERT_SPELER))
         {
             query.setString(1, speler.getGebruikersnaam());
@@ -34,11 +37,12 @@ public class SpelerMapper {
 
 
     public Speler geefSpeler(String gebruikersnaam) {
+
         Connectie ssh =new Connectie();
         Speler speler = null;
-
-        try (Connection conn = DriverManager.getConnection(Connectie.MYSQL_JDBC);
-             PreparedStatement query = conn.prepareStatement("SELECT * FROM ID429772_g36.Speler WHERE gebruikersnaam = ?")) {
+        try (Connection conn = DriverManager.getConnection(MYSQL_JDBC);
+             PreparedStatement query = conn.prepareStatement("SELECT * FROM ID429772_g36.Speler WHERE gebruikersnaam = ?"))
+        {
             query.setString(1, gebruikersnaam);
             try (ResultSet rs = query.executeQuery()) {
                 if (rs.next())
@@ -53,7 +57,6 @@ public class SpelerMapper {
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-
         ssh.closeConnection();
         return speler;
     }

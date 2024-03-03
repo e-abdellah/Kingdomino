@@ -8,15 +8,15 @@ import com.jcraft.jsch.Session;
 public class Connectie {
 
 	private static final int MYSQL_PORT = 3306, SSH_PORT = 22;
-	private static String SSH_PRIVATE_KEY_PATH;
+	private static final String SSH_PRIVATE_KEY_PATH = "C:\\Users\\dario/.ssh/id_rsa";
 
 	private static final String MYSQL_DB = "ID429772_g36";
 	private static final String MYSQL_USER = "ID429772_g36";
 	private static final String MYSQL_SERVER_URL = "ID429772_g36.db.webhosting.be";
 	private static final String MYSQL_PWD = "sdpgroep36";
-	private static final int RANDOM_LOCAL_PORT = 44444;
-	public static final String MYSQL_JDBC = "jdbc:mysql://localhost:" + RANDOM_LOCAL_PORT + "/" + MYSQL_DB + "?user="
-			+ MYSQL_USER + "&password=" + MYSQL_PWD;
+	private static final int RANDOM_LOCAL_PORT = 3306;
+	public static final String MYSQL_JDBC = "jdbc:mysql://localhost/" + MYSQL_DB + "?user="
+			+ MYSQL_USER + "&password=" + MYSQL_PWD + "&useUnicode=true&characterEncoding=UTF-8";
 	private final String SSH_SERVER_URL = "ssh.sdp1groep36.be", SSH_USER = "sdp1groep36be";
 	private int allocatedLocalPort = 0;
 
@@ -25,8 +25,6 @@ public class Connectie {
 	public Connectie() {
 		createSshConnection();
 	}
-
-	public static void setSshPrivateKeyPath(String sshPrivateKeyPath) { SSH_PRIVATE_KEY_PATH = sshPrivateKeyPath;}
 
 	public void closeConnection() {
 		if (this.sshSession != null) {
@@ -40,9 +38,10 @@ public class Connectie {
 			try {
 				JSch jsch = new JSch();
 				this.sshSession = jsch.getSession(SSH_USER, SSH_SERVER_URL, SSH_PORT);
-				// this.sshSession.setPassword(SSH_PWD);
+				//this.sshSession.setPassword("sdpgroep36");
 
 				File file = new File(SSH_PRIVATE_KEY_PATH);
+
 				jsch.addIdentity(file.getAbsolutePath());
 				java.util.Properties config = new java.util.Properties();
 				config.put("StrictHostKeyChecking", "no");
@@ -57,15 +56,14 @@ public class Connectie {
 				System.out.println("    User: " + SSH_USER);
 				System.out.println("    Server:Port: " + SSH_SERVER_URL + ":" + SSH_PORT);
 
-				this.allocatedLocalPort = this.sshSession.setPortForwardingL(RANDOM_LOCAL_PORT, MYSQL_SERVER_URL,
-						MYSQL_PORT);
-				System.out.println(
-						"  Forwarded port on " + MYSQL_SERVER_URL + ": " + allocatedLocalPort + " -> " + MYSQL_PORT);
-			} catch (Exception e) {
+				this.allocatedLocalPort = this.sshSession.setPortForwardingL(RANDOM_LOCAL_PORT, MYSQL_SERVER_URL, MYSQL_PORT);
+				System.out.println("  Forwarded port on " + MYSQL_SERVER_URL + ": " + allocatedLocalPort + " -> " + MYSQL_PORT);
+			} catch (Exception e){
 				System.out.println("Could not establish SSH connection!");
 				e.printStackTrace();
 			}
-		} else {
+		}
+		else {
 			if (!this.sshSession.isConnected()) {
 				try {
 					System.out.println("Reopening ssh connection...");
