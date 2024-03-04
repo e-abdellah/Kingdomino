@@ -25,4 +25,5 @@
 	<Button fx:id="volgendeBtn" layoutX="704.0" layoutY="553.0"
 		mnemonicParsing="false" onAction="#volgende" text="Volgende" />
 
+
 </AnchorPane>
