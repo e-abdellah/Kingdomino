@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import domein.DomeinController;
+import domein.Kleuren;
 import domein.Speler;
 import dto.SpelerDTO;
 
@@ -16,12 +17,14 @@ public class KingdominoApp {
 	private Scanner sc;
 	private List<Speler> spelers;
 	private final Map<String, String> gekozenSpelersMetKleur;
+	private final List<String> kleuren;
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
 		this.dc = dc;
 		this.spelers = new ArrayList<>();
 		gekozenSpelersMetKleur = new HashMap<>();
+		this.kleuren = Kleuren.getKleurLijst();
 
 	}
 
@@ -130,9 +133,15 @@ public class KingdominoApp {
 			return;
 		}
 
-		sc.nextLine(); // Consumeer de newline
-		System.out.print("Kies een kleur: ");
-		String gekozenKleur = sc.nextLine();
+		String gekozenKleur = "";
+		// sc.nextLine(); // Consumeer de newline
+		do {
+			System.out.print("Kies een kleur: ");
+			System.out.println(kleuren);
+
+			gekozenKleur = sc.next();
+			sc.nextLine();
+		} while (!kleuren.contains(gekozenKleur.toUpperCase()));
 
 		// Voeg de speler toe aan de lijst van gekozen spelers met de opgegeven kleur
 		gekozenSpelersMetKleur.put(gekozenSpelerGebruikersnaam, gekozenKleur);
@@ -144,6 +153,7 @@ public class KingdominoApp {
 		if (keuze.equalsIgnoreCase("ja")) {
 			kiesSpeler(); // Blijf spelers toevoegen indien gewenst
 		}
+
 	}
 
 	private void startKingdomino() {
@@ -151,6 +161,16 @@ public class KingdominoApp {
 		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
 
 		System.out.println("Het spel heeft " + aantalDominotegels + " dominotegels.");
+
+		// Toon overzicht per speler
+		for (Map.Entry<String, String> entry : gekozenSpelersMetKleur.entrySet()) {
+			String speler = entry.getKey();
+			String kleur = entry.getValue();
+
+			System.out.println(
+					"Speler: " + speler + ", Kasteel: " + kleur + ", Starttegel: " + kleur + ", Koning: " + kleur);
+		}
+
 	}
 
 }
