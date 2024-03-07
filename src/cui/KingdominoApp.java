@@ -148,20 +148,18 @@ public class KingdominoApp {
 
 		System.out.println("Speler " + gekozenSpelerGebruikersnaam + " toegevoegd met kleur " + gekozenKleur);
 
-		System.out.println("Wil je nog een speler toevoegen? (ja/nee):");
-		String keuze = sc.nextLine();
-		if (keuze.equalsIgnoreCase("ja")) {
-			kiesSpeler(); // Blijf spelers toevoegen indien gewenst
-		}
+		do {
+			System.out.println("Wil je nog een speler toevoegen? (ja/nee):\nMinstens 3 spelers");
+			String keuze = sc.nextLine();
+			if (keuze.equalsIgnoreCase("ja")) {
+				kiesSpeler(); // Blijf spelers toevoegen indien gewenst
+			}
+		} while (gekozenSpelersMetKleur.size() < 3);
 
 	}
 
 	private void startKingdomino() {
 		int aantalSpelers = gekozenSpelersMetKleur.size();
-
-		if (aantalSpelers != 3 && aantalSpelers != 4) {
-			throw new IllegalArgumentException("Het aantal spelers moet 3 of 4 zijn.");
-		}
 
 		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
 
