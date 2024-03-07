@@ -13,7 +13,7 @@ public class KingdominoApp {
 	private Scanner sc;
 	private List<Speler> spelers;
 	private final Map<String, String> gekozenSpelersMetKleur;
-	private List<String> gekozenKleuren;
+	private List<String> gekozenKleuren = new ArrayList<>();
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
