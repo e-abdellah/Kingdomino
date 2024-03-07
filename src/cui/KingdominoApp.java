@@ -1,10 +1,6 @@
 package cui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import domein.DomeinController;
 import domein.Kleuren;
@@ -17,14 +13,14 @@ public class KingdominoApp {
 	private Scanner sc;
 	private List<Speler> spelers;
 	private final Map<String, String> gekozenSpelersMetKleur;
-	private final List<String> kleuren;
+	private List<String> gekozenKleuren;
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
 		this.dc = dc;
 		this.spelers = new ArrayList<>();
 		gekozenSpelersMetKleur = new HashMap<>();
-		this.kleuren = Kleuren.getKleurLijst();
+
 
 	}
 
@@ -137,15 +133,15 @@ public class KingdominoApp {
 		// sc.nextLine(); // Consumeer de newline
 		do {
 			System.out.print("Kies een kleur: ");
-			System.out.println(kleuren);
+			System.out.printf("%s, %s, %s, %s\n", Kleuren.GEEL, Kleuren.BLAUW, Kleuren.ROOS, Kleuren.GROEN);
 
 			gekozenKleur = sc.next();
 			sc.nextLine();
-		} while (!kleuren.contains(gekozenKleur.toUpperCase()));
+		} while (EnumSet.allOf(Kleuren.class).contains(gekozenKleur.toUpperCase()));
 
 		// Voeg de speler toe aan de lijst van gekozen spelers met de opgegeven kleur
 		gekozenSpelersMetKleur.put(gekozenSpelerGebruikersnaam, gekozenKleur);
-
+		gekozenKleuren.add(gekozenKleur.toUpperCase());
 		System.out.println("Speler " + gekozenSpelerGebruikersnaam + " toegevoegd met kleur " + gekozenKleur);
 
 		do {
