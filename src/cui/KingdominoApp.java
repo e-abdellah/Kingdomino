@@ -158,6 +158,11 @@ public class KingdominoApp {
 
 	private void startKingdomino() {
 		int aantalSpelers = gekozenSpelersMetKleur.size();
+
+		if (aantalSpelers != 3 && aantalSpelers != 4) {
+			throw new IllegalArgumentException("Het aantal spelers moet 3 of 4 zijn.");
+		}
+
 		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
 
 		System.out.println("Het spel heeft " + aantalDominotegels + " dominotegels.");
@@ -170,7 +175,6 @@ public class KingdominoApp {
 			System.out.println(
 					"Speler: " + speler + ", Kasteel: " + kleur + ", Starttegel: " + kleur + ", Koning: " + kleur);
 		}
-
 	}
 
 }
