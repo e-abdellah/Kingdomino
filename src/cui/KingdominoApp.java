@@ -120,7 +120,6 @@ public class KingdominoApp {
 
 		start();
 	}
-	
 
 	private void toonOverzicht() {
 		List<SpelerDTO> overzicht = dc.geefOverzichtSpelers();
@@ -148,8 +147,14 @@ public class KingdominoApp {
 
 		int gekozenSpelerIndex;
 		do {
-			System.out.print("Kies een speler (nummer): ");
-			gekozenSpelerIndex = sc.nextInt() - 1;
+			try {
+				System.out.print("Kies een speler (nummer): ");
+				gekozenSpelerIndex = sc.nextInt() - 1;
+			} catch (InputMismatchException e) {
+				System.out.println("Ongeldige invoer. Voer een geldig nummer in.");
+				sc.nextLine(); // Consumeer de ongeldige invoer
+				gekozenSpelerIndex = -1; // Zet de index op een ongeldige waarde om de lus opnieuw te laten lopen
+			}
 		} while (gekozenSpelerIndex < 0 || gekozenSpelerIndex >= beschikbareSpelers.size());
 
 		String gekozenSpelerGebruikersnaam = beschikbareSpelers.get(gekozenSpelerIndex).gebruikersnaam();
@@ -165,7 +170,7 @@ public class KingdominoApp {
 		// sc.nextLine(); // Consumeer de newline
 		do {
 			System.out.print("Kies een kleur: ");
-			System.out.printf("%s, %s, %s, %s\n", Kleuren.GEEL, Kleuren.BLAUW, Kleuren.ROOS, Kleuren.GROEN);// Toon beschikbare kleuren aan de gebruiker
+			System.out.printf("%s, %s, %s, %s\n", Kleuren.GEEL, Kleuren.BLAUW, Kleuren.ROOS, Kleuren.GROEN);//Toon kleuren
 
 			gekozenKleur = sc.next();
 			sc.nextLine();
