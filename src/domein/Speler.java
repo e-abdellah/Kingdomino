@@ -33,7 +33,7 @@ public class Speler {
 	}
 
 	private void setGebruikersnaam(String gebruikersnaam) {
-		if (gebruikersnaam == null || gebruikersnaam.isBlank() || !gebruikersnaam.matches("[a-zA-Z0-9]+")) {
+		if (gebruikersnaam == null || gebruikersnaam.isBlank()) {//!gebruikersnaam.matches("[a-zA-Z0-9]+"
 			throw new IllegalArgumentException("Ongeldige gebruikersnaam");
 		}
 		this.gebruikersnaam = gebruikersnaam;

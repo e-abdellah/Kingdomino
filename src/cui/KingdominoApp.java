@@ -21,7 +21,6 @@ public class KingdominoApp {
 		this.spelers = new ArrayList<>();
 		gekozenSpelersMetKleur = new HashMap<>();
 
-
 	}
 
 	public void start() {
@@ -40,14 +39,39 @@ public class KingdominoApp {
 
 	private int maakMenuKeuze(String[] keuzes, String hoofding) {
 		int keuze = 0;
-		do {
-			System.out.printf("%n%s%n", hoofding);
-			for (int i = 0; i < keuzes.length; i++) {
-				System.out.printf("%d. %s%n", i + 1, keuzes[i]);
+
+		// Blijf in de lus totdat een geldige keuze is gemaakt
+		while (true) {
+			try {
+				// Toon het menu
+				System.out.printf("%n%s%n", hoofding);
+				for (int i = 0; i < keuzes.length; i++) {
+					System.out.printf("%d. %s%n", i + 1, keuzes[i]);
+				}
+				System.out.print("Jouw keuze: ");
+
+				// Controleer of de invoer een integer is
+				if (sc.hasNextInt()) {
+					keuze = sc.nextInt();
+
+					// Controleer of de keuze binnen het geldige bereik ligt
+					if (keuze >= 1 && keuze <= keuzes.length) {
+						break; // Geldige keuze, exit de lus
+					} else {
+						System.out.println("Ongeldige keuze. Kies een nummer tussen 1 en " + keuzes.length);
+					}
+				} else {
+					// Ongeldige invoer (geen integer)
+					System.out.println("Ongeldige invoer. Voer een nummer in.");
+					sc.next(); // Consumeer de ongeldige invoer om oneindige lussen te voorkomen
+				}
+			} catch (Exception e) {
+				// Vang eventuele uitzonderingen op en geef een foutmelding weer
+				System.out.println("Er is een fout opgetreden. Probeer opnieuw.");
+				sc.nextLine(); // Consumeer de newline om de scanner te resetten
 			}
-			System.out.print("Jouw keuze: ");
-			keuze = sc.nextInt();
-		} while (keuze < 1 || keuze > keuzes.length);
+		}
+
 		return keuze;
 	}
 
@@ -76,16 +100,22 @@ public class KingdominoApp {
 
 	private void registreerSpeler() {
 
-		sc.nextLine(); // Consumeer de newline
-		System.out.print("Geef de spelersnaam: ");
-		String naam = sc.nextLine(); // Lees de naam van de speler
+		try {
 
-		System.out.print("Geef het geboortejaar: ");
-		int geboortejaar = sc.nextInt(); // Lees het geboortejaar
+			sc.nextLine(); // Consumeer de newline
+			System.out.print("Geef de spelersnaam(minstens 6 karakters, niet enkel spaties): ");
+			String naam = sc.nextLine(); // Lees de naam van de speler
 
-		dc.registreerSpeler(naam, geboortejaar); // Registreer de speler
+			System.out.print("Geef het geboortejaar(minstens 6 jaar oud): ");
+			int geboortejaar = sc.nextInt(); // Lees het geboortejaar
 
-		System.out.println("U bent succesvol geregistreerd");
+			dc.registreerSpeler(naam, geboortejaar); // Registreer de speler
+
+			System.out.println("U bent succesvol geregistreerd");
+		} catch (Exception e) {
+			System.out.println("Er is een fout opgetreden bij het registreren van de speler. Probeer opnieuw.");
+			sc.nextLine(); // Consumeer de newline om de scanner te resetten
+		}
 
 		start();
 	}
@@ -133,11 +163,14 @@ public class KingdominoApp {
 		// sc.nextLine(); // Consumeer de newline
 		do {
 			System.out.print("Kies een kleur: ");
-			System.out.printf("%s, %s, %s, %s\n", Kleuren.GEEL, Kleuren.BLAUW, Kleuren.ROOS, Kleuren.GROEN);
+			System.out.printf("%s, %s, %s, %s\n", Kleuren.GEEL, Kleuren.BLAUW, Kleuren.ROOS, Kleuren.GROEN);// Toon beschikbare kleuren aan de gebruiker
 
 			gekozenKleur = sc.next();
 			sc.nextLine();
-		} while (EnumSet.allOf(Kleuren.class).contains(gekozenKleur.toUpperCase()));
+
+		} while (EnumSet.allOf(Kleuren.class).contains(gekozenKleur.toUpperCase()));// Controleer of de gekozen kleur
+																					// geldig is (moet een van de
+																					// enum-waarden zijn)
 
 		// Voeg de speler toe aan de lijst van gekozen spelers met de opgegeven kleur
 		gekozenSpelersMetKleur.put(gekozenSpelerGebruikersnaam, gekozenKleur);

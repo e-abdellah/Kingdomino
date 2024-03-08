@@ -1,3 +1,4 @@
+
 package testen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,30 +41,28 @@ class SpelerTest {
 			"%^%$^&*", "%^% $^&*" })
 	void maakGebruiker_fouteGebruikersnaam_WerptException(String gebruikersnaam) {
 		assertThrows(IllegalArgumentException.class, () -> new Speler(gebruikersnaam, 0));
-		// wordt gecontrolleerd of de gebruikersnaam null or leeg is + als speciale
+		// wordt gecontroleerd of de gebruikersnaam null or leeg is + als speciale
 		// tekens bevat
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "abcdef", "ABCDGF", "HBCJBHCJSBbckdkcsdv", "a bcs dcefw 1213", "123456789", "123456  8" })
 	void maakGebruiker_juisteGebruikersnaam_MaakGebruiker(String gebruikersnaam) throws Exception {
-		Speler s = new Speler(gebruikersnaam, 0);
+		Speler s = new Speler(gebruikersnaam, 2012);
 		assertEquals(gebruikersnaam, s.getGebruikersnaam());
 	}
 
 	@ParameterizedTest
-	@ValueSource(ints = { 9, 999, 1756, MIN_GEBOORTEJAAR - 1, 2200, MAX_GEBOORTEJAAR + 1, 20043 })
+	@ValueSource(ints = { 9, 999, 1756, MIN_GEBOORTEJAAR + 1, 2200, MAX_GEBOORTEJAAR - 1, 20043 })
 	void maakGeboortejaar_fouteGeboortejaar_WerptException(int geboortejaar) {
-
 		assertThrows(IllegalArgumentException.class, () -> new Speler("abcdefd", geboortejaar));
-		// wordt gecontrollerd of de geboortejaar is ouder dan 1924 of jonger dan 2018
+		// wordt gecontroleerd of de geboortejaar is ouder dan 1924 of jonger dan 2018
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { MIN_GEBOORTEJAAR, 1924, 2000, 2017, MAX_GEBOORTEJAAR })
 	void maakGeboortejaar_juisteGeboortejaar_MaakSpeler(int geboortejaar) throws Exception {
-		Speler s = new Speler("", geboortejaar);
+		Speler s = new Speler("abcdef", geboortejaar);
 		assertEquals(geboortejaar, s.getGeboortejaar());
 	}
-
 }
