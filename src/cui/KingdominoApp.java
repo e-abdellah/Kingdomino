@@ -1,11 +1,17 @@
 package cui;
 
-import java.time.Year;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 import domein.DomeinController;
+import domein.Dominotegel;
 import domein.Kleuren;
 import domein.Speler;
+import domein.Vakje;
 import dto.SpelerDTO;
 
 public class KingdominoApp {
@@ -15,6 +21,9 @@ public class KingdominoApp {
 	private List<Speler> spelers;
 	private final Map<String, String> gekozenSpelersMetKleur;
 	private List<String> gekozenKleuren = new ArrayList<>();
+	private List<Kleuren> alleKleuren = new ArrayList<>();
+	private Dominotegel dominotegel = new Dominotegel();
+	List<Vakje> vakjes = dominotegel.getVakjes();
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
@@ -36,11 +45,14 @@ public class KingdominoApp {
 			keuze = sc.nextInt();
 		}
 		System.out.printf("%nTot een volgende keer!");
+//		for (int i = 0; i < vakjes.size(); i++) {
+//			System.out.println("Vakje " + (i + 1) + ": " + vakjes.get(i).getLandschap());
+//		}
+
 	}
 
 	private int maakMenuKeuze(String[] keuzes, String hoofding) {
 		int keuze = 0;
-
 		// Blijf in de lus totdat een geldige keuze is gemaakt
 		while (true) {
 			try {
@@ -166,32 +178,46 @@ public class KingdominoApp {
 			return;
 		}
 
-		String gekozenKleur = "";
-		// sc.nextLine(); // Consumeer de newline
-		do {
+		while (alleKleuren.size() < Kleuren.values().length) {
 			System.out.print("Kies een kleur: ");
-			System.out.printf("%s, %s, %s, %s\n", Kleuren.GEEL, Kleuren.BLAUW, Kleuren.ROOS, Kleuren.GROEN);//Toon kleuren
-
-			gekozenKleur = sc.next();
-			sc.nextLine();
-
-		} while (EnumSet.allOf(Kleuren.class).contains(gekozenKleur.toUpperCase()));// Controleer of de gekozen kleur
-																					// geldig is (moet een van de
-																					// enum-waarden zijn)
-
-		// Voeg de speler toe aan de lijst van gekozen spelers met de opgegeven kleur
-		gekozenSpelersMetKleur.put(gekozenSpelerGebruikersnaam, gekozenKleur);
-		gekozenKleuren.add(gekozenKleur.toUpperCase());
-		System.out.println("Speler " + gekozenSpelerGebruikersnaam + " toegevoegd met kleur " + gekozenKleur);
-
-		do {
-			System.out.println("Wil je nog een speler toevoegen? (ja/nee):\nMinstens 3 spelers");
-			String keuze = sc.nextLine();
-			if (keuze.equalsIgnoreCase("ja")) {
-				kiesSpeler(); // Blijf spelers toevoegen indien gewenst
+			for (Kleuren kleur : Kleuren.values()) {
+				if (!alleKleuren.contains(kleur)) {
+					System.out.print(kleur + " ");
+				}
 			}
-		} while (gekozenSpelersMetKleur.size() < 3);
+			System.out.println();
 
+			String gekozenKleur = sc.next().toUpperCase();
+
+			Kleuren kleur = null;
+			try {
+				kleur = Kleuren.valueOf(gekozenKleur);
+			} catch (IllegalArgumentException e) {
+				System.out.println("Ongeldige kleur, probeer opnieuw.");
+				continue;
+			}
+
+			if (alleKleuren.contains(kleur)) {
+				System.out.println("Je hebt deze kleur al gekozen, kies een andere kleur.");
+				continue;
+
+			} else {
+				alleKleuren.add(kleur);
+			}
+
+			gekozenSpelersMetKleur.put(gekozenSpelerGebruikersnaam, gekozenKleur);
+			gekozenKleuren.add(gekozenKleur.toUpperCase());
+			System.out.println("Speler " + gekozenSpelerGebruikersnaam + " toegvoegd met kleur " + gekozenKleur);
+
+			do {
+				System.out.println("Wil je nog een speler toevoegen? (ja/nee):\nMinstens 3 spelers");
+				String keuze = sc.next();
+				if (keuze.equalsIgnoreCase("ja")) {
+					kiesSpeler(); // Blijf spelers toevoegen indien gewenst
+				}
+			} while (gekozenSpelersMetKleur.size() < 3);
+
+		}
 	}
 
 	private void startKingdomino() {

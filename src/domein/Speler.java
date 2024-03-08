@@ -32,18 +32,21 @@ public class Speler {
 		return gebruikersnaam;
 	}
 
-	private void setGebruikersnaam(String gebruikersnaam) {
-		if (gebruikersnaam == null || gebruikersnaam.isBlank()) {//!gebruikersnaam.matches("[a-zA-Z0-9]+"
+	public final void setGebruikersnaam(String gebruikersnaam) {
+		if (gebruikersnaam == null || gebruikersnaam.trim().isEmpty()) {
+			// || !gebruikersnaam.matches("[a-zA-Z0-9 ]{6,15}")) {// ipv ->
+			// gebruikersnaam.length() < 6) {
 			throw new IllegalArgumentException("Ongeldige gebruikersnaam");
 		}
 		this.gebruikersnaam = gebruikersnaam;
+
 	}
 
 	public int getGeboortejaar() {
 		return geboortejaar;
 	}
 
-	private void setGeboortejaar(int geboortejaar) {
+	public final void setGeboortejaar(int geboortejaar) {
 		if (geboortejaar < MAX_GEBOORTEJAAR || geboortejaar > MIN_GEBOORTEJAAR) {
 			throw new IllegalArgumentException(
 					String.format("Ongeldig geboortejaar. Het geboortejaar moet tussen %d en %d liggen.",
