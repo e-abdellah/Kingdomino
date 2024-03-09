@@ -136,12 +136,24 @@ public class KingdominoApp {
 	private void toonOverzicht() {
 		List<SpelerDTO> overzicht = dc.geefOverzichtSpelers();
 
-		if (overzicht.isEmpty())
+		if (overzicht.isEmpty()) {
 			System.out.printf("collectie is leeg%n%n");
-		else
+			start();
+		} else
 			for (SpelerDTO dto : overzicht)
 				System.out.printf("Speler %s van %d %n", dto.gebruikersnaam(), dto.geboortejaar());
 	}
+
+//	// Methode om de resterende spelers af te drukken
+//	public void drukResterendeSpelersAf(List<SpelerDTO> beschikbareSpelers, int gekozenSpelerIndex) {
+//		System.out.println("Resterende spelers:");
+//		for (int i = 0; i < beschikbareSpelers.size(); i++) {
+//			if (i != gekozenSpelerIndex) {
+//				System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
+//						beschikbareSpelers.get(i).geboortejaar());
+//			}
+//		}
+//	}
 
 	private void kiesSpeler() {
 		// Controleer of het maximaal aantal spelers al is bereikt
@@ -213,8 +225,17 @@ public class KingdominoApp {
 				System.out.println("Wil je nog een speler toevoegen? (ja/nee):\nMinstens 3 spelers");
 				String keuze = sc.next();
 				if (keuze.equalsIgnoreCase("ja")) {
+//					drukResterendeSpelersAf(beschikbareSpelers, gekozenSpelerIndex);
 					kiesSpeler(); // Blijf spelers toevoegen indien gewenst
 				}
+				if (keuze.equalsIgnoreCase("nee"))
+					if (gekozenSpelersMetKleur.size() < 3) {
+						System.out.println("Je moet minimaal 3 spelers kiezen.");
+						kiesSpeler();
+					} else {
+						startKingdomino();
+					}
+
 			} while (gekozenSpelersMetKleur.size() < 3);
 
 		}

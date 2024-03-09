@@ -33,9 +33,8 @@ public class Speler {
 	}
 
 	public final void setGebruikersnaam(String gebruikersnaam) {
-		if (gebruikersnaam == null || gebruikersnaam.trim().isEmpty()) {
-			// || !gebruikersnaam.matches("[a-zA-Z0-9 ]{6,15}")) {// ipv ->
-			// gebruikersnaam.length() < 6) {
+		if (gebruikersnaam == null || gebruikersnaam.trim().isEmpty()
+				|| !gebruikersnaam.matches("[a-zA-Z0-9 ]{6,15}")) {// {// ipv -> // gebruikersnaam.length() < 6) {
 			throw new IllegalArgumentException("Ongeldige gebruikersnaam");
 		}
 		this.gebruikersnaam = gebruikersnaam;
