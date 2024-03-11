@@ -137,7 +137,7 @@ public class KingdominoApp {
 		List<SpelerDTO> overzicht = dc.geefOverzichtSpelers();
 
 		if (overzicht.isEmpty()) {
-			System.out.printf("collectie is leeg%n%n");
+			System.out.printf("Er zijn nog geen geregistreerde spelers!%n%n");
 			start();
 		} else
 			for (SpelerDTO dto : overzicht)
