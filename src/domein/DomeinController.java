@@ -1,7 +1,9 @@
 package domein;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dto.SpelerDTO;
 
@@ -28,4 +30,12 @@ public class DomeinController {
 		}
 		return overzicht;
 	}
+
+	public static List<String> geefAlleKleuren() {
+		List<Kleuren> kleuren = Arrays.asList(Kleuren.values());
+		return kleuren.stream()
+				.map(Enum::toString)
+				.collect(Collectors.toList());
+	}
+
 }
