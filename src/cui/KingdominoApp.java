@@ -94,20 +94,20 @@ public class KingdominoApp {
 			System.out.println("Geregistreerde spelers:");
 			toonOverzicht();
 		} else {
-			toonOverzicht();
+			//toonOverzicht();
 			kiesSpeler();
 			startKingdomino();
 		}
 	}
 
-	private int vraagAantalSpelers() {
+	/*private int vraagAantalSpelers() {
 		int aantalSpelers;
 		do {
 			System.out.println("Hoeveel spelers willen er spelen? (3 of 4)");
 			aantalSpelers = sc.nextInt();
 		} while (aantalSpelers != 3 && aantalSpelers != 4);
 		return aantalSpelers;
-	}
+	}*/
 
 	private void registreerSpeler() {
 
@@ -132,14 +132,12 @@ public class KingdominoApp {
 	}
 
 	private void toonOverzicht() {
-		List<SpelerDTO> overzicht = dc.geefOverzichtSpelers();
-
-		if (overzicht.isEmpty()) {
-			System.out.printf("Er zijn nog geen geregistreerde spelers!%n%n");
-			start();
-		} else
-			for (SpelerDTO dto : overzicht)
-				System.out.printf("Speler %s van %d %n", dto.gebruikersnaam(), dto.geboortejaar());
+		List<SpelerDTO> beschikbaar = dc.geefOverzichtSpelers();
+		System.out.println("Beschikbare spelers:");
+		for (int i = 0; i < beschikbaar.size(); i++) {
+			System.out.printf("%d. %s (%d)%n", i + 1, beschikbaar.get(i).gebruikersnaam(),
+					beschikbaar.get(i).geboortejaar());
+		}
 	}
 
 //	// Methode om de resterende spelers af te drukken
@@ -160,12 +158,12 @@ public class KingdominoApp {
             return;
         }
 
-        List<SpelerDTO> beschikbareSpelers = dc.geefOverzichtSpelers();
-        System.out.println("Beschikbare spelers:");
-        for (int i = 0; i < beschikbareSpelers.size(); i++) {
-            System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
-                    beschikbareSpelers.get(i).geboortejaar());
-        }
+		List<SpelerDTO> beschikbareSpelers = dc.geefOverzichtSpelers();
+		System.out.println("Beschikbare spelers:");
+		for (int i = 0; i < beschikbareSpelers.size(); i++) {
+			System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
+					beschikbareSpelers.get(i).geboortejaar());
+		}
 
         int gekozenSpelerIndex;
         do {
@@ -210,7 +208,9 @@ public class KingdominoApp {
         System.out.println("Speler " + gekozenSpelerGebruikersnaam + " toegvoegd met kleur " + gekozenKleur);
 
         do {
-            System.out.println("Wil je nog een speler toevoegen? (ja/nee):\nMinstens 3 spelers");
+            System.out.println("Wil je nog een speler toevoegen? (ja/nee):");
+			if(gekozenSpelersMetKleur.size() < 3)
+				System.out.println("Minstens 3 spelers");
             String keuze = sc.next();
             if (keuze.equalsIgnoreCase("ja")) {
 //					drukResterendeSpelersAf(beschikbareSpelers, gekozenSpelerIndex);
@@ -221,12 +221,12 @@ public class KingdominoApp {
                     System.out.println("Je moet minimaal 3 spelers kiezen.");
                     kiesSpeler();
                 } else {
-                    startKingdomino();
+                    break;
                 }
 
         } while (gekozenSpelersMetKleur.size() < 3);
 
-    }
+    }//test
 
 	private void startKingdomino() {
 		int aantalSpelers = gekozenSpelersMetKleur.size();
