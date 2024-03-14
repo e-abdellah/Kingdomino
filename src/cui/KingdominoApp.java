@@ -205,7 +205,7 @@ public class KingdominoApp {
 
         gekozenSpelersMetKleur.put(gekozenSpelerGebruikersnaam, gekozenKleur);
         kleuren.remove(gekozenKleur.toUpperCase());
-        System.out.println("Speler " + gekozenSpelerGebruikersnaam + " toegvoegd met kleur " + gekozenKleur);
+        System.out.println("Speler " + gekozenSpelerGebruikersnaam + " toegevoegd met kleur " + gekozenKleur);
 
         do {
             System.out.println("Wil je nog een speler toevoegen? (ja/nee):");
