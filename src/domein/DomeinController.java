@@ -26,16 +26,14 @@ public class DomeinController {
 
 		for (Speler s : spelers) {
 			overzicht.add(new SpelerDTO(s.getGebruikersnaam(), s.getGeboortejaar(), s.getAantalGewonnen(),
-					s.getAantalGespeeld()));
+					s.getAantalGespeeld(), s.getKleur()));
 		}
 		return overzicht;
 	}
 
 	public static List<String> geefAlleKleuren() {
 		List<Kleuren> kleuren = Arrays.asList(Kleuren.values());
-		return kleuren.stream()
-				.map(Enum::toString)
-				.collect(Collectors.toList());
+		return kleuren.stream().map(Enum::toString).collect(Collectors.toList());
 	}
 
 }
