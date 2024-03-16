@@ -1,15 +1,11 @@
 package cui;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import domein.DomeinController;
 import domein.Dominotegel;
 import domein.Spel;
+import domein.Speler;
 import dto.SpelerDTO;
 
 public class KingdominoApp {
@@ -240,10 +236,58 @@ public class KingdominoApp {
 		}
 
 		// Print geschudde dominotegels
-		List<Dominotegel> geschuddeDominotegels = dc.schudDominotegels(aantalSpelers); // Aangepast om aantalSpelers
-																						// door te geven
-		for (Dominotegel tegel : geschuddeDominotegels) {
+		List<Dominotegel> geschuddeDominotegels = dc.schudDominotegels(aantalSpelers); // Aangepast om aantalSpelers// door te geven
+
+		List<Dominotegel> startKolom = new ArrayList<>();
+		for (int i = 0; i < aantalSpelers; i++){
+			startKolom.add(geschuddeDominotegels.get(0));
+			geschuddeDominotegels.remove(0);
+		}
+		startKolom.sort(Comparator.comparingInt(Dominotegel::getGetal));
+
+		for (Dominotegel tegel : startKolom) {
+			System.out.println(tegel);
+		}
+		/*for (Dominotegel tegel : geschuddeDominotegels) {
 			System.out.println(tegel); // Aanroepen van toString() methode van Dominotegel
+		}*/
+
+		Collections.shuffle(gekozenSpelers);//random volgorde van spelers genereren
+
+		List<Integer> tegels = new ArrayList<>();
+		for (int i = 1; i <= aantalSpelers; i++) {
+			tegels.add(i);
+		}
+		int i = 0;
+		Map<Dominotegel, SpelerDTO> TegelSpeler = new HashMap<>();
+		do {
+			System.out.printf("Speler met kleur %s welke tegel kies je?%n", spelerKleurMap.get(gekozenSpelers.get(i)));
+			int keuze;
+			while (true) {
+				while (!sc.hasNextInt()) {
+					sc.next();
+					System.out.printf("Fout antwoord, kies een getal tussen 1 en %d dat vrij is:%n", aantalSpelers);
+				}
+				keuze = sc.nextInt();
+				if (keuze >= 1 && keuze <= aantalSpelers && tegels.contains(keuze)) {
+					break;
+				} else {
+					System.out.printf("Fout antwoord, kies een getal tussen 1 en %d dat vrij is:%n", gekozenSpelers.size());
+				}
+			}
+			TegelSpeler.put(startKolom.get(keuze-1), gekozenSpelers.get(i));
+			i++;
+			Integer keuzeVerwijderen = keuze;
+			tegels.remove(keuzeVerwijderen);
+		}while(i < aantalSpelers);
+
+		for (SpelerDTO spelerDTO : gekozenSpelers) {
+			String gekozenKleur = spelerKleurMap.get(spelerDTO);
+			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
+			System.out.println("Nog te implementeren (koninkrijk is leeg atm)");
+		}
+		for (Dominotegel tegel : startKolom) {
+			System.out.printf("%s %s%n",tegel, spelerKleurMap.get(TegelSpeler.get(tegel)));
 		}
 	}
 

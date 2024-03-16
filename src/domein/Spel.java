@@ -5,6 +5,7 @@ import static domein.Landschap.BOS;
 import static domein.Landschap.GRAS;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
+import static domein.Landschap.MIJN;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,7 +61,7 @@ public class Spel {
 
 	}
 
-	private void genereerAantalDominotegels() {
+	private void genereerAantalDominotegels() { //cijfer achterkant, aantal kronen, (0 = 0kronen, 1 = kronen links, 2 = kronen rechts)
 		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(ZAND), 1, 0, 0));
 		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(ZAND), 2, 0, 0));
 		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(BOS), 3, 0, 0));
@@ -80,6 +81,36 @@ public class Spel {
 		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(WATER), 17, 0, 0));
 		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(GRAS), 18, 0, 0));
 		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(WATER), 19, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(BOS), 20, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(GRAS), 21, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(AARDE), 22, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(MIJN), 23, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(ZAND), 24, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(ZAND), 25, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(ZAND), 26, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(ZAND), 27, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(WATER), 28, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(GRAS), 29, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(ZAND), 30, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(ZAND), 31, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(BOS), 32, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(BOS), 33, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(BOS), 34, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(BOS), 35, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(GRAS), 36, 1, 2));
+		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(GRAS), 37, 1, 2));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(AARDE), 38, 1, 2));
+		dominotegels.add(new Dominotegel(new Vakje(GRAS), new Vakje(AARDE), 39, 1, 2));
+		dominotegels.add(new Dominotegel(new Vakje(MIJN), new Vakje(ZAND), 40, 1, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(GRAS), 41, 2, 2));
+		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(GRAS), 42, 2, 2));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(AARDE), 43, 2, 2));
+		dominotegels.add(new Dominotegel(new Vakje(GRAS), new Vakje(AARDE), 44, 2, 2));
+		dominotegels.add(new Dominotegel(new Vakje(MIJN), new Vakje(ZAND), 45, 2, 1));
+		dominotegels.add(new Dominotegel(new Vakje(AARDE), new Vakje(MIJN), 46, 2, 2));
+		dominotegels.add(new Dominotegel(new Vakje(AARDE), new Vakje(MIJN), 47, 2, 2));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(MIJN), 48, 3, 2));
+
 
 	}
 
@@ -96,7 +127,7 @@ public class Spel {
 		int aantalBenodigdeTegels = (aantalSpelers == 3) ? 36 : 48;
 
 		// Retourneer een sublist met het vereiste aantal tegels
-		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels));
+		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels-1));
 	}
 
 }
