@@ -2,14 +2,14 @@ package domein;
 
 public class Dominotegel {
 
-	private Vakje vakje;
+	private Vakje vakje1, vakje2;
 	private int getal = 0;
 	private int kroon;
 	private int zijde;
 
 	public Dominotegel(Vakje vakje1, Vakje vakje2, int getal, int kroon, int zijde) {
-		setVakje(vakje1);
-		setVakje(vakje2);
+		setVakje1(vakje1);
+		setVakje2(vakje2);
 		setGetal(getal);
 		setKroon(kroon);
 		setZijde(zijde);
@@ -49,12 +49,26 @@ public class Dominotegel {
 		this.zijde = zijde;
 	}
 
-	public Vakje getVakje() {
-		return vakje;
+	public Vakje getVakje1() {
+		return vakje1;
 	}
 
-	public void setVakje(Vakje vakje) {
-		this.vakje = vakje;
+	public final void setVakje1(Vakje vakje1) {
+		this.vakje1 = vakje1;
+	}
+
+	public Vakje getVakje2() {
+		return vakje2;
+	}
+
+	public final void setVakje2(Vakje vakje2) {
+		this.vakje2 = vakje2;
+	}
+
+	@Override
+	public String toString() {
+		return "Dominotegel [vakje=" + vakje1.toString() + " " + vakje2.toString() + ", getal=" + getal + ", kroon="
+				+ kroon + ", zijde=" + zijde + "]";
 	}
 
 }

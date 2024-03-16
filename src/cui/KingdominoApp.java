@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Scanner;
 
 import domein.DomeinController;
+import domein.Dominotegel;
+import domein.Spel;
 import dto.SpelerDTO;
 
 public class KingdominoApp {
@@ -18,6 +20,7 @@ public class KingdominoApp {
 	private List<String> kleuren;
 	private List<SpelerDTO> beschikbareSpelers;
 	private Map<SpelerDTO, String> spelerKleurMap;
+	private Spel spel = new Spel();
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
@@ -40,9 +43,6 @@ public class KingdominoApp {
 			keuze = sc.nextInt();
 		}
 		System.out.printf("%nTot een volgende keer!");
-//		for (int i = 0; i < vakjes.size(); i++) {
-//			System.out.println("Vakje " + (i + 1) + ": " + vakjes.get(i).getLandschap());
-//		}
 
 	}
 
@@ -187,6 +187,7 @@ public class KingdominoApp {
 		// Voeg de gekozen speler toe aan de lijst en verwijder deze uit de lijst van
 		// beschikbare spelers
 		gekozenSpelers.add(gekozenSpeler);
+		spel.getAantalSpelers().add(gekozenSpeler);
 
 		String gekozenKleur;
 		do {
@@ -238,6 +239,13 @@ public class KingdominoApp {
 		for (SpelerDTO spelerDTO : gekozenSpelers) {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
+		}
+
+		// Print geschudde dominotegels
+		List<Dominotegel> geschuddeDominotegels = dc.schudDominotegels(aantalSpelers); // Aangepast om aantalSpelers
+																						// door te geven
+		for (Dominotegel tegel : geschuddeDominotegels) {
+			System.out.println(tegel); // Aanroepen van toString() methode van Dominotegel
 		}
 	}
 

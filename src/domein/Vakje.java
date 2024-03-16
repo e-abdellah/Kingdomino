@@ -14,4 +14,9 @@ public class Vakje {
 		return landschap;
 	}
 
+	@Override
+	public String toString() {
+		return "[Landschap=" + landschap + "]";
+	}
+
 }

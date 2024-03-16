@@ -10,9 +10,11 @@ import dto.SpelerDTO;
 public class DomeinController {
 
 	private final SpelerRepository spelerRepository;
+	private final Spel spel;
 
 	public DomeinController() {
 		spelerRepository = new SpelerRepository();
+		spel = new Spel();
 	}
 
 	public void registreerSpeler(String gebruikersnaam, int geboortejaar) {
@@ -34,6 +36,11 @@ public class DomeinController {
 	public static List<String> geefAlleKleuren() {
 		List<Kleuren> kleuren = Arrays.asList(Kleuren.values());
 		return kleuren.stream().map(Enum::toString).collect(Collectors.toList());
+	}
+
+	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
+		return spel.schudDominotegels(aantalSpelers);
+
 	}
 
 }
