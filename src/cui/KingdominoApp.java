@@ -9,25 +9,25 @@ import java.util.Scanner;
 
 import domein.DomeinController;
 import domein.Dominotegel;
-import domein.Kleuren;
-import domein.Speler;
-import domein.Vakje;
+import domein.Spel;
 import dto.SpelerDTO;
 
 public class KingdominoApp {
 
 	private final DomeinController dc;
 	private Scanner sc;
-	private final Map<String, String> gekozenSpelersMetKleur;
-	private Dominotegel dominotegel = new Dominotegel();
+	private List<SpelerDTO> gekozenSpelers;
 	private List<String> kleuren;
-
-	List<Vakje> vakjes = dominotegel.getVakjes();
+	private List<SpelerDTO> beschikbareSpelers;
+	private Map<SpelerDTO, String> spelerKleurMap;
+	private Spel spel = new Spel();
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
 		this.dc = dc;
-		gekozenSpelersMetKleur = new HashMap<>();
+		gekozenSpelers = new ArrayList<>();
+		beschikbareSpelers = dc.geefOverzichtSpelers();
+		spelerKleurMap = new HashMap<>();
 		kleuren = dc.geefAlleKleuren();
 	}
 
@@ -43,9 +43,6 @@ public class KingdominoApp {
 			keuze = sc.nextInt();
 		}
 		System.out.printf("%nTot een volgende keer!");
-//		for (int i = 0; i < vakjes.size(); i++) {
-//			System.out.println("Vakje " + (i + 1) + ": " + vakjes.get(i).getLandschap());
-//		}
 
 	}
 
@@ -152,96 +149,101 @@ public class KingdominoApp {
 //	}
 
 	private void kiesSpeler() {
-        // Controleer of het maximaal aantal spelers al is bereikt
-        if (gekozenSpelersMetKleur.size() >= 4) {
-            System.out.println("Maximaal aantal spelers is al bereikt.");
-            return;
-        }
+		// Controleer of het maximaal aantal spelers al is bereikt
+		if (gekozenSpelers.size() >= 4) {
+			System.out.println("Maximaal aantal spelers is al bereikt.");
+			return;
+		}
 
-		List<SpelerDTO> beschikbareSpelers = dc.geefOverzichtSpelers();
 		System.out.println("Beschikbare spelers:");
 		for (int i = 0; i < beschikbareSpelers.size(); i++) {
 			System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
 					beschikbareSpelers.get(i).geboortejaar());
 		}
 
-        int gekozenSpelerIndex;
-        do {
-            try {
-                System.out.print("Kies een speler (nummer): ");
-                gekozenSpelerIndex = sc.nextInt() - 1;
-            } catch (InputMismatchException e) {
-                System.out.println("Ongeldige invoer. Voer een geldig nummer in.");
-                sc.nextLine(); // Consumeer de ongeldige invoer
-                gekozenSpelerIndex = -1; // Zet de index op een ongeldige waarde om de lus opnieuw te laten lopen
-            }
-        } while (gekozenSpelerIndex < 0 || gekozenSpelerIndex >= beschikbareSpelers.size());
+		int gekozenSpelerIndex;
+		do {
+			try {
+				System.out.print("Kies een speler (nummer): ");
+				gekozenSpelerIndex = sc.nextInt() - 1;
+			} catch (InputMismatchException e) {
+				System.out.println("Ongeldige invoer. Voer een geldig nummer in.");
+				sc.nextLine(); // Consumeer de ongeldige invoer
+				gekozenSpelerIndex = -1; // Zet de index op een ongeldige waarde om de lus opnieuw te laten lopen
+			}
+		} while (gekozenSpelerIndex < 0 || gekozenSpelerIndex >= beschikbareSpelers.size());
 
-        String gekozenSpelerGebruikersnaam = beschikbareSpelers.get(gekozenSpelerIndex).gebruikersnaam();
+		SpelerDTO gekozenSpeler = beschikbareSpelers.get(gekozenSpelerIndex);
 
-        // Controleer of de speler al is gekozen
-        if (gekozenSpelersMetKleur.containsKey(gekozenSpelerGebruikersnaam)) {
-            System.out.println("Deze speler is al gekozen. Kies een andere speler.");
-            kiesSpeler(); // Vraag de gebruiker om een andere speler te kiezen
-            return;
-        }
+		// Controleer of de speler al is gekozen
+		if (gekozenSpelers.contains(gekozenSpeler)) {
+			System.out.println("Deze speler is al gekozen. Kies een andere speler.");
+			kiesSpeler(); // Vraag de gebruiker om een andere speler te kiezen
+			return;
+		}
 
-        String gekozenKleur;
-        do {
-            System.out.print("Kies een kleur: ");
-            for (String kleur : kleuren) {
-                System.out.print(kleur + " ");
-            }
-            System.out.println();
+		// Voeg de gekozen speler toe aan de lijst en verwijder deze uit de lijst van
+		// beschikbare spelers
+		gekozenSpelers.add(gekozenSpeler);
+		spel.getAantalSpelers().add(gekozenSpeler);
 
-            gekozenKleur = sc.next().toUpperCase();
+		String gekozenKleur;
+		do {
+			System.out.print("Kies een kleur: ");
+			for (String kleur : kleuren) {
+				System.out.print(kleur + " ");
+			}
+			System.out.println();
 
-            if (!kleuren.contains(gekozenKleur)) {
-                System.out.println("Ongeldige kleur, kies een andere");
-            }
+			gekozenKleur = sc.next().toUpperCase();
 
-        }while(!kleuren.contains(gekozenKleur));
+			if (!kleuren.contains(gekozenKleur)) {
+				System.out.println("Ongeldige kleur, kies een andere");
+			}
 
+		} while (!kleuren.contains(gekozenKleur));
 
-        gekozenSpelersMetKleur.put(gekozenSpelerGebruikersnaam, gekozenKleur);
-        kleuren.remove(gekozenKleur.toUpperCase());
-        System.out.println("Speler " + gekozenSpelerGebruikersnaam + " toegevoegd met kleur " + gekozenKleur);
+		spelerKleurMap.put(gekozenSpeler, gekozenKleur);
+		beschikbareSpelers.remove(gekozenSpeler);
+		kleuren.remove(gekozenKleur.toUpperCase());
+		System.out.println("Speler " + gekozenSpeler.gebruikersnaam() + " toegvoegd met kleur " + gekozenKleur);
 
-        do {
-            System.out.println("Wil je nog een speler toevoegen? (ja/nee):");
-			if(gekozenSpelersMetKleur.size() < 3)
-				System.out.println("Minstens 3 spelers");
-            String keuze = sc.next();
-            if (keuze.equalsIgnoreCase("ja")) {
+		do {
+			System.out.println("Wil je nog een speler toevoegen? (ja/nee):\nMinstens 3 spelers");
+			String keuze = sc.next();
+			if (keuze.equalsIgnoreCase("ja")) {
 //					drukResterendeSpelersAf(beschikbareSpelers, gekozenSpelerIndex);
-                kiesSpeler(); // Blijf spelers toevoegen indien gewenst
-            }
-            if (keuze.equalsIgnoreCase("nee"))
-                if (gekozenSpelersMetKleur.size() < 3) {
-                    System.out.println("Je moet minimaal 3 spelers kiezen.");
-                    kiesSpeler();
-                } else {
-                    break;
-                }
+				kiesSpeler(); // Blijf spelers toevoegen indien gewenst
+			}
+			if (keuze.equalsIgnoreCase("nee"))
+				if (gekozenSpelers.size() < 3) {
+					System.out.println("Je moet minimaal 3 spelers kiezen.");
+					kiesSpeler();
+				} else {
+					break;
+				}
 
-        } while (gekozenSpelersMetKleur.size() < 3);
+		} while (gekozenSpelers.size() < 3);
 
-    }//test
+	}
 
 	private void startKingdomino() {
-		int aantalSpelers = gekozenSpelersMetKleur.size();
-
+		int aantalSpelers = gekozenSpelers.size();
 		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
 
 		System.out.println("Het spel heeft " + aantalDominotegels + " dominotegels.");
 
-		// Toon overzicht per speler
-		for (Map.Entry<String, String> entry : gekozenSpelersMetKleur.entrySet()) {
-			String speler = entry.getKey();
-			String kleur = entry.getValue();
+		// Toon overzicht per speler inclusief hun gekozen kleur
+		for (SpelerDTO spelerDTO : gekozenSpelers) {
+			String gekozenKleur = spelerKleurMap.get(spelerDTO);
+			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
+		}
 
-			System.out.println(
-					"Speler: " + speler + ", Kasteel: " + kleur + ", Starttegel: " + kleur + ", Koning: " + kleur);
+		// Print geschudde dominotegels
+		List<Dominotegel> geschuddeDominotegels = dc.schudDominotegels(aantalSpelers); // Aangepast om aantalSpelers
+																						// door te geven
+		for (Dominotegel tegel : geschuddeDominotegels) {
+			System.out.println(tegel); // Aanroepen van toString() methode van Dominotegel
 		}
 	}
 

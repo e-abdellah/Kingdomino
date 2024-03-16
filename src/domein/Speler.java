@@ -7,9 +7,10 @@ public class Speler {
 	protected static final int MAX_GEBOORTEJAAR = 1924;
 	protected static final int MIN_GEBOORTEJAAR = 2018;
 
+	private String kleur;
 	private int starttegel = 1;
-	private int koning = 1;
-	private int kasteel = 1;
+//	private int koning = 1;
+//	private int kasteel = 1;
 
 	public Speler(String gebruikersnaam, int geboortejaar) {
 		setGebruikersnaam(gebruikersnaam);
@@ -23,8 +24,14 @@ public class Speler {
 		setAantalGespeeld(aantalGespeeld);
 
 		setStarttegel(starttegel);
-		setKoning(koning);
-		setKasteel(kasteel);
+	}
+
+	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, String kleur) {
+		setGebruikersnaam(gebruikersnaam);
+		setGeboortejaar(geboortejaar);
+		setAantalGewonnen(aantalGewonnen);
+		setAantalGespeeld(aantalGespeeld);
+		setKleur(kleur);
 
 	}
 
@@ -78,20 +85,12 @@ public class Speler {
 		this.starttegel = starttegel;
 	}
 
-	public int getKoning() {
-		return koning;
+	public String getKleur() {
+		return kleur;
 	}
 
-	private void setKoning(int koning) {
-		this.koning = koning;
-	}
-
-	public int getKasteel() {
-		return kasteel;
-	}
-
-	private void setKasteel(int kasteel) {
-		this.kasteel = kasteel;
+	public final void setKleur(String kleur) {
+		this.kleur = kleur;
 	}
 
 }
