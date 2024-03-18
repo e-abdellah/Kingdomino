@@ -28,8 +28,8 @@ public class KingdominoApp {
 	}
 
 	public void start() {
-		String[] menuKeuzes = { "Registreer nieuwe speler", "Start nieuwe spel", "Afsluiten" };
-		int keuze = maakMenuKeuze(menuKeuzes, "Wat kies je? ");
+		String[] menuKeuzes = { "Registreer nieuwe speler", "Start nieuw spel", "Afsluiten" };
+		int keuze = maakMenuKeuze(menuKeuzes, "Kies één van de volgende opties: ");
 		while (keuze != 3) {
 			switch (keuze) {
 			case 1 -> registreerSpeler();
@@ -83,9 +83,10 @@ public class KingdominoApp {
 		List<SpelerDTO> geregistreerdeSpelers = dc.geefOverzichtSpelers();
 
 		if (geregistreerdeSpelers.size() < 3) {
-			System.out.println("Er zijn niet genoeg geregistreerde spelers");
-			System.out.println("Geregistreerde spelers:");
 			toonOverzicht();
+			System.out.printf("%nEr zijn niet genoeg geregistreerde spelers om het spel te kunnen starten!%n");
+			start();
+	
 		} else {
 			//toonOverzicht();
 			kiesSpeler();
@@ -107,15 +108,15 @@ public class KingdominoApp {
 		try {
 
 			sc.nextLine(); // Consumeer de newline
-			System.out.print("Geef de spelersnaam(minstens 6 karakters, niet enkel spaties): ");
+			System.out.print("Voer de naam van de speler in: (de spelersnaam moet minstens 6 karakters bevatten & mag niet enkel uit spaties bestaan): ");
 			String naam = sc.nextLine(); // Lees de naam van de speler
 
-			System.out.print("Geef het geboortejaar(minstens 6 jaar oud): ");
+			System.out.print("Voer het geboortejaar van de speler in: (de speler moet minstens 6 jaar oud zijn): ");
 			int geboortejaar = sc.nextInt(); // Lees het geboortejaar
 
 			dc.registreerSpeler(naam, geboortejaar); // Registreer de speler
 
-			System.out.println("U bent succesvol geregistreerd");
+			System.out.printf("%nSpeler %s werd succesvol geregistreerd!%n", naam);
 		} catch (Exception e) {
 			System.out.println("Er is een fout opgetreden bij het registreren van de speler. Probeer opnieuw.");
 			sc.nextLine(); // Consumeer de newline om de scanner te resetten
@@ -151,7 +152,7 @@ public class KingdominoApp {
 			return;
 		}
 
-		System.out.println("Beschikbare spelers:");
+		System.out.printf("%nBeschikbare spelers:%n");
 		for (int i = 0; i < beschikbareSpelers.size(); i++) {
 			System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
 					beschikbareSpelers.get(i).geboortejaar());
@@ -202,7 +203,7 @@ public class KingdominoApp {
 		spelerKleurMap.put(gekozenSpeler, gekozenKleur);
 		beschikbareSpelers.remove(gekozenSpeler);
 		kleuren.remove(gekozenKleur.toUpperCase());
-		System.out.println("Speler " + gekozenSpeler.gebruikersnaam() + " toegvoegd met kleur " + gekozenKleur);
+		System.out.println("Speler " + gekozenSpeler.gebruikersnaam() + " werd toegevoegd aan het spel met kleur " + gekozenKleur);
 
 		do {
 			System.out.println("Wil je nog een speler toevoegen? (ja/nee):\nMinstens 3 spelers");
@@ -213,7 +214,7 @@ public class KingdominoApp {
 			}
 			if (keuze.equalsIgnoreCase("nee"))
 				if (gekozenSpelers.size() < 3) {
-					System.out.println("Je moet minimaal 3 spelers kiezen.");
+					System.out.printf("%nJe moet minstens 3 spelers kiezen om het spel te kunnen starten.%n");
 					kiesSpeler();
 				} else {
 					break;
@@ -261,7 +262,12 @@ public class KingdominoApp {
 		int i = 0;
 		Map<Dominotegel, SpelerDTO> TegelSpeler = new HashMap<>();
 		do {
-			System.out.printf("Speler met kleur %s welke tegel kies je?%n", spelerKleurMap.get(gekozenSpelers.get(i)));
+			//Toont de huidige speler met zijn corresponderende kleur nadat ze geshuffled werden
+			SpelerDTO currentSpeler = gekozenSpelers.get(i);
+			String spelerNaam = currentSpeler.gebruikersnaam();
+			String spelerKleur = spelerKleurMap.get(currentSpeler);
+			System.out.printf("%nSpeler %s met kleur %s, welke tegel kies je? ", spelerNaam, spelerKleur);
+
 			int keuze;
 			while (true) {
 				while (!sc.hasNextInt()) {

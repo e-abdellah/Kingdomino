@@ -2,6 +2,7 @@ package domein;
 
 public class Vakje {
 	private Landschap landschap;
+	private int aantalKronen;
 
 	public Vakje() {
 	}
@@ -18,5 +19,15 @@ public class Vakje {
 	public String toString() {
 		return "[Landschap=" + landschap + "]";
 	}
+
+	public int getAantalKronen() {
+		return aantalKronen;
+	}
+
+	public void setAantalKronen(int aantalKronen) {
+		this.aantalKronen = aantalKronen;
+	}
+	
+	
 
 }
