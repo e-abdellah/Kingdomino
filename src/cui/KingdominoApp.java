@@ -138,7 +138,7 @@ public class KingdominoApp {
 
 		if (geregistreerdeSpelers.size() < 3) {
 			toonOverzicht();
-			System.out.printf("%nEr zijn niet genoeg geregistreerde spelers om het spel te kunnen starten!%n");
+			System.out.printf("%n%s%n", messages.getString("nietGenoegGeregistreerdeSpelers"));
 			start();
 	
 		} else {
@@ -181,7 +181,7 @@ public class KingdominoApp {
 
 	private void toonOverzicht() {
 		List<SpelerDTO> beschikbaar = dc.geefOverzichtSpelers();
-		System.out.println("Beschikbare spelers:");
+		System.out.printf("%n%s%n", messages.getString("toonOverzichtBeschikbareSpelers"));
 		for (int i = 0; i < beschikbaar.size(); i++) {
 			System.out.printf("%d. %s (%d)%n", i + 1, beschikbaar.get(i).gebruikersnaam(),
 					beschikbaar.get(i).geboortejaar());
@@ -202,11 +202,11 @@ public class KingdominoApp {
 	private void kiesSpeler() {
 		// Controleer of het maximaal aantal spelers al is bereikt
 		if (gekozenSpelers.size() >= 4) {
-			System.out.println("Maximaal aantal spelers is al bereikt, het spel wordt gestart.");
+			System.out.printf("%s", messages.getString("maximaalAantalSpelersBereikt"));
 			return;
 		}
 
-		System.out.printf("%nBeschikbare spelers:%n");
+		System.out.printf("%n%s%n", messages.getString("toonOverzichtBeschikbareSpelers"));
 		for (int i = 0; i < beschikbareSpelers.size(); i++) {
 			System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
 					beschikbareSpelers.get(i).geboortejaar());
@@ -215,10 +215,10 @@ public class KingdominoApp {
 		int gekozenSpelerIndex;
 		do {
 			try {
-				System.out.print("Kies een speler (nummer): ");
+				System.out.printf("%s", messages.getString("kiesSpelerViaNummer"));
 				gekozenSpelerIndex = sc.nextInt() - 1;
 			} catch (InputMismatchException e) {
-				System.out.println("Ongeldige invoer. Voer een geldig nummer in.");
+				System.out.printf("%s%n", messages.getString("ongeldigeMenuKeuzeGeenInteger"));
 				sc.nextLine(); // Consumeer de ongeldige invoer
 				gekozenSpelerIndex = -1; // Zet de index op een ongeldige waarde om de lus opnieuw te laten lopen
 			}
@@ -228,7 +228,7 @@ public class KingdominoApp {
 
 		// Controleer of de speler al is gekozen
 		if (gekozenSpelers.contains(gekozenSpeler)) {
-			System.out.println("Deze speler is al gekozen. Kies een andere speler.");
+			System.out.printf("%s%n", messages.getString("spelerAlGekozen"));
 			kiesSpeler(); // Vraag de gebruiker om een andere speler te kiezen
 			return;
 		}
@@ -240,7 +240,7 @@ public class KingdominoApp {
 
 		String gekozenKleur;
 		do {
-			System.out.print("Kies een kleur: ");
+			System.out.printf("%s ", messages.getString("kiesKleurSpeler"));
 			for (String kleur : kleuren) {
 				System.out.print(kleur + " ");
 			}
@@ -249,7 +249,7 @@ public class KingdominoApp {
 			gekozenKleur = sc.next().toUpperCase();
 
 			if (!kleuren.contains(gekozenKleur)) {
-				System.out.println("Ongeldige kleur, kies een andere");
+				System.out.printf("%s%n", messages.getString("kiesKleurSpelerOngeldig"));
 			}
 
 		} while (!kleuren.contains(gekozenKleur));
@@ -257,26 +257,41 @@ public class KingdominoApp {
 		spelerKleurMap.put(gekozenSpeler, gekozenKleur);
 		beschikbareSpelers.remove(gekozenSpeler);
 		kleuren.remove(gekozenKleur.toUpperCase());
-		System.out.println("Speler " + gekozenSpeler.gebruikersnaam() + " werd toegevoegd aan het spel met kleur " + gekozenKleur);
+		System.out.println(String.format(messages.getString("spelerToegevoegd"), gekozenSpeler.gebruikersnaam(), gekozenKleur));
 
 		do {
-			System.out.println("Wil je nog een speler toevoegen? (ja/nee):\nMinstens 3 spelers");
-			String keuze = sc.next();
-			if (keuze.equalsIgnoreCase("ja")) {
-//					drukResterendeSpelersAf(beschikbareSpelers, gekozenSpelerIndex);
-				kiesSpeler(); // Blijf spelers toevoegen indien gewenst
-			}
-			if (keuze.equalsIgnoreCase("nee"))
-				if (gekozenSpelers.size() < 3) {
-					System.out.printf("%nJe moet minstens 3 spelers kiezen om het spel te kunnen starten.%n");
-					kiesSpeler();
-				} else {
-					break;
-				}
-
+		    System.out.printf("%s%n", messages.getString("nogEenSpelerToevoegenVraag"));
+		    String keuze = sc.next();
+		    //Checkt of het antwoord positief ("ja" of "yes" of negatief "nee" of "no" is, dit hangt af van de gekozen taal
+		    if (isPositiefAntwoord(keuze)) {
+		        kiesSpeler(); // Blijf spelers toevoegen indien gewenst
+		    } else if (isNegatiefAntwoord(keuze)) {
+		        if (gekozenSpelers.size() < 3) {
+		            System.out.printf("%n%s%n", messages.getString("nogNietGenoegSpelersOmSpelTeStarten"));
+		            kiesSpeler();
+		        } else {
+		            break;
+		        }
+		    } else {
+		        System.out.printf("%s%n", messages.getString("ongeldigeInvoer")); // Zorg dat je een bericht hebt voor ongeldige invoer
+		    }
 		} while (gekozenSpelers.size() < 3);
+		
+		
 
 	}
+	
+	//Methodes om ervoor te zorgen dat je ja of nee kan antwoorden in de gekozen taal (NL of EN)
+	private boolean isPositiefAntwoord(String input) {
+	    String positief = messages.getString("ja").trim().toLowerCase();
+	    return input.trim().toLowerCase().equals(positief);
+	}
+
+	private boolean isNegatiefAntwoord(String input) {
+	    String negatief = messages.getString("nee").trim().toLowerCase();
+	    return input.trim().toLowerCase().equals(negatief);
+	}
+
 
 	private void startKingdomino() {
 		int aantalSpelers = gekozenSpelers.size();
