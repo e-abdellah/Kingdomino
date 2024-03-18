@@ -17,6 +17,7 @@ public class KingdominoApp {
 	private List<SpelerDTO> beschikbareSpelers;
 	private Map<SpelerDTO, String> spelerKleurMap;
 	private Spel spel = new Spel();
+	ResourceBundle messages = null;
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
@@ -25,11 +26,20 @@ public class KingdominoApp {
 		beschikbareSpelers = dc.geefOverzichtSpelers();
 		spelerKleurMap = new HashMap<>();
 		kleuren = dc.geefAlleKleuren();
+		kiesTaal();
 	}
 
 	public void start() {
-		String[] menuKeuzes = { "Registreer nieuwe speler", "Start nieuw spel", "Afsluiten" };
-		int keuze = maakMenuKeuze(menuKeuzes, "Kies één van de volgende opties: ");
+
+		
+
+	    String[] menuKeuzes = {
+	            messages.getString("registreerSpeler"),
+	            messages.getString("startNieuwSpel"),
+	            messages.getString("afsluiten")
+	        };
+		
+		int keuze = maakMenuKeuze(menuKeuzes, messages.getString("kiesOptie"));
 		while (keuze != 3) {
 			switch (keuze) {
 			case 1 -> registreerSpeler();
@@ -38,8 +48,52 @@ public class KingdominoApp {
 			}
 			keuze = sc.nextInt();
 		}
-		System.out.printf("%nTot een volgende keer!");
+		System.out.printf("%s", messages.getString("afsluitenBericht"));
 
+	}
+	//kiesTaal methode om eenmalig een taal te kunnen kiezen bij het opstarten van het spel
+	private void kiesTaal() {
+		
+	    boolean geldigeTaalKeuze = false;
+	    Locale locale = null;
+	    while (!geldigeTaalKeuze) {
+	        // Taal keuze
+	        System.out.println("Kies uw taal // Choose your language: ");
+	        System.out.println("1. English");
+	        System.out.println("2. Nederlands");
+	       
+	        try {
+	            int taalKeuze = sc.nextInt();
+	            sc.nextLine(); 
+
+	            // Switch om de taalkeuze te kunnen invoeren, na invoer wordt locale ingesteld
+	            switch (taalKeuze) {
+	                case 1:
+	                    locale = new Locale("en", "EN");
+	                    geldigeTaalKeuze = true;
+	                    break;
+	                case 2:
+	                    locale = new Locale("nl", "NL");
+	                    geldigeTaalKeuze = true;
+	                    break;
+	                default:
+	                    System.out.println("Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
+	                    break;
+	            }
+	            //InputMismatchException om ervoor te zorgen dat enkel de cijfers die bij een taal horen ingevoerd kunnen worden
+	        } catch (InputMismatchException e) {
+	            System.out.println("Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
+	            sc.next(); 
+	        }
+	    }
+		
+	    try {
+	        // Past het pad aan op basis van de gekozen taal zodat de juiste resource bundle ingeladen kan worden
+	        messages = ResourceBundle.getBundle("cui.resource_bundle", locale);
+	    } catch (MissingResourceException e) {
+	        System.err.println("Error loading resource bundle: " + e.getMessage());
+	        return; 
+	    }
 	}
 
 	private int maakMenuKeuze(String[] keuzes, String hoofding) {
@@ -52,7 +106,7 @@ public class KingdominoApp {
 				for (int i = 0; i < keuzes.length; i++) {
 					System.out.printf("%d. %s%n", i + 1, keuzes[i]);
 				}
-				System.out.print("Jouw keuze: ");
+				System.out.printf("%s ", messages.getString("jouwKeuzePrompt"));
 
 				// Controleer of de invoer een integer is
 				if (sc.hasNextInt()) {
@@ -62,16 +116,16 @@ public class KingdominoApp {
 					if (keuze >= 1 && keuze <= keuzes.length) {
 						break; // Geldige keuze, exit de lus
 					} else {
-						System.out.println("Ongeldige keuze. Kies een nummer tussen 1 en " + keuzes.length);
+						System.out.printf("%n%s %d%n ", messages.getString("ongeldigeMenuKeuze"), keuzes.length);
 					}
 				} else {
 					// Ongeldige invoer (geen integer)
-					System.out.println("Ongeldige invoer. Voer een nummer in.");
+					System.out.printf("%n%s%n", messages.getString("ongeldigeMenuKeuzeGeenInteger"));
 					sc.next(); // Consumeer de ongeldige invoer om oneindige lussen te voorkomen
 				}
 			} catch (Exception e) {
 				// Vang eventuele uitzonderingen op en geef een foutmelding weer
-				System.out.println("Er is een fout opgetreden. Probeer opnieuw.");
+				System.out.printf("%n%s%n", messages.getString("ongeldigeMenuKeuzeUitzonderingen"));
 				sc.nextLine(); // Consumeer de newline om de scanner te resetten
 			}
 		}
@@ -108,17 +162,17 @@ public class KingdominoApp {
 		try {
 
 			sc.nextLine(); // Consumeer de newline
-			System.out.print("Voer de naam van de speler in: (de spelersnaam moet minstens 6 karakters bevatten & mag niet enkel uit spaties bestaan): ");
+			System.out.printf("%s " ,messages.getString("voerNaamSpelerIn"));
 			String naam = sc.nextLine(); // Lees de naam van de speler
 
-			System.out.print("Voer het geboortejaar van de speler in: (de speler moet minstens 6 jaar oud zijn): ");
+			System.out.printf("%s " ,messages.getString("voerGeboorteJaarSpelerIn"));
 			int geboortejaar = sc.nextInt(); // Lees het geboortejaar
 
 			dc.registreerSpeler(naam, geboortejaar); // Registreer de speler
 
-			System.out.printf("%nSpeler %s werd succesvol geregistreerd!%n", naam);
+			System.out.printf("%n%s %s%n", naam, messages.getString("spelerSuccesvolGeregistreerd"));
 		} catch (Exception e) {
-			System.out.println("Er is een fout opgetreden bij het registreren van de speler. Probeer opnieuw.");
+			System.out.printf("%n%s", messages.getString("spelerOnsuccesvolGeregistreerd"));
 			sc.nextLine(); // Consumeer de newline om de scanner te resetten
 		}
 
@@ -148,7 +202,7 @@ public class KingdominoApp {
 	private void kiesSpeler() {
 		// Controleer of het maximaal aantal spelers al is bereikt
 		if (gekozenSpelers.size() >= 4) {
-			System.out.println("Maximaal aantal spelers is al bereikt.");
+			System.out.println("Maximaal aantal spelers is al bereikt, het spel wordt gestart.");
 			return;
 		}
 
@@ -290,7 +344,7 @@ public class KingdominoApp {
 		for (SpelerDTO spelerDTO : gekozenSpelers) {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
-			System.out.println("Nog te implementeren (koninkrijk is leeg atm)");
+			System.out.printf("Nog te implementeren (koninkrijk is leeg atm)");
 		}
 		for (Dominotegel tegel : startKolom) {
 			System.out.printf("%s %s%n",tegel, spelerKleurMap.get(TegelSpeler.get(tegel)));
