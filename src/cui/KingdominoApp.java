@@ -31,14 +31,9 @@ public class KingdominoApp {
 
 	public void start() {
 
-		
+		String[] menuKeuzes = { messages.getString("registreerSpeler"), messages.getString("startNieuwSpel"),
+				messages.getString("afsluiten") };
 
-	    String[] menuKeuzes = {
-	            messages.getString("registreerSpeler"),
-	            messages.getString("startNieuwSpel"),
-	            messages.getString("afsluiten")
-	        };
-		
 		int keuze = maakMenuKeuze(menuKeuzes, messages.getString("kiesOptie"));
 		while (keuze != 3) {
 			switch (keuze) {
@@ -51,49 +46,60 @@ public class KingdominoApp {
 		System.out.printf("%s", messages.getString("afsluitenBericht"));
 
 	}
-	//kiesTaal methode om eenmalig een taal te kunnen kiezen bij het opstarten van het spel
-	private void kiesTaal() {
-		
-	    boolean geldigeTaalKeuze = false;
-	    Locale locale = null;
-	    while (!geldigeTaalKeuze) {
-	        // Taal keuze
-	        System.out.println("Kies uw taal // Choose your language: ");
-	        System.out.println("1. English");
-	        System.out.println("2. Nederlands");
-	       
-	        try {
-	            int taalKeuze = sc.nextInt();
-	            sc.nextLine(); 
 
-	            // Switch om de taalkeuze te kunnen invoeren, na invoer wordt locale ingesteld
-	            switch (taalKeuze) {
-	                case 1:
-	                    locale = new Locale("en", "EN");
-	                    geldigeTaalKeuze = true;
-	                    break;
-	                case 2:
-	                    locale = new Locale("nl", "NL");
-	                    geldigeTaalKeuze = true;
-	                    break;
-	                default:
-	                    System.out.println("Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
-	                    break;
-	            }
-	            //InputMismatchException om ervoor te zorgen dat enkel de cijfers die bij een taal horen ingevoerd kunnen worden
-	        } catch (InputMismatchException e) {
-	            System.out.println("Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
-	            sc.next(); 
-	        }
-	    }
-		
-	    try {
-	        // Past het pad aan op basis van de gekozen taal zodat de juiste resource bundle ingeladen kan worden
-	        messages = ResourceBundle.getBundle("cui.resource_bundle", locale);
-	    } catch (MissingResourceException e) {
-	        System.err.println("Error loading resource bundle: " + e.getMessage());
-	        return; 
-	    }
+	// kiesTaal methode om eenmalig een taal te kunnen kiezen bij het opstarten van
+	// het spel
+	private void kiesTaal() {
+
+		boolean geldigeTaalKeuze = false;
+		Locale locale = null;
+		while (!geldigeTaalKeuze) {
+			// Taal keuze
+			System.out.println("Kies uw taal // Choose your language: ");
+			System.out.println("1. English");
+			System.out.println("2. Nederlands");
+			System.out.println("3. Français");
+
+			try {
+				int taalKeuze = sc.nextInt();
+				sc.nextLine();
+
+				// Switch om de taalkeuze te kunnen invoeren, na invoer wordt locale ingesteld
+				switch (taalKeuze) {
+				case 1:
+					locale = new Locale("en", "EN");
+					geldigeTaalKeuze = true;
+					break;
+				case 2:
+					locale = new Locale("nl", "NL");
+					geldigeTaalKeuze = true;
+					break;
+				case 3:
+					locale = new Locale("fr", "FR");
+					geldigeTaalKeuze = true;
+					break;
+				default:
+					System.out.println(
+							"Entrée incorrecte. Veuillez choisir 1 ou 2 pour choisir votre langue.// Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
+					break;
+				}
+				// InputMismatchException om ervoor te zorgen dat enkel de cijfers die bij een
+				// taal horen ingevoerd kunnen worden
+			} catch (InputMismatchException e) {
+				System.out.println(
+						"Entrée incorrecte. Veuillez choisir 1 ou 2 pour choisir votre langue.// Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
+				sc.next();
+			}
+		}
+
+		try {
+			// Past het pad aan op basis van de gekozen taal zodat de juiste resource bundle
+			// ingeladen kan worden
+			messages = ResourceBundle.getBundle("cui.resource_bundle", locale);
+		} catch (MissingResourceException e) {
+			System.err.println("Error loading resource bundle: " + e.getMessage());
+			return;
+		}
 	}
 
 	private int maakMenuKeuze(String[] keuzes, String hoofding) {
@@ -140,32 +146,30 @@ public class KingdominoApp {
 			toonOverzicht();
 			System.out.printf("%n%s%n", messages.getString("nietGenoegGeregistreerdeSpelers"));
 			start();
-	
+
 		} else {
-			//toonOverzicht();
+			// toonOverzicht();
 			kiesSpeler();
 			startKingdomino();
 		}
 	}
 
-	/*private int vraagAantalSpelers() {
-		int aantalSpelers;
-		do {
-			System.out.println("Hoeveel spelers willen er spelen? (3 of 4)");
-			aantalSpelers = sc.nextInt();
-		} while (aantalSpelers != 3 && aantalSpelers != 4);
-		return aantalSpelers;
-	}*/
+	/*
+	 * private int vraagAantalSpelers() { int aantalSpelers; do {
+	 * System.out.println("Hoeveel spelers willen er spelen? (3 of 4)");
+	 * aantalSpelers = sc.nextInt(); } while (aantalSpelers != 3 && aantalSpelers !=
+	 * 4); return aantalSpelers; }
+	 */
 
 	private void registreerSpeler() {
 
 		try {
 
 			sc.nextLine(); // Consumeer de newline
-			System.out.printf("%s " ,messages.getString("voerNaamSpelerIn"));
+			System.out.printf("%s ", messages.getString("voerNaamSpelerIn"));
 			String naam = sc.nextLine(); // Lees de naam van de speler
 
-			System.out.printf("%s " ,messages.getString("voerGeboorteJaarSpelerIn"));
+			System.out.printf("%s ", messages.getString("voerGeboorteJaarSpelerIn"));
 			int geboortejaar = sc.nextInt(); // Lees het geboortejaar
 
 			dc.registreerSpeler(naam, geboortejaar); // Registreer de speler
@@ -257,41 +261,42 @@ public class KingdominoApp {
 		spelerKleurMap.put(gekozenSpeler, gekozenKleur);
 		beschikbareSpelers.remove(gekozenSpeler);
 		kleuren.remove(gekozenKleur.toUpperCase());
-		System.out.println(String.format(messages.getString("spelerToegevoegd"), gekozenSpeler.gebruikersnaam(), gekozenKleur));
+		System.out.println(
+				String.format(messages.getString("spelerToegevoegd"), gekozenSpeler.gebruikersnaam(), gekozenKleur));
 
 		do {
-		    System.out.printf("%s%n", messages.getString("nogEenSpelerToevoegenVraag"));
-		    String keuze = sc.next();
-		    //Checkt of het antwoord positief ("ja" of "yes" of negatief "nee" of "no" is, dit hangt af van de gekozen taal
-		    if (isPositiefAntwoord(keuze)) {
-		        kiesSpeler(); // Blijf spelers toevoegen indien gewenst
-		    } else if (isNegatiefAntwoord(keuze)) {
-		        if (gekozenSpelers.size() < 3) {
-		            System.out.printf("%n%s%n", messages.getString("nogNietGenoegSpelersOmSpelTeStarten"));
-		            kiesSpeler();
-		        } else {
-		            break;
-		        }
-		    } else {
-		        System.out.printf("%s%n", messages.getString("ongeldigeInvoer")); // Zorg dat je een bericht hebt voor ongeldige invoer
-		    }
+			System.out.printf("%s%n", messages.getString("nogEenSpelerToevoegenVraag"));
+			String keuze = sc.next();
+			// Checkt of het antwoord positief ("ja" of "yes" of negatief "nee" of "no" is,
+			// dit hangt af van de gekozen taal
+			if (isPositiefAntwoord(keuze)) {
+				kiesSpeler(); // Blijf spelers toevoegen indien gewenst
+			} else if (isNegatiefAntwoord(keuze)) {
+				if (gekozenSpelers.size() < 3) {
+					System.out.printf("%n%s%n", messages.getString("nogNietGenoegSpelersOmSpelTeStarten"));
+					kiesSpeler();
+				} else {
+					break;
+				}
+			} else {
+				System.out.printf("%s%n", messages.getString("ongeldigeInvoer")); // Zorg dat je een bericht hebt voor
+																					// ongeldige invoer
+			}
 		} while (gekozenSpelers.size() < 3);
-		
-		
 
 	}
-	
-	//Methodes om ervoor te zorgen dat je ja of nee kan antwoorden in de gekozen taal (NL of EN)
+
+	// Methodes om ervoor te zorgen dat je ja of nee kan antwoorden in de gekozen
+	// taal (NL of EN)
 	private boolean isPositiefAntwoord(String input) {
-	    String positief = messages.getString("ja").trim().toLowerCase();
-	    return input.trim().toLowerCase().equals(positief);
+		String positief = messages.getString("ja").trim().toLowerCase();
+		return input.trim().toLowerCase().equals(positief);
 	}
 
 	private boolean isNegatiefAntwoord(String input) {
-	    String negatief = messages.getString("nee").trim().toLowerCase();
-	    return input.trim().toLowerCase().equals(negatief);
+		String negatief = messages.getString("nee").trim().toLowerCase();
+		return input.trim().toLowerCase().equals(negatief);
 	}
-
 
 	private void startKingdomino() {
 		int aantalSpelers = gekozenSpelers.size();
@@ -306,10 +311,11 @@ public class KingdominoApp {
 		}
 
 		// Print geschudde dominotegels
-		List<Dominotegel> geschuddeDominotegels = dc.schudDominotegels(aantalSpelers); // Aangepast om aantalSpelers// door te geven
+		List<Dominotegel> geschuddeDominotegels = dc.schudDominotegels(aantalSpelers); // Aangepast om aantalSpelers//
+																						// door te geven
 
 		List<Dominotegel> startKolom = new ArrayList<>();
-		for (int i = 0; i < aantalSpelers; i++){
+		for (int i = 0; i < aantalSpelers; i++) {
 			startKolom.add(geschuddeDominotegels.get(0));
 			geschuddeDominotegels.remove(0);
 		}
@@ -318,11 +324,12 @@ public class KingdominoApp {
 		for (Dominotegel tegel : startKolom) {
 			System.out.println(tegel);
 		}
-		/*for (Dominotegel tegel : geschuddeDominotegels) {
-			System.out.println(tegel); // Aanroepen van toString() methode van Dominotegel
-		}*/
+		/*
+		 * for (Dominotegel tegel : geschuddeDominotegels) { System.out.println(tegel);
+		 * // Aanroepen van toString() methode van Dominotegel }
+		 */
 
-		Collections.shuffle(gekozenSpelers);//random volgorde van spelers genereren
+		Collections.shuffle(gekozenSpelers);// random volgorde van spelers genereren
 
 		List<Integer> tegels = new ArrayList<>();
 		for (int i = 1; i <= aantalSpelers; i++) {
@@ -331,7 +338,8 @@ public class KingdominoApp {
 		int i = 0;
 		Map<Dominotegel, SpelerDTO> TegelSpeler = new HashMap<>();
 		do {
-			//Toont de huidige speler met zijn corresponderende kleur nadat ze geshuffled werden
+			// Toont de huidige speler met zijn corresponderende kleur nadat ze geshuffled
+			// werden
 			SpelerDTO currentSpeler = gekozenSpelers.get(i);
 			String spelerNaam = currentSpeler.gebruikersnaam();
 			String spelerKleur = spelerKleurMap.get(currentSpeler);
@@ -347,14 +355,15 @@ public class KingdominoApp {
 				if (keuze >= 1 && keuze <= aantalSpelers && tegels.contains(keuze)) {
 					break;
 				} else {
-					System.out.printf("Fout antwoord, kies een getal tussen 1 en %d dat vrij is:%n", gekozenSpelers.size());
+					System.out.printf("Fout antwoord, kies een getal tussen 1 en %d dat vrij is:%n",
+							gekozenSpelers.size());
 				}
 			}
-			TegelSpeler.put(startKolom.get(keuze-1), gekozenSpelers.get(i));
+			TegelSpeler.put(startKolom.get(keuze - 1), gekozenSpelers.get(i));
 			i++;
 			Integer keuzeVerwijderen = keuze;
 			tegels.remove(keuzeVerwijderen);
-		}while(i < aantalSpelers);
+		} while (i < aantalSpelers);
 
 		for (SpelerDTO spelerDTO : gekozenSpelers) {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
@@ -362,7 +371,7 @@ public class KingdominoApp {
 			System.out.printf("Nog te implementeren (koninkrijk is leeg atm)");
 		}
 		for (Dominotegel tegel : startKolom) {
-			System.out.printf("%s %s%n",tegel, spelerKleurMap.get(TegelSpeler.get(tegel)));
+			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(TegelSpeler.get(tegel)));
 		}
 	}
 
