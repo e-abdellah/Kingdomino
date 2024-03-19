@@ -55,7 +55,7 @@ public class KingdominoApp {
 		Locale locale = null;
 		while (!geldigeTaalKeuze) {
 			// Taal keuze
-			System.out.println("Kies uw taal // Choose your language: ");
+			System.out.println("Kies uw taal // Choose your language // Choisissez votre langue: ");
 			System.out.println("1. English");
 			System.out.println("2. Nederlands");
 			System.out.println("3. Français");
