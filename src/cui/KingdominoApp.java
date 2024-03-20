@@ -374,32 +374,32 @@ public class KingdominoApp {
 
 
 
+		if(aantalDominotegels == 0) {
+			//einde spel + winnaar
+			//sorteer spelerDTO op score
+			dc.sorteerOpScore(gekozenSpelers);
 
-		//einde spel + winnaar
-		//sorteer spelerDTO op score
-		dc.sorteerOpScore(gekozenSpelers);
+			SpelerDTO topSpeler = gekozenSpelers.get(0);
+			List<Integer> topScores = dc.berekenScore(topSpeler);
 
-		SpelerDTO topSpeler = gekozenSpelers.get(0);
-		List<Integer> topScores = dc.berekenScore(topSpeler);
+			System.out.println("Winnaar(s):");
+			System.out.printf("Speler %s met kleur %s met een score van: %d", topSpeler.gebruikersnaam(), spelerKleurMap.get(topSpeler), topScores.get(0));
 
-		System.out.println("Winnaar(s):");
-		System.out.printf("Speler %s met kleur %s met een score van: %d", topSpeler.gebruikersnaam(), spelerKleurMap.get(topSpeler), topScores.get(0));
+			// Now check for ties
+			for (int j = 1; j < gekozenSpelers.size(); j++) {
+				SpelerDTO huidigeSpeler = gekozenSpelers.get(j);
+				List<Integer> huidigeScores = dc.berekenScore(huidigeSpeler);
 
-		// Now check for ties
-		for (int j = 1; j < gekozenSpelers.size(); j++) {
-			SpelerDTO huidigeSpeler = gekozenSpelers.get(j);
-			List<Integer> huidigeScores = dc.berekenScore(huidigeSpeler);
-
-			// Compare current player scores with top scores
-			if (huidigeScores.get(0).equals(topScores.get(0))
-					&& huidigeScores.get(1).equals(topScores.get(1))
-					&& huidigeScores.get(2).equals(topScores.get(2))) {
-				System.out.printf("Speler %s met kleur %s met een score van: %d", topSpeler.gebruikersnaam(), spelerKleurMap.get(topSpeler), topScores.get(0));
-			} else {
-				break;
+				// Compare current player scores with top scores
+				if (huidigeScores.get(0).equals(topScores.get(0))
+						&& huidigeScores.get(1).equals(topScores.get(1))
+						&& huidigeScores.get(2).equals(topScores.get(2))) {
+					System.out.printf("Speler %s met kleur %s met een score van: %d", topSpeler.gebruikersnaam(), spelerKleurMap.get(topSpeler), topScores.get(0));
+				} else {
+					break;
+				}
 			}
 		}
-
 	}
 
 	private void Ronde(){
