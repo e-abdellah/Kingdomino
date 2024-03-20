@@ -132,17 +132,28 @@ public class Spel {
 	}
 
 
-	public int berekenScore(SpelerDTO speler) {
+	public List<Integer> berekenScore(SpelerDTO speler) {
+		List<Integer> returnwaarde = new ArrayList<>();
 		int score = 0;
+		int maxgebied = 0;
+		int maxkronen = 0;
 		String[][][] koninkrijk = deepCopy3DStringArray(speler.koninkrijk());
 		for (int i = 0; i <= 2 * MAX_LENGTE; i++) {
 			for (int j = 0; j <= 2 * MAX_LENGTE; j++) {
 				if (koninkrijk[i][j][0] != null){
-					score += berekenScoreRecursief(i, j, koninkrijk).get(0) * berekenScoreRecursief(i, j ,koninkrijk).get(1);
+					int tempgebied, tempkroon;
+					tempgebied = berekenScoreRecursief(i, j, koninkrijk).get(0);
+					tempkroon = berekenScoreRecursief(i, j ,koninkrijk).get(1);
+					score += tempgebied * tempkroon;
+					if(tempgebied > maxgebied){maxgebied = tempgebied;}
+					if(tempkroon > maxkronen){maxkronen = tempkroon;}
 				}
 			}
 		}
-		return score;
+		returnwaarde.add(score);
+		returnwaarde.add(maxgebied);
+		returnwaarde.add(maxkronen);
+		return returnwaarde;
 	}
 	public List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk){
 		List<Integer> score = new ArrayList<>();
@@ -166,7 +177,7 @@ public class Spel {
 		return score;
 	}
 
-	public static String[][][] deepCopy3DStringArray(String[][][] original) {
+	private static String[][][] deepCopy3DStringArray(String[][][] original) {
 		if (original == null) {
 			return null;
 		}

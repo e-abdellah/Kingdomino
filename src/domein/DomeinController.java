@@ -2,6 +2,7 @@ package domein;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +42,14 @@ public class DomeinController {
 	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
 		return spel.schudDominotegels(aantalSpelers);
 
+	}
+
+	public List<Integer> berekenScore(SpelerDTO speler){
+		return spel.berekenScore(speler);
+	}
+
+	public void sorteerOpScore(List<SpelerDTO> spelers){
+		spelers.sort(new ScoreComparator());
 	}
 
 
