@@ -368,7 +368,7 @@ public class KingdominoApp {
 		for (SpelerDTO spelerDTO : gekozenSpelers) {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
-			System.out.printf("Nog te implementeren (koninkrijk is leeg atm)");
+			System.out.println("Nog te implementeren (koninkrijk is leeg atm)");
 		}
 		for (Dominotegel tegel : startKolom) {
 			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(TegelSpeler.get(tegel)));

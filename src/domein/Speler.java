@@ -2,15 +2,27 @@ package domein;
 
 public class Speler {
 	private String gebruikersnaam;
-	private int geboortejaar;
+	private int geboortejaar, score;
 	private int aantalGewonnen, aantalGespeeld;
+
+	private String[][][] koninkrijk;
+
 	protected static final int MAX_GEBOORTEJAAR = 1924;
 	protected static final int MIN_GEBOORTEJAAR = 2018;
+	protected static final int MAX_LENGTE = 6;
 
 	private String kleur;
 	private int starttegel = 1;
 //	private int koning = 1;
 //	private int kasteel = 1;
+
+	public String[][][] getKoninkrijk() {
+		return koninkrijk;
+	}
+
+	public void setKoninkrijk(String[][][] koninkrijk) {
+		this.koninkrijk = koninkrijk;
+	}
 
 	public Speler(String gebruikersnaam, int geboortejaar) {
 		setGebruikersnaam(gebruikersnaam);
@@ -92,5 +104,9 @@ public class Speler {
 	public final void setKleur(String kleur) {
 		this.kleur = kleur;
 	}
+
+	public final void setScore(int score){this.score = score;}
+
+	public int getScore(){return score;}
 
 }

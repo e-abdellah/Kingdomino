@@ -28,7 +28,7 @@ public class DomeinController {
 
 		for (Speler s : spelers) {
 			overzicht.add(new SpelerDTO(s.getGebruikersnaam(), s.getGeboortejaar(), s.getAantalGewonnen(),
-					s.getAantalGespeeld(), s.getKleur()));
+					s.getAantalGespeeld(), s.getKleur(), s.getKoninkrijk()));
 		}
 		return overzicht;
 	}
