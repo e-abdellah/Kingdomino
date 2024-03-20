@@ -383,20 +383,22 @@ public class KingdominoApp {
 			List<Integer> topScores = dc.berekenScore(topSpeler);
 
 			System.out.println("Winnaar(s):");
-			System.out.printf("Speler %s met kleur %s met een score van: %d", topSpeler.gebruikersnaam(), spelerKleurMap.get(topSpeler), topScores.get(0));
+
 
 			// Now check for ties
-			for (int j = 1; j < gekozenSpelers.size(); j++) {
-				SpelerDTO huidigeSpeler = gekozenSpelers.get(j);
-				List<Integer> huidigeScores = dc.berekenScore(huidigeSpeler);
-
-				// Compare current player scores with top scores
-				if (huidigeScores.get(0).equals(topScores.get(0))
-						&& huidigeScores.get(1).equals(topScores.get(1))
-						&& huidigeScores.get(2).equals(topScores.get(2))) {
-					System.out.printf("Speler %s met kleur %s met een score van: %d", topSpeler.gebruikersnaam(), spelerKleurMap.get(topSpeler), topScores.get(0));
+			System.out.println("Winnaar(s):");
+			boolean foundNonWinner = false;
+			for (SpelerDTO speler : gekozenSpelers) {
+				List<Integer> scores = dc.berekenScore(speler);
+				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0), scores.get(1), scores.get(2));
+				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1)) && scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
+					System.out.printf("Speler %s met kleur %s met een %s", speler.gebruikersnaam(), spelerKleurMap.get(speler), scoreDetails); // This player is a winner
 				} else {
-					break;
+					if (!foundNonWinner) {
+						System.out.println("Niet-winnaar(s):");
+						foundNonWinner = true;
+					}
+					System.out.printf("Speler %s met kleur %s met %s", speler.gebruikersnaam(), spelerKleurMap.get(speler), scoreDetails);
 				}
 			}
 		}

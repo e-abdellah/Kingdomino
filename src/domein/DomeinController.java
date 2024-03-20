@@ -49,7 +49,7 @@ public class DomeinController {
 	}
 
 	public void sorteerOpScore(List<SpelerDTO> spelers){
-		spelers.sort(new ScoreComparator());
+		spelers.sort(new ScoreComparator(this));
 	}
 
 
