@@ -11,7 +11,7 @@ public class StartUp extends Application {
 
 	public static void main(String[] args) {
 
-		new KingdominoApp(new DomeinController()).start();
+//		new KingdominoApp(new DomeinController()).start();
 		launch(args);
 
 	}

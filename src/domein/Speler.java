@@ -13,10 +13,14 @@ public class Speler {
 
 	protected static final int MAX_GEBOORTEJAAR = 1924;
 	protected static final int MIN_GEBOORTEJAAR = 2018;
-	protected static final int MAX_LENGTE = 6;
 
 	private String kleur;
 	private int starttegel = 1;
+<<<<<<< HEAD
+=======
+	//	private int koning = 1;
+	//	private int kasteel = 1;
+>>>>>>> 594e912 (registratie knop geimplementeert)
 
 	public String[][][] getKoninkrijk() {
 		return koninkrijk;
@@ -113,6 +117,7 @@ public class Speler {
 		this.kleur = kleur;
 	}
 
+<<<<<<< HEAD
 	private List<Integer> berekenScore() {
 		List<Integer> returnwaarde = new ArrayList<>();
 		int score = 0;
@@ -162,6 +167,15 @@ public class Speler {
 		if (original == null) {
 			return null;
 		}
+=======
+	public final void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getScore() {
+		return score;
+	}
+>>>>>>> 594e912 (registratie knop geimplementeert)
 
 		String[][][] copy = new String[original.length][][];
 		for (int i = 0; i < original.length; i++) {

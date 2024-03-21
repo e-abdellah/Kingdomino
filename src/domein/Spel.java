@@ -6,7 +6,6 @@ import static domein.Landschap.GRAS;
 import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
-import static domein.Speler.MAX_LENGTE;
 
 import java.util.*;
 
@@ -17,7 +16,11 @@ public class Spel {
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
 	private Set<Integer> getallen;
 	private List<Dominotegel> dominotegels;
+<<<<<<< HEAD
 	private List<Speler> spelers;
+=======
+	protected static final int MAX_LENGTE = 6;
+>>>>>>> 594e912 (registratie knop geimplementeert)
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen) {
 		setAantalSpelers(aantalSpelers);
@@ -192,7 +195,7 @@ public class Spel {
 		spelers.sort(new ScoreComparator());
 	}
 
-	private boolean isEindeSpel(List<Dominotegel> tegels) {
+	private boolean isEindeSpel() {
 		while (!dominotegels.isEmpty()) {
 			speelRonde();
 			return false;

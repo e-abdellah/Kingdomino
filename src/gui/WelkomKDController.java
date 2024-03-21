@@ -7,6 +7,7 @@ import java.util.Optional;
 import domein.DomeinController;
 import dto.SpelerDTO;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,8 +16,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class WelkomKDController {
@@ -42,7 +46,80 @@ public class WelkomKDController {
 
 	@FXML
 	private void registreerSpeler() {
-		showAlert("Registreer nieuwe speler", "Actie nog niet geïmplementeerd");
+		Dialog<Void> dialog = new Dialog<>();
+		dialog.setTitle("Nieuwe Speler Registratie");
+		dialog.setHeaderText("Voer de gegevens van de nieuwe speler in:");
+
+		// Voeg knoppen toe.
+		ButtonType registreerButtonType = new ButtonType("Registreer");
+		dialog.getDialogPane().getButtonTypes().addAll(registreerButtonType, ButtonType.CANCEL);
+
+		// Maak de invoervelden en foutmeldingen.
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+
+		TextField gebruikersnaam = new TextField();
+		gebruikersnaam.setPromptText("Gebruikersnaam");
+		Label gebruikersnaamFout = new Label();
+		gebruikersnaamFout.setStyle("-fx-text-fill: red;");
+
+		TextField geboortejaar = new TextField();
+		geboortejaar.setPromptText("Geboortejaar");
+		Label geboortejaarFout = new Label();
+		geboortejaarFout.setStyle("-fx-text-fill: red;");
+
+		grid.add(new Label("Gebruikersnaam:"), 0, 0);
+		grid.add(gebruikersnaam, 1, 0);
+		grid.add(gebruikersnaamFout, 1, 1);
+		grid.add(new Label("Geboortejaar:"), 0, 2);
+		grid.add(geboortejaar, 1, 2);
+		grid.add(geboortejaarFout, 1, 3);
+
+		dialog.getDialogPane().setContent(grid);
+
+		// Zet de focus op het gebruikersnaam veld.
+		Platform.runLater(gebruikersnaam::requestFocus);
+
+		// Voeg een event filter toe om de registratieknop te controleren.
+		dialog.getDialogPane().lookupButton(registreerButtonType).addEventFilter(ActionEvent.ACTION, event -> {
+			// Reset foutmeldingen.
+			gebruikersnaamFout.setText("");
+			geboortejaarFout.setText("");
+
+			// Valideer gebruikersnaam en geboortejaar.
+			String naam = gebruikersnaam.getText();
+			String jaarText = geboortejaar.getText();
+			boolean validatieFout = false;
+
+			if (naam.trim().isEmpty() || naam.length() < 6) {
+				gebruikersnaamFout.setText("Gebruikersnaam moet minstens 6 tekens lang zijn.");
+				validatieFout = true;
+			}
+
+			int jaar = 0;
+			try {
+				jaar = Integer.parseInt(jaarText);
+				if (jaar < 1920 || jaar > 2018) {
+					geboortejaarFout.setText("Ongeldig geboortejaar.");
+					validatieFout = true;
+				}
+			} catch (NumberFormatException e) {
+				geboortejaarFout.setText("Geboortejaar moet een getal zijn.");
+				validatieFout = true;
+			}
+
+			// Als er een validatiefout is, consumeer het event zodat het dialoogvenster open blijft.
+			if (validatieFout) {
+				event.consume();
+			} else {
+				// Registreer de nieuwe speler als er geen fouten zijn.
+				dc.registreerSpeler(naam, jaar);
+				showAlert("Registratie Voltooid", "De nieuwe speler is succesvol geregistreerd.");
+			}
+		});
+
+		dialog.showAndWait();
 	}
 
 	@FXML
@@ -50,10 +127,10 @@ public class WelkomKDController {
 		showAlert("Start nieuwe spel", "Actie nog niet geïmplementeerd");
 	}
 
-//    @FXML
-//    private void afsluiten() {
-//        showAlert("Afsluiten", "Actie nog niet geïmplementeerd");
-//    }
+	//    @FXML
+	//    private void afsluiten() {
+	//        showAlert("Afsluiten", "Actie nog niet geïmplementeerd");
+	//    }
 	@FXML
 	private void afsluiten(Event event) // <5>
 	{
