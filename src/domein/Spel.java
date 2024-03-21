@@ -130,7 +130,7 @@ public class Spel {
 
 
 	public HashMap<Speler, List<Integer>> geefScores(){
-		HashMap<Speler, List<Integer>> spelerScores = new HashMap<>();
+		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();
 		for(Speler speler : spelers){
 			spelerScores.put(speler, speler.getScores());
 		}
@@ -141,7 +141,6 @@ public class Spel {
 		spelers.sort(new ScoreComparator());
 	}
 
-	public
 
 
 

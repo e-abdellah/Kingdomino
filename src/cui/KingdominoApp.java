@@ -379,30 +379,32 @@ public class KingdominoApp {
 			//einde spel + winnaar
 			//sorteer spelerDTO op score
 			dc.sorteerOpScore();
-			Speler topSpeler;
+			Speler topSpeler = null;
+			int tempMaxScore = 0;
 			HashMap<Speler, List<Integer>> spelerScores = dc.geefScores();
-			for(Map.entry<Speler, List<Integer>> entry : spelerScores.entrySet()){
-				if(entry.getkey())
+			for(Map.Entry<Speler, List<Integer>> entry : spelerScores.entrySet()){
+				if(entry.getValue().get(0) > tempMaxScore){
+					tempMaxScore = entry.getValue().get(0);
+					topSpeler = entry.getKey();
+				}
 			}
 			List<Integer> topScores = spelerScores.get(topSpeler);
 
+			// kijk wie gelijk is met winnaar
 			System.out.println("Winnaar(s):");
-
-
-			// Now check for ties
-			System.out.println("Winnaar(s):");
-			boolean foundNonWinner = false;
-			for (SpelerDTO speler : gekozenSpelers) {
-				List<Integer> scores = dc.berekenScore(speler);
+			boolean nietWinnaarGevonden = false;
+			for (Map.Entry<Speler, List<Integer>> persoon : spelerScores.entrySet()) {
+				Speler speler = persoon.getKey();
+				List<Integer> scores = persoon.getValue();
 				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0), scores.get(1), scores.get(2));
-				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1)) && scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
-					System.out.printf("Speler %s met kleur %s met een %s", speler.gebruikersnaam(), spelerKleurMap.get(speler), scoreDetails); // This player is a winner
+				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1)) && scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
+					System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
 				} else {
-					if (!foundNonWinner) {
+					if (!nietWinnaarGevonden) {
 						System.out.println("Niet-winnaar(s):");
-						foundNonWinner = true;
+						nietWinnaarGevonden = true;
 					}
-					System.out.printf("Speler %s met kleur %s met %s", speler.gebruikersnaam(), spelerKleurMap.get(speler), scoreDetails);
+					System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
 				}
 			}
 		}

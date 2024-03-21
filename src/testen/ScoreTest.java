@@ -13,7 +13,6 @@ import domein.Spel;
 import domein.Speler;
 
 public class ScoreTest {
-    private Spel spel;
     private Speler speler;
     private final static int MAX_LENGTE = 5;
 
@@ -58,7 +57,7 @@ public class ScoreTest {
         koninkrijk[1][4][1] = "0";
         koninkrijk[2][0][1] = "0";
         koninkrijk[2][1][1] = "0";
-        koninkrijk[2][2][1] = "1";
+        koninkrijk[2][2][1] = "0";
         koninkrijk[2][3][1] = "1";
         koninkrijk[2][4][1] = "0";
         koninkrijk[3][0][1] = "0";
@@ -76,8 +75,9 @@ public class ScoreTest {
     }
     @Test
     void testBerekenScore(){
-        spel.berekenScore(speler);
-        Assertions.assertEquals();
+        speler = new Speler("avatar", 2003, 4, 25);
+        speler.setKoninkrijk(koninkrijk);
+        Assertions.assertEquals(speler.getScores().get(0), 100);
     }
 
 
