@@ -1,11 +1,15 @@
 package domein;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Speler {
 	private String gebruikersnaam;
-	private int geboortejaar, score;
+	private int geboortejaar;
 	private int aantalGewonnen, aantalGespeeld;
 
 	private String[][][] koninkrijk;
+	private List<Integer> scores;
 
 	protected static final int MAX_GEBOORTEJAAR = 1924;
 	protected static final int MIN_GEBOORTEJAAR = 2018;
@@ -13,8 +17,6 @@ public class Speler {
 
 	private String kleur;
 	private int starttegel = 1;
-//	private int koning = 1;
-//	private int kasteel = 1;
 
 	public String[][][] getKoninkrijk() {
 		return koninkrijk;
@@ -60,6 +62,11 @@ public class Speler {
 
 	}
 
+	public List<Integer> getScores(){return scores;}
+	public final void setScores()
+	{
+		this.scores = berekenScore();
+	}
 	public int getGeboortejaar() {
 		return geboortejaar;
 	}
@@ -72,6 +79,7 @@ public class Speler {
 		}
 		this.geboortejaar = geboortejaar;
 	}
+
 
 	public int getAantalGewonnen() {
 		return aantalGewonnen;
@@ -105,8 +113,73 @@ public class Speler {
 		this.kleur = kleur;
 	}
 
-	public final void setScore(int score){this.score = score;}
+	private List<Integer> berekenScore() {
+		List<Integer> returnwaarde = new ArrayList<>();
+		int score = 0;
+		int maxgebied = 0;
+		int maxkronen = 0;
+		String[][][] koninkrijk = deepCopy3DStringArray(this.koninkrijk);
+		for (int i = 0; i <= 2 * MAX_LENGTE; i++) {
+			for (int j = 0; j <= 2 * MAX_LENGTE; j++) {
+				if (koninkrijk[i][j][0] != null){
+					int tempgebied, tempkroon;
+					tempgebied = berekenScoreRecursief(i, j, koninkrijk).get(0);
+					tempkroon = berekenScoreRecursief(i, j ,koninkrijk).get(1);
+					score += tempgebied * tempkroon;
+					if(tempgebied > maxgebied){maxgebied = tempgebied;}
+					if(tempkroon > maxkronen){maxkronen = tempkroon;}
+				}
+			}
+		}
+		returnwaarde.add(score);
+		returnwaarde.add(maxgebied);
+		returnwaarde.add(maxkronen);
+		return returnwaarde;
+	}
+	private List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk){
+		List<Integer> score = new ArrayList<>();
+		int aantal = 1;
+		int kronen = Integer.parseInt(koninkrijk[x][y][1]);
+		String huidigVak = koninkrijk[x][y][0];
+		koninkrijk[x][y][0] = null;
+		for (int j = -1; j <= 1; j++) {
+			for (int k = -1; k <= 1; k++) {
+				if ((j == 0 && k == 0) || (j == -1 && k == 1) || (j == 1 && k == -1) || (j == 1 && k == 1) || (j == -1 && k == -1)) {
+					continue;
+				}
+				if (koninkrijk[x + j][y + k][0].equals(huidigVak)) {
+					aantal += berekenScoreRecursief(x + j, y + k, koninkrijk).get(0);
+					kronen += berekenScoreRecursief(x + j, y + k, koninkrijk).get(1);
+				}
+			}
+		}
+		score.add(aantal);
+		score.add(kronen);
+		return score;
+	}
 
-	public int getScore(){return score;}
+	private static String[][][] deepCopy3DStringArray(String[][][] original) {
+		if (original == null) {
+			return null;
+		}
 
+		String[][][] copy = new String[original.length][][];
+		for (int i = 0; i < original.length; i++) {
+			if (original[i] == null) {
+				continue;
+			}
+
+			copy[i] = new String[original[i].length][];
+			for (int j = 0; j < original[i].length; j++) {
+				if (original[i][j] == null) {
+					continue;
+				}
+
+				copy[i][j] = new String[original[i][j].length];
+				System.arraycopy(original[i][j], 0, copy[i][j], 0, original[i][j].length);
+			}
+		}
+
+		return copy;
+	}
 }

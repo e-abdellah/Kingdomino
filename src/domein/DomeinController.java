@@ -1,9 +1,6 @@
 package domein;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import dto.SpelerDTO;
@@ -44,12 +41,12 @@ public class DomeinController {
 
 	}
 
-	public List<Integer> berekenScore(SpelerDTO speler){
-		return spel.berekenScore(speler);
+	public HashMap<Speler, List<Integer>> geefScores(){
+		return spel.geefScores();
 	}
 
-	public void sorteerOpScore(List<SpelerDTO> spelers){
-		spelers.sort(new ScoreComparator(this));
+	public void sorteerOpScore(){
+		spel.sorteerOpScore();
 	}
 
 

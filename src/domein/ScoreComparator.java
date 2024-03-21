@@ -3,17 +3,12 @@ import java.util.Comparator;
 import dto.SpelerDTO;
 import java.util.List;
 
-public class ScoreComparator implements Comparator<SpelerDTO> {
-    private final DomeinController dc;
-
-    public ScoreComparator(DomeinController dc) {
-        this.dc = dc;
-    }
-
+public class ScoreComparator implements Comparator<Speler> {
+    private Spel spel;
     @Override
-    public int compare(SpelerDTO o1, SpelerDTO o2) {
-        List<Integer> scoresO1 = dc.berekenScore(o1);
-        List<Integer> scoresO2 = dc.berekenScore(o2);
+    public int compare(Speler o1, Speler o2) {
+        List<Integer> scoresO1 = o1.getScores();
+        List<Integer> scoresO2 = o2.getScores();
 
         // Compare score
         int scoreCompare = Integer.compare(scoresO1.get(0), scoresO2.get(0));

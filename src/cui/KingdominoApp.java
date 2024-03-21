@@ -200,6 +200,7 @@ public class KingdominoApp {
 //		}
 //	}
 
+
 	private void kiesSpeler() {
 		// Controleer of het maximaal aantal spelers al is bereikt
 		if (gekozenSpelers.size() >= 4) {
@@ -377,10 +378,13 @@ public class KingdominoApp {
 		if(aantalDominotegels == 0) {
 			//einde spel + winnaar
 			//sorteer spelerDTO op score
-			dc.sorteerOpScore(gekozenSpelers);
-
-			SpelerDTO topSpeler = gekozenSpelers.get(0);
-			List<Integer> topScores = dc.berekenScore(topSpeler);
+			dc.sorteerOpScore();
+			Speler topSpeler;
+			HashMap<Speler, List<Integer>> spelerScores = dc.geefScores();
+			for(Map.entry<Speler, List<Integer>> entry : spelerScores.entrySet()){
+				if(entry.getkey())
+			}
+			List<Integer> topScores = spelerScores.get(topSpeler);
 
 			System.out.println("Winnaar(s):");
 
