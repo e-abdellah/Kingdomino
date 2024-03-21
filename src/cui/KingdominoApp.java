@@ -1,8 +1,20 @@
 package cui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
-import domein.*;
+import domein.DomeinController;
+import domein.Dominotegel;
+import domein.Spel;
 import dto.SpelerDTO;
 
 public class KingdominoApp {
@@ -189,16 +201,16 @@ public class KingdominoApp {
 		}
 	}
 
-//	// Methode om de resterende spelers af te drukken
-//	public void drukResterendeSpelersAf(List<SpelerDTO> beschikbareSpelers, int gekozenSpelerIndex) {
-//		System.out.println("Resterende spelers:");
-//		for (int i = 0; i < beschikbareSpelers.size(); i++) {
-//			if (i != gekozenSpelerIndex) {
-//				System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
-//						beschikbareSpelers.get(i).geboortejaar());
-//			}
-//		}
-//	}
+	//	// Methode om de resterende spelers af te drukken
+	//	public void drukResterendeSpelersAf(List<SpelerDTO> beschikbareSpelers, int gekozenSpelerIndex) {
+	//		System.out.println("Resterende spelers:");
+	//		for (int i = 0; i < beschikbareSpelers.size(); i++) {
+	//			if (i != gekozenSpelerIndex) {
+	//				System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
+	//						beschikbareSpelers.get(i).geboortejaar());
+	//			}
+	//		}
+	//	}
 
 
 	private void kiesSpeler() {
@@ -334,7 +346,7 @@ public class KingdominoApp {
 			tegels.add(i);
 		}
 		int i = 0;
-		Map<Dominotegel, SpelerDTO> TegelSpeler = new HashMap<>();
+		Map<Dominotegel, SpelerDTO> tegelSpeler = new HashMap<>();
 		do {
 			// Toont de huidige speler met zijn corresponderende kleur nadat ze geshuffled
 			// werden
@@ -357,7 +369,7 @@ public class KingdominoApp {
 							gekozenSpelers.size());
 				}
 			}
-			TegelSpeler.put(startKolom.get(keuze - 1), gekozenSpelers.get(i));
+			tegelSpeler.put(startKolom.get(keuze - 1), gekozenSpelers.get(i));
 			i++;
 			Integer keuzeVerwijderen = keuze;
 			tegels.remove(keuzeVerwijderen);
@@ -369,13 +381,10 @@ public class KingdominoApp {
 			System.out.println("Nog te implementeren (koninkrijk is leeg atm)");
 		}
 		for (Dominotegel tegel : startKolom) {
-			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(TegelSpeler.get(tegel)));
+			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(tegelSpeler.get(tegel)));
 		}
 
-
-
-
-		if(aantalDominotegels == 0) {
+		if (aantalDominotegels == 0) {
 			//einde spel + winnaar
 			//sorteer spelerDTO op score
 			dc.sorteerOpScore();
@@ -392,6 +401,7 @@ public class KingdominoApp {
 
 			// kijk wie gelijk is met winnaar
 			System.out.println("Winnaar(s):");
+<<<<<<< HEAD
 			boolean nietWinnaarGevonden = false;
 			for (Map.Entry<Speler, List<Integer>> persoon : spelerScores.entrySet()) {
 				Speler speler = persoon.getKey();
@@ -399,18 +409,37 @@ public class KingdominoApp {
 				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0), scores.get(1), scores.get(2));
 				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1)) && scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
 					System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
+=======
+
+			// Now check for ties
+			System.out.println("Winnaar(s):");
+			boolean foundNonWinner = false;
+			for (SpelerDTO speler : gekozenSpelers) {
+				List<Integer> scores = dc.berekenScore(speler);
+				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
+						scores.get(1), scores.get(2));
+				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
+						&& scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
+					System.out.printf("Speler %s met kleur %s met een %s", speler.gebruikersnaam(),
+							spelerKleurMap.get(speler), scoreDetails); // This player is a winner
+>>>>>>> bad21f8 (Kleine typos gefixd)
 				} else {
 					if (!nietWinnaarGevonden) {
 						System.out.println("Niet-winnaar(s):");
 						nietWinnaarGevonden = true;
 					}
+<<<<<<< HEAD
 					System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
+=======
+					System.out.printf("Speler %s met kleur %s met %s", speler.gebruikersnaam(),
+							spelerKleurMap.get(speler), scoreDetails);
+>>>>>>> bad21f8 (Kleine typos gefixd)
 				}
 			}
 		}
 	}
 
-	private void Ronde(){
+	private void ronde() {
 
 	}
 
