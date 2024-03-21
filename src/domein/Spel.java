@@ -7,7 +7,13 @@ import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
 
 import dto.SpelerDTO;
 
@@ -16,11 +22,8 @@ public class Spel {
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
 	private Set<Integer> getallen;
 	private List<Dominotegel> dominotegels;
-<<<<<<< HEAD
 	private List<Speler> spelers;
-=======
 	protected static final int MAX_LENGTE = 6;
->>>>>>> 594e912 (registratie knop geimplementeert)
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen) {
 		setAantalSpelers(aantalSpelers);
@@ -130,15 +133,14 @@ public class Spel {
 		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
 	}
 
-<<<<<<< HEAD
-
-	public HashMap<Speler, List<Integer>> geefScores(){
+	public HashMap<Speler, List<Integer>> geefScores() {
 		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();
-		for(Speler speler : spelers){
+		for (Speler speler : spelers) {
 			spelerScores.put(speler, speler.getScores());
 		}
 		return spelerScores;
-=======
+	}
+
 	public List<Integer> berekenScore(SpelerDTO speler) {
 		List<Integer> returnwaarde = new ArrayList<>();
 		int score = 0;
@@ -188,11 +190,31 @@ public class Spel {
 		score.add(aantal);
 		score.add(kronen);
 		return score;
->>>>>>> bad21f8 (Kleine typos gefixd)
 	}
 
-	public void sorteerOpScore(){
-		spelers.sort(new ScoreComparator());
+	private static String[][][] deepCopy3DStringArray(String[][][] original) {
+		if (original == null) {
+			return null;
+		}
+
+		String[][][] copy = new String[original.length][][];
+		for (int i = 0; i < original.length; i++) {
+			if (original[i] == null) {
+				continue;
+			}
+
+			copy[i] = new String[original[i].length][];
+			for (int j = 0; j < original[i].length; j++) {
+				if (original[i][j] == null) {
+					continue;
+				}
+
+				copy[i][j] = new String[original[i][j].length];
+				System.arraycopy(original[i][j], 0, copy[i][j], 0, original[i][j].length);
+			}
+		}
+
+		return copy;
 	}
 
 	private boolean isEindeSpel() {
@@ -207,5 +229,9 @@ public class Spel {
 
 	}
 
+	public void sorteerOpScore() {
+		// TODO Auto-generated method stub
+
+	}
 
 }

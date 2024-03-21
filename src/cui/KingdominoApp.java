@@ -15,6 +15,7 @@ import java.util.Scanner;
 import domein.DomeinController;
 import domein.Dominotegel;
 import domein.Spel;
+import domein.Speler;
 import dto.SpelerDTO;
 
 public class KingdominoApp {
@@ -212,7 +213,6 @@ public class KingdominoApp {
 	//		}
 	//	}
 
-
 	private void kiesSpeler() {
 		// Controleer of het maximaal aantal spelers al is bereikt
 		if (gekozenSpelers.size() >= 4) {
@@ -391,8 +391,8 @@ public class KingdominoApp {
 			Speler topSpeler = null;
 			int tempMaxScore = 0;
 			HashMap<Speler, List<Integer>> spelerScores = dc.geefScores();
-			for(Map.Entry<Speler, List<Integer>> entry : spelerScores.entrySet()){
-				if(entry.getValue().get(0) > tempMaxScore){
+			for (Map.Entry<Speler, List<Integer>> entry : spelerScores.entrySet()) {
+				if (entry.getValue().get(0) > tempMaxScore) {
 					tempMaxScore = entry.getValue().get(0);
 					topSpeler = entry.getKey();
 				}
@@ -401,39 +401,37 @@ public class KingdominoApp {
 
 			// kijk wie gelijk is met winnaar
 			System.out.println("Winnaar(s):");
-<<<<<<< HEAD
 			boolean nietWinnaarGevonden = false;
 			for (Map.Entry<Speler, List<Integer>> persoon : spelerScores.entrySet()) {
 				Speler speler = persoon.getKey();
 				List<Integer> scores = persoon.getValue();
-				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0), scores.get(1), scores.get(2));
-				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1)) && scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
-					System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
-=======
-
-			// Now check for ties
-			System.out.println("Winnaar(s):");
-			boolean foundNonWinner = false;
-			for (SpelerDTO speler : gekozenSpelers) {
-				List<Integer> scores = dc.berekenScore(speler);
 				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
 						scores.get(1), scores.get(2));
 				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
-						&& scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
-					System.out.printf("Speler %s met kleur %s met een %s", speler.gebruikersnaam(),
-							spelerKleurMap.get(speler), scoreDetails); // This player is a winner
->>>>>>> bad21f8 (Kleine typos gefixd)
-				} else {
-					if (!nietWinnaarGevonden) {
-						System.out.println("Niet-winnaar(s):");
-						nietWinnaarGevonden = true;
+						&& scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
+					System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
+
+					// Now check for ties //het zou beter werken als we Speler ipv SpelerDTO gebruiken
+					System.out.println("Winnaar(s):");
+					boolean foundNonWinner = false;
+					for (SpelerDTO speler : gekozenSpelers) {
+						List<Integer> scores = dc.berekenScore(speler);
+						String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
+								scores.get(1), scores.get(2));
+						if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
+								&& scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
+							System.out.printf("Speler %s met kleur %s met een %s", speler.gebruikersnaam(),
+									spelerKleurMap.get(speler), scoreDetails); // This player is a winner
+						} else {
+							if (!nietWinnaarGevonden) {
+								System.out.println("Niet-winnaar(s):");
+								nietWinnaarGevonden = true;
+							}
+							System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
+							System.out.printf("Speler %s met kleur %s met %s", speler.gebruikersnaam(),
+									spelerKleurMap.get(speler), scoreDetails);
+						}
 					}
-<<<<<<< HEAD
-					System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
-=======
-					System.out.printf("Speler %s met kleur %s met %s", speler.gebruikersnaam(),
-							spelerKleurMap.get(speler), scoreDetails);
->>>>>>> bad21f8 (Kleine typos gefixd)
 				}
 			}
 		}

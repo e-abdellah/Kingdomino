@@ -16,11 +16,10 @@ public class Speler {
 
 	private String kleur;
 	private int starttegel = 1;
-<<<<<<< HEAD
-=======
+	private int score;
 	//	private int koning = 1;
 	//	private int kasteel = 1;
->>>>>>> 594e912 (registratie knop geimplementeert)
+	protected static final int MAX_LENGTE = 6;
 
 	public String[][][] getKoninkrijk() {
 		return koninkrijk;
@@ -66,11 +65,14 @@ public class Speler {
 
 	}
 
-	public List<Integer> getScores(){return scores;}
-	public final void setScores()
-	{
+	public List<Integer> getScores() {
+		return scores;
+	}
+
+	public final void setScores() {
 		this.scores = berekenScore();
 	}
+
 	public int getGeboortejaar() {
 		return geboortejaar;
 	}
@@ -83,7 +85,6 @@ public class Speler {
 		}
 		this.geboortejaar = geboortejaar;
 	}
-
 
 	public int getAantalGewonnen() {
 		return aantalGewonnen;
@@ -117,7 +118,6 @@ public class Speler {
 		this.kleur = kleur;
 	}
 
-<<<<<<< HEAD
 	private List<Integer> berekenScore() {
 		List<Integer> returnwaarde = new ArrayList<>();
 		int score = 0;
@@ -126,13 +126,17 @@ public class Speler {
 		String[][][] koninkrijk = deepCopy3DStringArray(this.koninkrijk);
 		for (int i = 0; i <= 2 * MAX_LENGTE; i++) {
 			for (int j = 0; j <= 2 * MAX_LENGTE; j++) {
-				if (koninkrijk[i][j][0] != null){
+				if (koninkrijk[i][j][0] != null) {
 					int tempgebied, tempkroon;
 					tempgebied = berekenScoreRecursief(i, j, koninkrijk).get(0);
-					tempkroon = berekenScoreRecursief(i, j ,koninkrijk).get(1);
+					tempkroon = berekenScoreRecursief(i, j, koninkrijk).get(1);
 					score += tempgebied * tempkroon;
-					if(tempgebied > maxgebied){maxgebied = tempgebied;}
-					if(tempkroon > maxkronen){maxkronen = tempkroon;}
+					if (tempgebied > maxgebied) {
+						maxgebied = tempgebied;
+					}
+					if (tempkroon > maxkronen) {
+						maxkronen = tempkroon;
+					}
 				}
 			}
 		}
@@ -141,7 +145,8 @@ public class Speler {
 		returnwaarde.add(maxkronen);
 		return returnwaarde;
 	}
-	private List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk){
+
+	private List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk) {
 		List<Integer> score = new ArrayList<>();
 		int aantal = 1;
 		int kronen = Integer.parseInt(koninkrijk[x][y][1]);
@@ -149,7 +154,8 @@ public class Speler {
 		koninkrijk[x][y][0] = null;
 		for (int j = -1; j <= 1; j++) {
 			for (int k = -1; k <= 1; k++) {
-				if ((j == 0 && k == 0) || (j == -1 && k == 1) || (j == 1 && k == -1) || (j == 1 && k == 1) || (j == -1 && k == -1)) {
+				if ((j == 0 && k == 0) || (j == -1 && k == 1) || (j == 1 && k == -1) || (j == 1 && k == 1)
+						|| (j == -1 && k == -1)) {
 					continue;
 				}
 				if (koninkrijk[x + j][y + k][0].equals(huidigVak)) {
@@ -167,15 +173,6 @@ public class Speler {
 		if (original == null) {
 			return null;
 		}
-=======
-	public final void setScore(int score) {
-		this.score = score;
-	}
-
-	public int getScore() {
-		return score;
-	}
->>>>>>> 594e912 (registratie knop geimplementeert)
 
 		String[][][] copy = new String[original.length][][];
 		for (int i = 0; i < original.length; i++) {
@@ -196,4 +193,13 @@ public class Speler {
 
 		return copy;
 	}
+
+	public final void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
 }
