@@ -164,13 +164,6 @@ public class KingdominoApp {
 		}
 	}
 
-	/*
-	 * private int vraagAantalSpelers() { int aantalSpelers; do {
-	 * System.out.println("Hoeveel spelers willen er spelen? (3 of 4)");
-	 * aantalSpelers = sc.nextInt(); } while (aantalSpelers != 3 && aantalSpelers !=
-	 * 4); return aantalSpelers; }
-	 */
-
 	private void registreerSpeler() {
 
 		try {

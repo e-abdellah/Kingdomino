@@ -1,19 +1,27 @@
 package gui;
 
+import java.util.List;
+
+import domein.DomeinController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
 public class SpelController {
 
-    @FXML
-    private Label spelLabel;
+	@FXML
+	private Label spelLabel;
+	private DomeinController dc;
 
-    // Je kunt hier je actie-methoden toevoegen, afhankelijk van wat je in het spel wilt doen
+	@FXML
+	private VBox spelerInformatieContainer; // Stel dat dit een VBox is in je FXML die de speler info gaat bevatten
 
-    @FXML
-    private void initialize() {
-        // Voeg hier eventuele initialisatielogica toe
-        spelLabel.setText("Welkom bij het spel!");
-    }
+	@FXML
+
+	public void setSpelerInformatie(List<String> spelerInformatie) {
+		spelerInformatie.forEach(info -> {
+			Label label = new Label(info);
+			spelerInformatieContainer.getChildren().add(label);
+		});
+	}
 }
-

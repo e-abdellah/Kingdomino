@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="805.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.WelkomKDController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="805.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.WelkomKDController">
 
 	<ImageView preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 		<image>
@@ -23,6 +23,6 @@
 		<Button fx:id="registreerBtn" mnemonicParsing="false" onAction="#registreerSpeler" style="-fx-font-size: 18px;" text="Register New Player" />
 	</HBox>
 
-	<Button fx:id="volgendeBtn" layoutX="706.0" layoutY="506.0" mnemonicParsing="false" onAction="#volgende" style="-fx-font-size: 18px;" text="Next" />
-		<Button fx:id="afsluitenBtn" layoutX="706.0" layoutY="565.0" mnemonicParsing="false" onAction="#afsluiten" prefHeight="39.0" prefWidth="62.0" style="-fx-font-size: 18px;" text="Exit" />
+<!-- 	<Button fx:id="volgendeBtn" layoutX="706.0" layoutY="506.0" mnemonicParsing="false" onAction="#volgende" style="-fx-font-size: 18px;" text="Next" /> -->
+		<Button fx:id="afsluitenBtn" layoutX="661.0" layoutY="566.0" mnemonicParsing="false" onAction="#afsluiten" prefHeight="40.0" prefWidth="112.0" style="-fx-font-size: 18px;" text="Exit" />
 </AnchorPane>

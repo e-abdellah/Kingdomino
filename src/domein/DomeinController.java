@@ -1,9 +1,13 @@
 package domein;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import dto.SpelerDTO;
+import exceptions.GebruikersnaamInGebruikException;
 
 public class DomeinController {
 
@@ -15,7 +19,7 @@ public class DomeinController {
 		spel = new Spel();
 	}
 
-	public void registreerSpeler(String gebruikersnaam, int geboortejaar) {
+	public void registreerSpeler(String gebruikersnaam, int geboortejaar) throws GebruikersnaamInGebruikException {
 		Speler nieuweSpeler = new Speler(gebruikersnaam, geboortejaar);
 		spelerRepository.voegToe(nieuweSpeler);
 	}
@@ -41,13 +45,12 @@ public class DomeinController {
 
 	}
 
-	public HashMap<Speler, List<Integer>> geefScores(){
+	public HashMap<Speler, List<Integer>> geefScores() {
 		return spel.geefScores();
 	}
 
-	public void sorteerOpScore(){
+	public void sorteerOpScore() {
 		spel.sorteerOpScore();
 	}
-
 
 }

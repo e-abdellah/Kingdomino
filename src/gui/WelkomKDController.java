@@ -1,13 +1,17 @@
 package gui;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import domein.DomeinController;
 import dto.SpelerDTO;
+import exceptions.GebruikersnaamInGebruikException;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -18,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -27,6 +32,7 @@ import javafx.stage.Stage;
 
 public class WelkomKDController {
 	private DomeinController dc = new DomeinController();
+	private SpelerDTO dto;
 
 	@FXML
 	private AnchorPane root;
@@ -48,23 +54,23 @@ public class WelkomKDController {
 
 	private ResourceBundle resourceBundle;
 
-//	public void initialize() {
-//		// Stel de standaard taal in
-//		setLanguage("fr");
-//	}
+	//	public void initialize() {
+	//		// Stel de standaard taal in
+	//		setLanguage("fr");
+	//	}
 	@FXML
 	private void chooseDutch(ActionEvent event) {
-	    setLanguage("nl");
+		setLanguage("nl");
 	}
 
 	@FXML
 	private void chooseEnglish(ActionEvent event) {
-	    setLanguage("en");
+		setLanguage("en");
 	}
 
 	@FXML
 	private void chooseFrench(ActionEvent event) {
-	    setLanguage("fr");
+		setLanguage("fr");
 	}
 
 	public void setLanguage(String language) {
@@ -75,8 +81,7 @@ public class WelkomKDController {
 		registreerBtn.setText(resourceBundle.getString("registerButton"));
 		startBtn.setText(resourceBundle.getString("startButton"));
 		afsluitenBtn.setText(resourceBundle.getString("exitButton"));
-		volgendeBtn.setText(resourceBundle.getString("nextButton"));
-		 //titleLabel.setText(resourceBundle.getString("welcomeMessage"));
+		//		titleLabel.setText(resourceBundle.getString("welcomeMessage"));
 	}
 
 	@FXML
@@ -135,23 +140,28 @@ public class WelkomKDController {
 			int jaar = 0;
 			try {
 				jaar = Integer.parseInt(jaarText);
-				if (jaar < 1920 || jaar > 2018) {
-					geboortejaarFout.setText("Ongeldig geboortejaar.");
-					validatieFout = true;
-				}
 			} catch (NumberFormatException e) {
 				geboortejaarFout.setText("Geboortejaar moet een getal zijn.");
 				validatieFout = true;
 			}
 
-			// Als er een validatiefout is, consumeer het event zodat het dialoogvenster
-			// open blijft.
-			if (validatieFout) {
-				event.consume();
+			if (jaar < 1920 || jaar > 2018) {
+				geboortejaarFout.setText("Ongeldig geboortejaar.");
+				validatieFout = true;
+			}
+
+			// Alleen proberen te registreren als er tot nu toe geen validatiefouten zijn.
+			if (!validatieFout) {
+				try {
+					dc.registreerSpeler(naam, jaar);
+					// Registreer de nieuwe speler als er geen fouten zijn en toon succesmelding.
+					showAlert("Registratie Voltooid", "De nieuwe speler is succesvol geregistreerd.");
+				} catch (GebruikersnaamInGebruikException ex) {
+					gebruikersnaamFout.setText("Gebruikersnaam reeds in gebruik.");
+					event.consume(); // Voorkom dat het dialoog sluit.
+				}
 			} else {
-				// Registreer de nieuwe speler als er geen fouten zijn.
-				dc.registreerSpeler(naam, jaar);
-				showAlert("Registratie Voltooid", "De nieuwe speler is succesvol geregistreerd.");
+				event.consume(); // Voorkom dat het dialoog sluit bij een validatiefout.
 			}
 		});
 
@@ -160,7 +170,63 @@ public class WelkomKDController {
 
 	@FXML
 	private void startSpel() {
-		showAlert("Start nieuwe spel", "Actie nog niet geïmplementeerd");
+		List<String> keuzes = Arrays.asList("3", "4");
+		ChoiceDialog<String> aantalSpelersDialog = new ChoiceDialog<>("3", keuzes);
+		aantalSpelersDialog.setTitle("Aantal Spelers");
+		aantalSpelersDialog.setHeaderText("Hoeveel spelers gaan er spelen?");
+		aantalSpelersDialog.setContentText("Kies het aantal spelers:");
+
+		Optional<String> aantalSpelersResultaat = aantalSpelersDialog.showAndWait();
+		List<String> spelerEnKleurInformatie = new ArrayList<>(); // Verplaatst om zichtbaar te zijn buiten de lambda
+
+		aantalSpelersResultaat.ifPresent(aantalSpelers -> {
+			int aantal = Integer.parseInt(aantalSpelers);
+			List<String> spelersNamen = dc.geefOverzichtSpelers().stream().map(SpelerDTO::gebruikersnaam)
+					.collect(Collectors.toList());
+			List<String> beschikbareKleuren = dc.geefAlleKleuren();
+
+			for (int i = 1; i <= aantal; i++) {
+				ChoiceDialog<String> spelerKeuzeDialog = new ChoiceDialog<>(spelersNamen.get(0), spelersNamen);
+				spelerKeuzeDialog.setTitle("Kies Speler");
+				spelerKeuzeDialog.setHeaderText("Kies speler " + i);
+				spelerKeuzeDialog.setContentText("Beschikbare spelers:");
+
+				Optional<String> spelerKeuzeResultaat = spelerKeuzeDialog.showAndWait();
+				spelerKeuzeResultaat.ifPresent(spelerNaam -> {
+					ChoiceDialog<String> kleurDialog = new ChoiceDialog<>(beschikbareKleuren.get(0),
+							beschikbareKleuren);
+					kleurDialog.setTitle("Kleurkeuze voor " + spelerNaam);
+					kleurDialog.setHeaderText("Kies een kleur voor " + spelerNaam + ":");
+					kleurDialog.setContentText("Beschikbare kleuren:");
+
+					Optional<String> kleurResultaat = kleurDialog.showAndWait();
+					kleurResultaat.ifPresent(kleur -> {
+						spelerEnKleurInformatie.add(spelerNaam + " - " + kleur);
+						spelersNamen.remove(spelerNaam);
+						beschikbareKleuren.remove(kleur);
+					});
+				});
+			}
+			navigeerNaarSpel(spelerEnKleurInformatie);
+		});
+	}
+
+	private void navigeerNaarSpel(List<String> spelerEnKleurInformatie) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/startSpel.FXML"));
+			Parent root = loader.load();
+
+			SpelController spelController = loader.getController();
+			spelController.setSpelerInformatie(spelerEnKleurInformatie);
+
+			Scene scene = new Scene(root);
+			Stage stage = new Stage();
+			stage.setTitle("Spel");
+			stage.setScene(scene);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	// @FXML
@@ -168,8 +234,7 @@ public class WelkomKDController {
 	// showAlert("Afsluiten", "Actie nog niet geïmplementeerd");
 	// }
 	@FXML
-	private void afsluiten(Event event) // <5>
-	{
+	private void afsluiten(Event event) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
 		alert.setTitle("Bevestig");
 		alert.setContentText("Wil je de applicatie afsluiten?");
@@ -185,32 +250,7 @@ public class WelkomKDController {
 
 	@FXML
 	private void volgende() {
-		// Haal de lijst met spelers op
-		List<SpelerDTO> spelers = dc.geefOverzichtSpelers();
 
-		// Toon een Alert met de lijst met spelers
-		StringBuilder alertContent = new StringBuilder("Spelers:\n");
-		for (SpelerDTO speler : spelers) {
-			alertContent.append(String.format("- %s (%d)\n", speler.gebruikersnaam(), speler.geboortejaar()));
-		}
-
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle("Spelersoverzicht");
-		alert.setHeaderText(null);
-		alert.setContentText(alertContent.toString());
-		alert.showAndWait();
-
-		// Navigeer naar het spelFXML
-		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/startSpel.FXML"));
-			Parent root = loader.load();
-			Stage stage = new Stage();
-			stage.setTitle("Spel");
-			stage.setScene(new Scene(root));
-			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void showAlert(String title, String content) {
@@ -220,6 +260,5 @@ public class WelkomKDController {
 		alert.setContentText(content);
 		alert.showAndWait();
 	}
-	
 
 }
