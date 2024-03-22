@@ -2,7 +2,9 @@ package gui;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.ResourceBundle;
 
 import domein.DomeinController;
 import dto.SpelerDTO;
@@ -43,6 +45,39 @@ public class WelkomKDController {
 
 	@FXML
 	private Button volgendeBtn;
+
+	private ResourceBundle resourceBundle;
+
+//	public void initialize() {
+//		// Stel de standaard taal in
+//		setLanguage("fr");
+//	}
+	@FXML
+	private void chooseDutch(ActionEvent event) {
+	    setLanguage("nl");
+	}
+
+	@FXML
+	private void chooseEnglish(ActionEvent event) {
+	    setLanguage("en");
+	}
+
+	@FXML
+	private void chooseFrench(ActionEvent event) {
+	    setLanguage("fr");
+	}
+
+	public void setLanguage(String language) {
+		// Laad de juiste ResourceBundle op basis van de geselecteerde taal
+		resourceBundle = ResourceBundle.getBundle("cui.resource_bundle", new Locale(language));
+
+		// Set de tekst van de knoppen vanuit de ResourceBundle
+		registreerBtn.setText(resourceBundle.getString("registerButton"));
+		startBtn.setText(resourceBundle.getString("startButton"));
+		afsluitenBtn.setText(resourceBundle.getString("exitButton"));
+		volgendeBtn.setText(resourceBundle.getString("nextButton"));
+		 //titleLabel.setText(resourceBundle.getString("welcomeMessage"));
+	}
 
 	@FXML
 	private void registreerSpeler() {
@@ -109,7 +144,8 @@ public class WelkomKDController {
 				validatieFout = true;
 			}
 
-			// Als er een validatiefout is, consumeer het event zodat het dialoogvenster open blijft.
+			// Als er een validatiefout is, consumeer het event zodat het dialoogvenster
+			// open blijft.
 			if (validatieFout) {
 				event.consume();
 			} else {
@@ -127,10 +163,10 @@ public class WelkomKDController {
 		showAlert("Start nieuwe spel", "Actie nog niet geïmplementeerd");
 	}
 
-	//    @FXML
-	//    private void afsluiten() {
-	//        showAlert("Afsluiten", "Actie nog niet geïmplementeerd");
-	//    }
+	// @FXML
+	// private void afsluiten() {
+	// showAlert("Afsluiten", "Actie nog niet geïmplementeerd");
+	// }
 	@FXML
 	private void afsluiten(Event event) // <5>
 	{
@@ -184,4 +220,6 @@ public class WelkomKDController {
 		alert.setContentText(content);
 		alert.showAndWait();
 	}
+	
+
 }
