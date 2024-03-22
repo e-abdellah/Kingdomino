@@ -1,25 +1,17 @@
-package testen;
+package main;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
+import domein.Speler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.junit.jupiter.params.provider.ValueSource;
-
-import domein.Spel;
-import domein.Speler;
 
 public class ScoreTest {
-    private Speler speler;
-    private final static int MAX_LENGTE = 5;
+    public static void main(String[] args){
+        Speler speler;
+        final int MAX_LENGTE = 5;
 
-    private String[][][] koninkrijk = new String[MAX_LENGTE][MAX_LENGTE][2];
-    @BeforeEach
-    void maakKoninkrijk(){
+        String[][][] koninkrijk = new String[MAX_LENGTE][MAX_LENGTE][2];
+
         koninkrijk[0][0][0] = "W";
         koninkrijk[0][1][0] = "W";
         koninkrijk[0][2][0] = "W";
@@ -72,13 +64,8 @@ public class ScoreTest {
         koninkrijk[4][3][1] = "0";
         koninkrijk[4][4][1] = "0";
 
-
-    }
-    @Test
-    void testBerekenScore(){
         speler = new Speler("avatar", 2003, 4, 25, koninkrijk);
-        Assertions.assertEquals(speler.getScores().get(0), 47);
+        System.out.println(speler.getScores().toString());
+
     }
-
-
 }

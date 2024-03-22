@@ -8,12 +8,12 @@ public class Speler {
 	private int geboortejaar;
 	private int aantalGewonnen, aantalGespeeld;
 
-	private String[][][] koninkrijk;
-	private List<Integer> scores;
+	private String[][][] koninkrijk = new String[2*MAX_LENGTE+1][2*MAX_LENGTE+1][1];
+	private List<Integer> scores = new ArrayList<>();
 
 	protected static final int MAX_GEBOORTEJAAR = 1924;
 	protected static final int MIN_GEBOORTEJAAR = 2018;
-	protected static final int MAX_LENGTE = 6;
+	protected static final int MAX_LENGTE = 2;
 
 	private String kleur;
 	private int starttegel = 1;
@@ -31,13 +31,14 @@ public class Speler {
 		setGeboortejaar(geboortejaar);
 	}
 
-	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld) {
+	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, String[][][] koninkrijk) {
 		setGebruikersnaam(gebruikersnaam);
 		setGeboortejaar(geboortejaar);
 		setAantalGewonnen(aantalGewonnen);
 		setAantalGespeeld(aantalGespeeld);
-
+		setKoninkrijk(koninkrijk);
 		setStarttegel(starttegel);
+		setScores();
 	}
 
 	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, String kleur) {
@@ -46,8 +47,18 @@ public class Speler {
 		setAantalGewonnen(aantalGewonnen);
 		setAantalGespeeld(aantalGespeeld);
 		setKleur(kleur);
+		setScores();
 
 	}
+	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld) {
+		setGebruikersnaam(gebruikersnaam);
+		setGeboortejaar(geboortejaar);
+		setAantalGewonnen(aantalGewonnen);
+		setAantalGespeeld(aantalGespeeld);
+		setStarttegel(starttegel);
+		setScores();
+	}
+
 
 	public String getGebruikersnaam() {
 		return gebruikersnaam;
@@ -62,7 +73,10 @@ public class Speler {
 
 	}
 
-	public List<Integer> getScores(){return scores;}
+	public List<Integer> getScores()
+	{
+		return scores;
+	}
 	public final void setScores()
 	{
 		this.scores = berekenScore();
@@ -123,8 +137,10 @@ public class Speler {
 			for (int j = 0; j <= 2 * MAX_LENGTE; j++) {
 				if (koninkrijk[i][j][0] != null){
 					int tempgebied, tempkroon;
-					tempgebied = berekenScoreRecursief(i, j, koninkrijk).get(0);
-					tempkroon = berekenScoreRecursief(i, j ,koninkrijk).get(1);
+					List<Integer> temp;
+					temp = berekenScoreRecursief(i, j, koninkrijk);
+					tempgebied = temp.get(0);
+					tempkroon = temp.get(1);
 					score += tempgebied * tempkroon;
 					if(tempgebied > maxgebied){maxgebied = tempgebied;}
 					if(tempkroon > maxkronen){maxkronen = tempkroon;}
@@ -134,6 +150,7 @@ public class Speler {
 		returnwaarde.add(score);
 		returnwaarde.add(maxgebied);
 		returnwaarde.add(maxkronen);
+		
 		return returnwaarde;
 	}
 	private List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk){
@@ -147,9 +164,14 @@ public class Speler {
 				if ((j == 0 && k == 0) || (j == -1 && k == 1) || (j == 1 && k == -1) || (j == 1 && k == 1) || (j == -1 && k == -1)) {
 					continue;
 				}
-				if (koninkrijk[x + j][y + k][0].equals(huidigVak)) {
-					aantal += berekenScoreRecursief(x + j, y + k, koninkrijk).get(0);
-					kronen += berekenScoreRecursief(x + j, y + k, koninkrijk).get(1);
+				if ((x + j < 0) || (y + k < 0) || (x + j > 2*MAX_LENGTE) || (y + k > 2*MAX_LENGTE)) {
+					continue;
+				}
+				if (koninkrijk[x + j][y + k][0] != null && koninkrijk[x + j][y + k][0].equals(huidigVak)) {
+					List<Integer> temp;
+					temp = berekenScoreRecursief(x + j, y + k, koninkrijk);
+					aantal += temp.get(0);
+					kronen += temp.get(1);
 				}
 			}
 		}
@@ -183,3 +205,4 @@ public class Speler {
 		return copy;
 	}
 }
+
