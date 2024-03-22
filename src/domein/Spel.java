@@ -3,12 +3,17 @@ package domein;
 import static domein.Landschap.AARDE;
 import static domein.Landschap.BOS;
 import static domein.Landschap.GRAS;
+import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
-import static domein.Landschap.MIJN;
-import static domein.Speler.MAX_LENGTE;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
 
 import dto.SpelerDTO;
 
@@ -18,6 +23,7 @@ public class Spel {
 	private Set<Integer> getallen;
 	private List<Dominotegel> dominotegels;
 	private List<Speler> spelers;
+	protected static final int MAX_LENGTE = 6;
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen) {
 		setAantalSpelers(aantalSpelers);
@@ -41,9 +47,9 @@ public class Spel {
 	}
 
 	private void setAantalSpelers(List<SpelerDTO> aantalSpelers2) {
-//		if (aantalSpelers.size() < 3 || aantalSpelers.size() > 4)
-//			throw new IllegalArgumentException(
-//					"Het aantal spelers moet minstens 3 spelers en maximum 4 spelers bevatten");
+		//		if (aantalSpelers.size() < 3 || aantalSpelers.size() > 4)
+		//			throw new IllegalArgumentException(
+		//					"Het aantal spelers moet minstens 3 spelers en maximum 4 spelers bevatten");
 		this.aantalSpelers = aantalSpelers2;
 	}
 
@@ -109,7 +115,6 @@ public class Spel {
 		dominotegels.add(new Dominotegel(new Vakje(AARDE), new Vakje(MIJN), 47, 2, 2));
 		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(MIJN), 48, 3, 2));
 
-
 	}
 
 	protected List<Dominotegel> schudDominotegels(int aantalSpelers) {
@@ -125,23 +130,108 @@ public class Spel {
 		int aantalBenodigdeTegels = (aantalSpelers == 3) ? 36 : 48;
 
 		// Retourneer een sublist met het vereiste aantal tegels
-		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels-1));
+		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
 	}
 
-
-	public HashMap<Speler, List<Integer>> geefScores(){
+	public HashMap<Speler, List<Integer>> geefScores() {
 		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();
-		for(Speler speler : spelers){
+		for (Speler speler : spelers) {
 			spelerScores.put(speler, speler.getScores());
 		}
 		return spelerScores;
 	}
 
-	public void sorteerOpScore(){
-		spelers.sort(new ScoreComparator());
+	public List<Integer> berekenScore(SpelerDTO speler) {
+		List<Integer> returnwaarde = new ArrayList<>();
+		int score = 0;
+		int maxgebied = 0;
+		int maxkronen = 0;
+		String[][][] koninkrijk = deepCopy3DStringArray(speler.koninkrijk());
+		for (int i = 0; i <= 2 * MAX_LENGTE; i++) {
+			for (int j = 0; j <= 2 * MAX_LENGTE; j++) {
+				if (koninkrijk[i][j][0] != null) {
+					int tempgebied, tempkroon;
+					tempgebied = berekenScoreRecursief(i, j, koninkrijk).get(0);
+					tempkroon = berekenScoreRecursief(i, j, koninkrijk).get(1);
+					score += tempgebied * tempkroon;
+					if (tempgebied > maxgebied) {
+						maxgebied = tempgebied;
+					}
+					if (tempkroon > maxkronen) {
+						maxkronen = tempkroon;
+					}
+				}
+			}
+		}
+		returnwaarde.add(score);
+		returnwaarde.add(maxgebied);
+		returnwaarde.add(maxkronen);
+		return returnwaarde;
 	}
 
+	public List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk) {
+		List<Integer> score = new ArrayList<>();
+		int aantal = 1;
+		int kronen = Integer.parseInt(koninkrijk[x][y][1]);
+		String huidigVak = koninkrijk[x][y][0];
+		koninkrijk[x][y][0] = null;
+		for (int j = -1; j <= 1; j++) {
+			for (int k = -1; k <= 1; k++) {
+				if ((j == 0 && k == 0) || (j == -1 && k == 1) || (j == 1 && k == -1) || (j == 1 && k == 1)
+						|| (j == -1 && k == -1)) {
+					continue;
+				}
+				if (koninkrijk[x + j][y + k][0].equals(huidigVak)) {
+					aantal += berekenScoreRecursief(x + j, y + k, koninkrijk).get(0);
+					kronen += berekenScoreRecursief(x + j, y + k, koninkrijk).get(1);
+				}
+			}
+		}
+		score.add(aantal);
+		score.add(kronen);
+		return score;
+	}
 
+	private static String[][][] deepCopy3DStringArray(String[][][] original) {
+		if (original == null) {
+			return null;
+		}
 
+		String[][][] copy = new String[original.length][][];
+		for (int i = 0; i < original.length; i++) {
+			if (original[i] == null) {
+				continue;
+			}
+
+			copy[i] = new String[original[i].length][];
+			for (int j = 0; j < original[i].length; j++) {
+				if (original[i][j] == null) {
+					continue;
+				}
+
+				copy[i][j] = new String[original[i][j].length];
+				System.arraycopy(original[i][j], 0, copy[i][j], 0, original[i][j].length);
+			}
+		}
+
+		return copy;
+	}
+
+	private boolean isEindeSpel() {
+		while (!dominotegels.isEmpty()) {
+			speelRonde();
+			return false;
+		}
+		return true;
+	}
+
+	private void speelRonde() {
+
+	}
+
+	public void sorteerOpScore() {
+		// TODO Auto-generated method stub
+
+	}
 
 }

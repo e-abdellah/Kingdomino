@@ -17,6 +17,10 @@ public class Speler {
 
 	private String kleur;
 	private int starttegel = 1;
+	private int score;
+	//	private int koning = 1;
+	//	private int kasteel = 1;
+	protected static final int MAX_LENGTE = 6;
 
 	public String[][][] getKoninkrijk() {
 		return koninkrijk;
@@ -81,6 +85,7 @@ public class Speler {
 	{
 		this.scores = berekenScore();
 	}
+
 	public int getGeboortejaar() {
 		return geboortejaar;
 	}
@@ -93,7 +98,6 @@ public class Speler {
 		}
 		this.geboortejaar = geboortejaar;
 	}
-
 
 	public int getAantalGewonnen() {
 		return aantalGewonnen;
@@ -135,15 +139,19 @@ public class Speler {
 		String[][][] koninkrijk = deepCopy3DStringArray(this.koninkrijk);
 		for (int i = 0; i <= 2 * MAX_LENGTE; i++) {
 			for (int j = 0; j <= 2 * MAX_LENGTE; j++) {
-				if (koninkrijk[i][j][0] != null){
+				if (koninkrijk[i][j][0] != null) {
 					int tempgebied, tempkroon;
 					List<Integer> temp;
 					temp = berekenScoreRecursief(i, j, koninkrijk);
 					tempgebied = temp.get(0);
 					tempkroon = temp.get(1);
 					score += tempgebied * tempkroon;
-					if(tempgebied > maxgebied){maxgebied = tempgebied;}
-					if(tempkroon > maxkronen){maxkronen = tempkroon;}
+					if (tempgebied > maxgebied) {
+						maxgebied = tempgebied;
+					}
+					if (tempkroon > maxkronen) {
+						maxkronen = tempkroon;
+					}
 				}
 			}
 		}
@@ -153,7 +161,8 @@ public class Speler {
 		
 		return returnwaarde;
 	}
-	private List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk){
+
+	private List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk) {
 		List<Integer> score = new ArrayList<>();
 		int aantal = 1;
 		int kronen = Integer.parseInt(koninkrijk[x][y][1]);
@@ -161,7 +170,8 @@ public class Speler {
 		koninkrijk[x][y][0] = null;
 		for (int j = -1; j <= 1; j++) {
 			for (int k = -1; k <= 1; k++) {
-				if ((j == 0 && k == 0) || (j == -1 && k == 1) || (j == 1 && k == -1) || (j == 1 && k == 1) || (j == -1 && k == -1)) {
+				if ((j == 0 && k == 0) || (j == -1 && k == 1) || (j == 1 && k == -1) || (j == 1 && k == 1)
+						|| (j == -1 && k == -1)) {
 					continue;
 				}
 				if ((x + j < 0) || (y + k < 0) || (x + j > 2*MAX_LENGTE) || (y + k > 2*MAX_LENGTE)) {
@@ -204,5 +214,14 @@ public class Speler {
 
 		return copy;
 	}
+
+	public final void setScore(int score) {
+		this.score = score;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
 }
 

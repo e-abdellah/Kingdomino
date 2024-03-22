@@ -1,8 +1,21 @@
 package cui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
-import domein.*;
+import domein.DomeinController;
+import domein.Dominotegel;
+import domein.Spel;
+import domein.Speler;
 import dto.SpelerDTO;
 
 public class KingdominoApp {
@@ -151,13 +164,6 @@ public class KingdominoApp {
 		}
 	}
 
-	/*
-	 * private int vraagAantalSpelers() { int aantalSpelers; do {
-	 * System.out.println("Hoeveel spelers willen er spelen? (3 of 4)");
-	 * aantalSpelers = sc.nextInt(); } while (aantalSpelers != 3 && aantalSpelers !=
-	 * 4); return aantalSpelers; }
-	 */
-
 	private void registreerSpeler() {
 
 		try {
@@ -189,17 +195,16 @@ public class KingdominoApp {
 		}
 	}
 
-//	// Methode om de resterende spelers af te drukken
-//	public void drukResterendeSpelersAf(List<SpelerDTO> beschikbareSpelers, int gekozenSpelerIndex) {
-//		System.out.println("Resterende spelers:");
-//		for (int i = 0; i < beschikbareSpelers.size(); i++) {
-//			if (i != gekozenSpelerIndex) {
-//				System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
-//						beschikbareSpelers.get(i).geboortejaar());
-//			}
-//		}
-//	}
-
+	//	// Methode om de resterende spelers af te drukken
+	//	public void drukResterendeSpelersAf(List<SpelerDTO> beschikbareSpelers, int gekozenSpelerIndex) {
+	//		System.out.println("Resterende spelers:");
+	//		for (int i = 0; i < beschikbareSpelers.size(); i++) {
+	//			if (i != gekozenSpelerIndex) {
+	//				System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
+	//						beschikbareSpelers.get(i).geboortejaar());
+	//			}
+	//		}
+	//	}
 
 	private void kiesSpeler() {
 		// Controleer of het maximaal aantal spelers al is bereikt
@@ -334,7 +339,7 @@ public class KingdominoApp {
 			tegels.add(i);
 		}
 		int i = 0;
-		Map<Dominotegel, SpelerDTO> TegelSpeler = new HashMap<>();
+		Map<Dominotegel, SpelerDTO> tegelSpeler = new HashMap<>();
 		do {
 			// Toont de huidige speler met zijn corresponderende kleur nadat ze geshuffled
 			// werden
@@ -357,7 +362,7 @@ public class KingdominoApp {
 							gekozenSpelers.size());
 				}
 			}
-			TegelSpeler.put(startKolom.get(keuze - 1), gekozenSpelers.get(i));
+			tegelSpeler.put(startKolom.get(keuze - 1), gekozenSpelers.get(i));
 			i++;
 			Integer keuzeVerwijderen = keuze;
 			tegels.remove(keuzeVerwijderen);
@@ -369,21 +374,18 @@ public class KingdominoApp {
 			System.out.println("Nog te implementeren (koninkrijk is leeg atm)");
 		}
 		for (Dominotegel tegel : startKolom) {
-			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(TegelSpeler.get(tegel)));
+			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(tegelSpeler.get(tegel)));
 		}
 
-
-
-
-		if(aantalDominotegels == 0) {
+		if (aantalDominotegels == 0) {
 			//einde spel + winnaar
 			//sorteer spelerDTO op score
 			dc.sorteerOpScore();
 			Speler topSpeler = null;
 			int tempMaxScore = 0;
 			HashMap<Speler, List<Integer>> spelerScores = dc.geefScores();
-			for(Map.Entry<Speler, List<Integer>> entry : spelerScores.entrySet()){
-				if(entry.getValue().get(0) > tempMaxScore){
+			for (Map.Entry<Speler, List<Integer>> entry : spelerScores.entrySet()) {
+				if (entry.getValue().get(0) > tempMaxScore) {
 					tempMaxScore = entry.getValue().get(0);
 					topSpeler = entry.getKey();
 				}
@@ -396,21 +398,39 @@ public class KingdominoApp {
 			for (Map.Entry<Speler, List<Integer>> persoon : spelerScores.entrySet()) {
 				Speler speler = persoon.getKey();
 				List<Integer> scores = persoon.getValue();
-				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0), scores.get(1), scores.get(2));
-				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1)) && scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
+				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
+						scores.get(1), scores.get(2));
+				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
+						&& scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
 					System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
-				} else {
-					if (!nietWinnaarGevonden) {
-						System.out.println("Niet-winnaar(s):");
-						nietWinnaarGevonden = true;
+
+					// Now check for ties //het zou beter werken als we Speler ipv SpelerDTO gebruiken
+					System.out.println("Winnaar(s):");
+					boolean foundNonWinner = false;
+					for (SpelerDTO speler : gekozenSpelers) {
+						List<Integer> scores = dc.berekenScore(speler);
+						String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
+								scores.get(1), scores.get(2));
+						if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
+								&& scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
+							System.out.printf("Speler %s met kleur %s met een %s", speler.gebruikersnaam(),
+									spelerKleurMap.get(speler), scoreDetails); // This player is a winner
+						} else {
+							if (!nietWinnaarGevonden) {
+								System.out.println("Niet-winnaar(s):");
+								nietWinnaarGevonden = true;
+							}
+							System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
+							System.out.printf("Speler %s met kleur %s met %s", speler.gebruikersnaam(),
+									spelerKleurMap.get(speler), scoreDetails);
+						}
 					}
-					System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
 				}
 			}
 		}
 	}
 
-	private void Ronde(){
+	private void ronde() {
 
 	}
 
