@@ -28,6 +28,7 @@ public class KingdominoApp {
 	private Map<SpelerDTO, String> spelerKleurMap;
 	private Spel spel = new Spel();
 	ResourceBundle messages = null;
+	private List<Dominotegel> dominotegels;
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
@@ -37,6 +38,7 @@ public class KingdominoApp {
 		spelerKleurMap = new HashMap<>();
 		kleuren = dc.geefAlleKleuren();
 		kiesTaal();
+		dominotegels = dc.schudDominotegels(3);
 	}
 
 	public void start() {
@@ -55,6 +57,12 @@ public class KingdominoApp {
 		}
 		System.out.printf("%s", messages.getString("afsluitenBericht"));
 
+		Dominotegel tegel = new Dominotegel();
+		for (Dominotegel tegel1 : dominotegels) {
+			tegel1.genereerFotoPaden();
+			System.out.println("Voorkant foto pad: " + tegel1.getVoorkantFotoPad());
+			System.out.println("Achterkant foto pad: " + tegel1.getAchterkantFotoPad());
+		}
 	}
 
 	// kiesTaal methode om eenmalig een taal te kunnen kiezen bij het opstarten van

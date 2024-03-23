@@ -133,6 +133,22 @@ public class Spel {
 		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
 	}
 
+	protected List<Dominotegel> schudDominotegelsAantal(int aantal) {
+		if (dominotegels == null) {
+			// Log een fout, initialiseer de lijst, of gooi een exception
+			dominotegels = new ArrayList<>();
+			genereerAantalDominotegels(); // Mogelijke actie
+		}
+
+		Collections.shuffle(dominotegels); // Schud de lijst met dominotegels
+
+		// Controleer het aantal spelers en bepaal het aantal benodigde tegels
+		int aantalBenodigdeTegels = aantal;
+
+		// Retourneer een sublist met het vereiste aantal tegels
+		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
+	}
+
 	public HashMap<Speler, List<Integer>> geefScores() {
 		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();
 		for (Speler speler : spelers) {

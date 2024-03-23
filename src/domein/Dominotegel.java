@@ -3,9 +3,12 @@ package domein;
 public class Dominotegel {
 
 	private Vakje vakje1, vakje2;
-	private int getal = 0;
+	private int getal = 1;
 	private int kroon;
 	private int zijde;
+
+	private String voorkantFotoPad;
+	private String achterkantFotoPad;
 
 	public Dominotegel(Vakje vakje1, Vakje vakje2, int getal, int kroon, int zijde) {
 		setVakje1(vakje1);
@@ -13,6 +16,16 @@ public class Dominotegel {
 		setGetal(getal);
 		setKroon(kroon);
 		setZijde(zijde);
+	}
+
+	public Dominotegel() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void genereerFotoPaden() {
+		String nummerAlsString = String.format("%02d", this.getGetal()); // Zorgt ervoor dat het getal altijd twee cijfers heeft
+		this.setVoorkantFotoPad("/img/tegel_" + nummerAlsString + "_voorkant.png");
+		this.setAchterkantFotoPad("/img/tegel_" + nummerAlsString + "_achterkant.png");
 	}
 
 	public int getGetal() {
@@ -69,6 +82,22 @@ public class Dominotegel {
 	public String toString() {
 		return "Dominotegel [vakje=" + vakje1.toString() + " " + vakje2.toString() + ", getal=" + getal + ", kroon="
 				+ kroon + ", zijde=" + zijde + "]";
+	}
+
+	public String getVoorkantFotoPad() {
+		return voorkantFotoPad;
+	}
+
+	public final void setVoorkantFotoPad(String voorkantFotoPad) {
+		this.voorkantFotoPad = voorkantFotoPad;
+	}
+
+	public String getAchterkantFotoPad() {
+		return achterkantFotoPad;
+	}
+
+	public final void setAchterkantFotoPad(String achterkantFotoPad) {
+		this.achterkantFotoPad = achterkantFotoPad;
 	}
 
 }

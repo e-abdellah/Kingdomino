@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
-
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity"
+    minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+    prefWidth="600.0" xmlns="http://javafx.com/javafx/16"
+    xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
     <children>
         <TextField layoutX="225.0" layoutY="52.0" text="Speel ronde" />
-        <VBox fx:id="spelerInformatieContainer" layoutY="4.0" prefHeight="96.0" prefWidth="202.0">
+        <VBox fx:id="spelerInformatieContainer" layoutX="20.0" layoutY="100.0"
+            prefHeight="96.0" prefWidth="202.0">
             <!-- Labels voor spelers en kleuren zullen hier programmatisch worden toegevoegd -->
+        </VBox>
+        <VBox fx:id="dominotegelInformatieContainer" layoutX="151.0"
+            layoutY="100.0" prefHeight="215.0" prefWidth="297.0">
+            <!-- ImageView voor dominotegels zal hier programmatisch worden toegevoegd -->
         </VBox>
     </children>
 </AnchorPane>

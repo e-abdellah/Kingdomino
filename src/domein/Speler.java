@@ -8,12 +8,12 @@ public class Speler {
 	private int geboortejaar;
 	private int aantalGewonnen, aantalGespeeld;
 
-	private String[][][] koninkrijk = new String[2*MAX_LENGTE+1][2*MAX_LENGTE+1][1];
+	private String[][][] koninkrijk = new String[2 * MAX_LENGTE + 1][2 * MAX_LENGTE + 1][1];
 	private List<Integer> scores = new ArrayList<>();
 
 	protected static final int MAX_GEBOORTEJAAR = 1924;
 	protected static final int MIN_GEBOORTEJAAR = 2018;
-	protected static final int MAX_LENGTE = 2;
+	//	protected static final int MAX_LENGTE = 2;
 
 	private String kleur;
 	private int starttegel = 1;
@@ -35,7 +35,8 @@ public class Speler {
 		setGeboortejaar(geboortejaar);
 	}
 
-	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, String[][][] koninkrijk) {
+	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld,
+			String[][][] koninkrijk) {
 		setGebruikersnaam(gebruikersnaam);
 		setGeboortejaar(geboortejaar);
 		setAantalGewonnen(aantalGewonnen);
@@ -54,6 +55,7 @@ public class Speler {
 		setScores();
 
 	}
+
 	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld) {
 		setGebruikersnaam(gebruikersnaam);
 		setGeboortejaar(geboortejaar);
@@ -62,7 +64,6 @@ public class Speler {
 		setStarttegel(starttegel);
 		setScores();
 	}
-
 
 	public String getGebruikersnaam() {
 		return gebruikersnaam;
@@ -77,12 +78,11 @@ public class Speler {
 
 	}
 
-	public List<Integer> getScores()
-	{
+	public List<Integer> getScores() {
 		return scores;
 	}
-	public final void setScores()
-	{
+
+	public final void setScores() {
 		this.scores = berekenScore();
 	}
 
@@ -158,7 +158,7 @@ public class Speler {
 		returnwaarde.add(score);
 		returnwaarde.add(maxgebied);
 		returnwaarde.add(maxkronen);
-		
+
 		return returnwaarde;
 	}
 
@@ -174,7 +174,7 @@ public class Speler {
 						|| (j == -1 && k == -1)) {
 					continue;
 				}
-				if ((x + j < 0) || (y + k < 0) || (x + j > 2*MAX_LENGTE) || (y + k > 2*MAX_LENGTE)) {
+				if ((x + j < 0) || (y + k < 0) || (x + j > 2 * MAX_LENGTE) || (y + k > 2 * MAX_LENGTE)) {
 					continue;
 				}
 				if (koninkrijk[x + j][y + k][0] != null && koninkrijk[x + j][y + k][0].equals(huidigVak)) {
@@ -224,4 +224,3 @@ public class Speler {
 	}
 
 }
-

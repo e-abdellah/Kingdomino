@@ -42,7 +42,10 @@ public class DomeinController {
 
 	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
 		return spel.schudDominotegels(aantalSpelers);
+	}
 
+	public List<Dominotegel> schudDominotegelsAantal(int aantal) {
+		return spel.schudDominotegelsAantal(aantal);
 	}
 
 	public HashMap<Speler, List<Integer>> geefScores() {
