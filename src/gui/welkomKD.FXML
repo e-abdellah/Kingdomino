@@ -11,7 +11,7 @@
 
 	<ImageView preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 		<image>
-			<Image url="@../img/_ad801f1c-e483-4621-8325-8282bd0a8423.jpg" />
+			<Image url="@../imgs/_ad801f1c-e483-4621-8325-8282bd0a8423.jpg" />
 		</image>
 	</ImageView>
 

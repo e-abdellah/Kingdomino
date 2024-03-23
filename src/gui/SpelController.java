@@ -30,7 +30,7 @@ public class SpelController {
 	@FXML
 	public void initialize() {
 		// Initialize je UI componenten indien nodig
-		toonDominotegels();
+		//		toonDominotegels();
 	}
 
 	public void setSpelerInformatie(List<String> spelerInformatie) {
@@ -41,22 +41,15 @@ public class SpelController {
 	}
 
 	private void toonDominotegels() {
-//		// Ergens na het aanmaken van een Dominotegel object
-//		Dominotegel tegel = new Dominotegel();
-//		tegel.genereerFotoPaden(); // Genereer de paden naar de afbeeldingen
-//
-//		// Nu kan je veilig de afbeeldingen laden
-//		Image image = new Image(tegel.getVoorkantFotoPad());
-		
-
-//		for (Dominotegel tegel : dominotegels) {
-//			Image image = new Image(tegel.getVoorkantFotoPad());
-//			ImageView imageView = new ImageView(image);
-//			imageView.setFitWidth(100); // Breedte instellen
-//			imageView.setFitHeight(150); // Hoogte instellen
-//			dominotegelInformatieContainer.getChildren().add(imageView); // Toevoegen aan de VBox
-			
-	//	}
+		List<Dominotegel> dominotegels = dc.schudDominotegelsAantal(3); // Veronderstelt dat je een methode hebt om de lijst van tegels te krijgen
+		for (Dominotegel tegel : dominotegels) {
+			Image image = new Image(tegel.getVoorkantFotoPad());
+			System.out.println(tegel.getVoorkantFotoPad());
+			ImageView imageView = new ImageView(image);
+			imageView.setFitWidth(100); // Stel een passende breedte in
+			imageView.setFitHeight(150); // Stel een passende hoogte in
+			dominotegelInformatieContainer.getChildren().add(imageView);
+		}
 	}
 
 }

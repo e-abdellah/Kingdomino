@@ -16,6 +16,7 @@ public class Dominotegel {
 		setGetal(getal);
 		setKroon(kroon);
 		setZijde(zijde);
+		genereerFotoPaden();
 	}
 
 	public Dominotegel() {

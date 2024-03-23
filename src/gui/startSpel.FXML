@@ -1,21 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="856.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
-    <children>
-        <TextField layoutX="225.0" layoutY="52.0" text="Speel ronde" />
-        <VBox fx:id="spelerInformatieContainer" layoutX="20.0" layoutY="100.0" prefHeight="96.0" prefWidth="202.0">
-            <!-- Labels voor spelers en kleuren zullen hier programmatisch worden toegevoegd -->
-        </VBox>
-        <VBox fx:id="dominotegelInformatieContainer" layoutX="252.0" layoutY="148.0" prefHeight="283.0" prefWidth="258.0">
-         <children>
-            <ImageView fitHeight="82.0" fitWidth="173.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fitHeight="92.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fitHeight="97.0" fitWidth="166.0" pickOnBounds="true" preserveRatio="true" />
-         </children></VBox>
-    </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="787.0" prefWidth="1184.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
+	<children>
+		<VBox fx:id="spelerInformatieContainer" layoutX="327.0" layoutY="40.0" prefHeight="96.0" prefWidth="202.0">
+			<!-- Labels voor spelers en kleuren zullen hier programmatisch worden 
+				toegevoegd -->
+		</VBox>
+		<VBox fx:id="dominotegelInformatieContainer" layoutX="252.0" layoutY="148.0" prefHeight="283.0" prefWidth="258.0">
+			
+		</VBox>
+      <ImageView fitHeight="89.0" fitWidth="88.0" layoutX="149.0" layoutY="136.0">
+         <image>
+            <Image url="@../imgs/starttegel_blauw.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="89.0" fitWidth="88.0" layoutX="667.0" layoutY="136.0">
+         <image>
+            <Image url="@../imgs/starttegel_geel.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="89.0" fitWidth="88.0" layoutX="139.0" layoutY="510.0">
+         <image>
+            <Image url="@../imgs/starttegel_groen.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="89.0" fitWidth="88.0" layoutX="674.0" layoutY="510.0">
+         <image>
+            <Image url="@../imgs/starttegel_roos.png" />
+         </image>
+      </ImageView>
+<!-- 		<ImageView fitHeight="107.0" fitWidth="186.0" layoutX="634.0" layoutY="35.0" preserveRatio="true" AnchorPane.bottomAnchor="502.0" AnchorPane.leftAnchor="634.0" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="35.0"> -->
+<!-- 			<image> -->
+<!-- <Image url="@../../imgs/starttegel_geel.png" /> -->
+<!-- 			</image> -->
+<!-- 		</ImageView> -->
+<!-- 		<ImageView fitHeight="121.0" fitWidth="186.0" layoutX="36.0" layoutY="480.0" preserveRatio="true" AnchorPane.bottomAnchor="43.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="634.0" AnchorPane.topAnchor="480.0"> -->
+<!-- 			<image> -->
+<!-- 				<Image url="@../../imgs/starttegel_groen.png" /> -->
+<!-- 			</image> -->
+<!-- 		</ImageView> -->
+<!-- 		<ImageView fitHeight="114.0" fitWidth="194.0" layoutX="614.0" layoutY="483.0" preserveRatio="true" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="614.0" AnchorPane.rightAnchor="48.0" AnchorPane.topAnchor="483.0"> -->
+<!-- 			<image> -->
+<!-- 				<Image url="@../../imgs/starttegel_roos.png" /> -->
+<!-- 			</image> -->
+<!-- 		</ImageView> -->
+<!-- 		<ImageView fitHeight="114.0" fitWidth="226.0" layoutX="36.0" layoutY="31.0" preserveRatio="true" AnchorPane.bottomAnchor="499.0" AnchorPane.leftAnchor="36.0" AnchorPane.rightAnchor="594.0" AnchorPane.topAnchor="31.0"> -->
+<!-- 			<image> -->
+<!-- 				<Image url="@../../imgs/starttegel_blauw.png" /> -->
+<!-- 			</image> -->
+<!-- 		</ImageView> -->
+	</children>
 </AnchorPane>
