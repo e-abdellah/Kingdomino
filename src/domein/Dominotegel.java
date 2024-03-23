@@ -24,8 +24,8 @@ public class Dominotegel {
 
 	public void genereerFotoPaden() {
 		String nummerAlsString = String.format("%02d", this.getGetal()); // Zorgt ervoor dat het getal altijd twee cijfers heeft
-		this.setVoorkantFotoPad("/img/tegel_" + nummerAlsString + "_voorkant.png");
-		this.setAchterkantFotoPad("/img/tegel_" + nummerAlsString + "_achterkant.png");
+		this.setVoorkantFotoPad("../img/tegel_" + nummerAlsString + "_voorkant.png");
+		this.setAchterkantFotoPad("../img/tegel_" + nummerAlsString + "_achterkant.png");
 	}
 
 	public int getGetal() {
