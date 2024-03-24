@@ -16,7 +16,7 @@ public class Spel {
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
 	private Set<Integer> getallen;
 	private List<Dominotegel> dominotegels;
-	private List<Speler> spelers;
+	private List<Speler> spelers = new ArrayList<>();
 	protected static final int MAX_LENGTE = 6;
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen) {
@@ -35,6 +35,12 @@ public class Spel {
 	public Spel() {
 		setAantalSpelers(aantalSpelers);
 	}
+
+	public void voegSpelerToe(Speler speler){
+		spelers.add(speler);
+	}
+
+	public List<Speler> getSpelers(){return spelers;}
 
 	public List<SpelerDTO> getAantalSpelers() {
 		return aantalSpelers;
@@ -164,11 +170,11 @@ public class Spel {
 	}
 
 	public void sorteerOpScore() {
-		// TODO Auto-generated method stub
+		spelers.sort(new ScoreComparator());
 
 	}
 	public List<Dominotegel> geefBeginOfEindKolom(){
-		int aantal = aantalSpelers.size();
+		int aantal = spelers.size();
 		List<Dominotegel> geschuddeDominotegels = schudDominotegels(aantal);
 		List<Dominotegel> kolom = new ArrayList<>();
 		for (int i = 0; i < aantal; i++) {

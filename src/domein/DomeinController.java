@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dto.SpelDTO;
 import dto.SpelerDTO;
 import exceptions.GebruikersnaamInGebruikException;
 
@@ -34,6 +35,12 @@ public class DomeinController {
 		}
 		return overzicht;
 	}
+	public SpelDTO geefSpelDTO(){
+        return new SpelDTO(spel.getSpelers(), spel.geefBeginOfEindKolom());
+	}
+	public void voegSpelerToe(String gebruikersnaam){
+		spel.voegSpelerToe(new Speler(gebruikersnaam));
+	}
 
 	public static List<String> geefAlleKleuren() {
 		List<Kleuren> kleuren = Arrays.asList(Kleuren.values());
@@ -54,9 +61,5 @@ public class DomeinController {
 
 	public void sorteerOpScore() {
 		spel.sorteerOpScore();
-	}
-
-	public List<Dominotegel> geefBeginOfEindkolom(){
-		return spel.geefBeginOfEindKolom();
 	}
 }

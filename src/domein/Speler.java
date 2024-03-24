@@ -7,6 +7,7 @@ public class Speler {
 	private String gebruikersnaam;
 	private int geboortejaar;
 	private int aantalGewonnen, aantalGespeeld;
+	private static final int MAX_LENGTE = 2;
 
 	private String[][][] koninkrijk = new String[2 * MAX_LENGTE + 1][2 * MAX_LENGTE + 1][1];
 	private List<Integer> scores = new ArrayList<>();
@@ -32,6 +33,10 @@ public class Speler {
 	public Speler(String gebruikersnaam, int geboortejaar) {
 		setGebruikersnaam(gebruikersnaam);
 		setGeboortejaar(geboortejaar);
+	}
+
+	public Speler(String gebruikersnaam) {
+		setGebruikersnaam(gebruikersnaam);
 	}
 
 	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld,
@@ -129,7 +134,12 @@ public class Speler {
 	public final void setKleur(String kleur) {
 		this.kleur = kleur;
 	}
-
+	/*Uitleg score berekening
+	Eerst word gelooped over het veld beginnende linksboven, checkt elk vakje en kijkt wat er ligt, indien er iets ligt
+	gaat hij in de 2e functie waar hij rond zich checkt of er nog liggen met hetzelfde landschap, indien wel roept hij zichzelf op
+	en checkt hij op dat vakje alles, eens hiermee rond backtraced hij voor degene die hij misste. Elk gecheckt vakje word op null gezet
+	hierdoor wordt niets dubbel geteld.
+	*/
 	private List<Integer> berekenScore() {
 		List<Integer> returnwaarde = new ArrayList<>();
 		int score = 0;
