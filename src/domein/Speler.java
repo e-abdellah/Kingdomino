@@ -20,7 +20,6 @@ public class Speler {
 	private int score;
 	//	private int koning = 1;
 	//	private int kasteel = 1;
-	protected static final int MAX_LENGTE = 6;
 
 	public String[][][] getKoninkrijk() {
 		return koninkrijk;

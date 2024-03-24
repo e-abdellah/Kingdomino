@@ -56,4 +56,7 @@ public class DomeinController {
 		spel.sorteerOpScore();
 	}
 
+	public List<Dominotegel> geefBeginOfEindkolom(){
+		return spel.geefBeginOfEindKolom();
+	}
 }

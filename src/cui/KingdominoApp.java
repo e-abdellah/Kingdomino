@@ -17,6 +17,7 @@ import domein.Dominotegel;
 import domein.Spel;
 import domein.Speler;
 import dto.SpelerDTO;
+import dto.SpelDTO;
 
 public class KingdominoApp {
 
@@ -29,6 +30,7 @@ public class KingdominoApp {
 	private Spel spel = new Spel();
 	ResourceBundle messages = null;
 	private List<Dominotegel> dominotegels;
+	private SpelDTO spelDTO;
 
 	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
@@ -36,7 +38,7 @@ public class KingdominoApp {
 		gekozenSpelers = new ArrayList<>();
 		beschikbareSpelers = dc.geefOverzichtSpelers();
 		spelerKleurMap = new HashMap<>();
-		kleuren = dc.geefAlleKleuren();
+		kleuren = DomeinController.geefAlleKleuren();
 		kiesTaal();
 		dominotegels = dc.schudDominotegels(3);
 	}
@@ -321,17 +323,8 @@ public class KingdominoApp {
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
 		}
 
-		// Print geschudde dominotegels
-		List<Dominotegel> geschuddeDominotegels = dc.schudDominotegels(aantalSpelers); // Aangepast om aantalSpelers//
-																						// door te geven
 
-		List<Dominotegel> startKolom = new ArrayList<>();
-		for (int i = 0; i < aantalSpelers; i++) {
-			startKolom.add(geschuddeDominotegels.get(0));
-			geschuddeDominotegels.remove(0);
-		}
-		startKolom.sort(Comparator.comparingInt(Dominotegel::getGetal));
-
+		List <Dominotegel> startKolom = dc.geefBeginOfEindkolom();
 		for (Dominotegel tegel : startKolom) {
 			System.out.println(tegel);
 		}
