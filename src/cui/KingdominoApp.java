@@ -129,7 +129,7 @@ public class KingdominoApp {
 		try {
 			// Past het pad aan op basis van de gekozen taal zodat de juiste resource bundle
 			// ingeladen kan worden
-			messages = ResourceBundle.getBundle("utils.resource_bundle", locale);
+			messages = ResourceBundle.getBundle("cui.resource_bundle", locale);
 		} catch (MissingResourceException e) {
 			System.err.println("Error loading resource bundle: " + e.getMessage());
 			return;
@@ -267,6 +267,8 @@ public class KingdominoApp {
 		// Voeg de gekozen speler toe aan de lijst en verwijder deze uit de lijst van
 		// beschikbare spelers
 		gekozenSpelers.add(gekozenSpeler);
+		dc.voegSpelerToe(gekozenSpeler.gebruikersnaam());
+		spel.getAantalSpelers().add(gekozenSpeler);
 
 		String gekozenKleur;
 		do {
@@ -309,8 +311,7 @@ public class KingdominoApp {
 																					// ongeldige invoer
 			}
 		} while (gekozenSpelers.size() < 3);
-		dominotegels = dc.schudDominotegels(gekozenSpelers.size());
-		spelDTO = dc.geefSpelDTO();
+
 	}
 
 	// Methodes om ervoor te zorgen dat je ja of nee kan antwoorden in de gekozen
@@ -336,11 +337,16 @@ public class KingdominoApp {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
 		}
-		int indexKolom = 0;
-		List <Dominotegel> startKolom = spelDTO.kolommen().get(indexKolom++);
+
+		spelDTO = dc.geefSpelDTO();
+		List <Dominotegel> startKolom = spelDTO.kolom();
 		for (Dominotegel tegel : startKolom) {
 			System.out.println(tegel);
 		}
+		/*
+		 * for (Dominotegel tegel : geschuddeDominotegels) { System.out.println(tegel);
+		 * // Aanroepen van toString() methode van Dominotegel }
+		 */
 
 		Collections.shuffle(gekozenSpelers);// random volgorde van spelers genereren
 
@@ -387,20 +393,22 @@ public class KingdominoApp {
 			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(tegelSpeler.get(tegel)));
 		}
 
-		if(spelDTO.eindeSpel()){
-			dc.berekenWinnaars();
-			for(SpelerDTO speler : gekozenSpelers){
-				if(speler.isWinnaar()) {
-					System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld",
-							speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld());
-				}
-			}
-		}
-
-
-		/*if (aantalDominotegels == 0) {
+		if (aantalDominotegels == 0) {
 			//einde spel + winnaar
 			//sorteer spelerDTO op score
+			Spel.sorteerOpScore();
+			Speler topSpeler = null;
+			int tempMaxScore = 0;
+			HashMap<Speler, List<Integer>> spelerScores = Spel.geefScores();
+			for (Map.Entry<Speler, List<Integer>> entry : spelerScores.entrySet()) {
+				if (entry.getValue().get(0) > tempMaxScore) {
+					tempMaxScore = entry.getValue().get(0);
+					topSpeler = entry.getKey();
+				}
+			}
+			List<Integer> topScores = spelerScores.get(topSpeler);
+
+			// kijk wie gelijk is met winnaar
 			System.out.println("Winnaar(s):");
 			boolean nietWinnaarGevonden = false;
 			for (Speler speler : spelDTO.spelers()) {
@@ -433,7 +441,8 @@ public class KingdominoApp {
 						}
 					}
 				}
-		}*/
+			}
+		}
 	}
 
 	private void ronde() {
