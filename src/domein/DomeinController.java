@@ -1,9 +1,6 @@
 package domein;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import dto.SpelDTO;
@@ -31,36 +28,26 @@ public class DomeinController {
 
 		for (Speler s : spelers) {
 			overzicht.add(new SpelerDTO(s.getGebruikersnaam(), s.getGeboortejaar(), s.getAantalGewonnen(),
-					s.getAantalGespeeld(), s.getKleur(), s.getKoninkrijk()));
+					s.getAantalGespeeld(), s.getKoninkrijk(), s.getScores(), s.isWinnaar()));
 		}
 		return overzicht;
 	}
 	public SpelDTO geefSpelDTO(){
-        return new SpelDTO(spel.getSpelers(), spel.geefBeginOfEindKolom());
+		List<List<Dominotegel>> kolommen = new ArrayList<>();
+		for(int i = 0; i < 12; i++){
+			kolommen.add(spel.geefBeginOfEindKolom());
+		}
+		return new SpelDTO(kolommen, spel.isEindeSpel());
 	}
-	public void voegSpelerToe(String gebruikersnaam){
-		spel.voegSpelerToe(new Speler(gebruikersnaam));
-	}
-
 	public static List<String> geefAlleKleuren() {
 		List<Kleuren> kleuren = Arrays.asList(Kleuren.values());
 		return kleuren.stream().map(Enum::toString).collect(Collectors.toList());
 	}
-
-	/*public List<Dominotegel> schudDominotegels(int aantalSpelers) {
+	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
 		return spel.schudDominotegels(aantalSpelers);
 	}
-
-	public List<Dominotegel> schudDominotegelsAantal(int aantal) {
-		return spel.schudDominotegelsAantal(aantal);
+	public void berekenWinnaars(){
+		spel.berekenWinnaars();
 	}
-
-	public HashMap<Speler, List<Integer>> geefScores() {
-		return spel.geefScores();
-	}
-
-	public void sorteerOpScore() {
-		spel.sorteerOpScore();
-	}*/
 
 }

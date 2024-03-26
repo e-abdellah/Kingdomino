@@ -18,7 +18,8 @@ public class Speler {
 
 	private String kleur;
 	private int starttegel = 1;
-	private int score;
+
+	private boolean isWinnaar;
 	//	private int koning = 1;
 	//	private int kasteel = 1;
 
@@ -48,6 +49,17 @@ public class Speler {
 		setKoninkrijk(koninkrijk);
 		setStarttegel(starttegel);
 		setScores();
+	}
+
+	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, String[][][] koninkrijk, List<Integer> scores, boolean isWinnaar) {
+		setGebruikersnaam(gebruikersnaam);
+		setGeboortejaar(geboortejaar);
+		setAantalGewonnen(aantalGewonnen);
+		setAantalGespeeld(aantalGespeeld);
+		setKoninkrijk(koninkrijk);
+		setScores();
+		setIsWinnaar(isWinnaar);
+
 	}
 
 	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, String kleur) {
@@ -82,6 +94,9 @@ public class Speler {
 
 	}
 
+	public boolean isWinnaar(){return isWinnaar;}
+	public final void setIsWinnaar(boolean isWinnaar){this.isWinnaar = isWinnaar;}
+
 	public List<Integer> getScores() {
 		return scores;
 	}
@@ -107,7 +122,7 @@ public class Speler {
 		return aantalGewonnen;
 	}
 
-	private void setAantalGewonnen(int aantalGewonnen) {
+	public final void setAantalGewonnen(int aantalGewonnen) {
 		this.aantalGewonnen = aantalGewonnen;
 	}
 
@@ -115,7 +130,7 @@ public class Speler {
 		return aantalGespeeld;
 	}
 
-	private void setAantalGespeeld(int aantalGespeeld) {
+	public final void setAantalGespeeld(int aantalGespeeld) {
 		this.aantalGespeeld = aantalGespeeld;
 	}
 
@@ -222,14 +237,6 @@ public class Speler {
 		}
 
 		return copy;
-	}
-
-	public final void setScore(int score) {
-		this.score = score;
-	}
-
-	public int getScore() {
-		return score;
 	}
 
 }

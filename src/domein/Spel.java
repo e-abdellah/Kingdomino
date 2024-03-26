@@ -7,14 +7,7 @@ import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.Comparator;
+import java.util.*;
 
 import dto.SpelerDTO;
 
@@ -23,13 +16,12 @@ public class Spel {
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
 	private Set<Integer> getallen;
 	private List<Dominotegel> dominotegels;
-	private List<Speler> spelers;
+	private List<Speler> spelers = new ArrayList<>();
 	private List<Dominotegel> stapelDominotegels; // Stapel met alle dominotegels, gesorteerd op nummer
 	private List<Dominotegel> startKolom; // Startkolom met dominotegels voor deze ronde
 	private List<Dominotegel> eindKolom; // Eindkolom met dominotegels voor de volgende ronde
 
 	private boolean isEindeSpel;
-	private List<Speler> spelers = new ArrayList<>();
 	protected static final int MAX_LENGTE = 6;
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, boolean isEindeSpel) {
@@ -48,10 +40,6 @@ public class Spel {
 
 	public Spel() {
 		setAantalSpelers(aantalSpelers);
-	}
-
-	public void voegSpelerToe(Speler speler){
-		spelers.add(speler);
 	}
 
 	public List<Speler> getSpelers(){return spelers;}
@@ -131,8 +119,8 @@ public class Spel {
 
 	}
 
-	public static List<Dominotegel> schudDominotegels(int aantalSpelers) {
-/*		if (dominotegels == null) {
+	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
+		if (dominotegels == null) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
 			dominotegels = new ArrayList<>();
 			genereerAantalDominotegels(); // Mogelijke actie
@@ -147,22 +135,6 @@ public class Spel {
 		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
 	}
 
-	protected List<Dominotegel> schudDominotegelsAantal(int aantal) {
-		if (dominotegels == null) {
-			// Log een fout, initialiseer de lijst, of gooi een exception
-			dominotegels = new ArrayList<>();
-			genereerAantalDominotegels(); // Mogelijke actie
-		}
-
-		Collections.shuffle(dominotegels); // Schud de lijst met dominotegels
-
-		// Controleer het aantal spelers en bepaal het aantal benodigde tegels
-		int aantalBenodigdeTegels = aantal;
-
-		// Retourneer een sublist met het vereiste aantal tegels
-		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
-	}
-
 	public HashMap<Speler, List<Integer>> geefScores() {
 		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();
 		for (Speler speler : spelers) {
@@ -171,25 +143,8 @@ public class Spel {
 		return spelerScores;
 	}
 
-	private boolean isEindeSpel() {
-		while (!dominotegels.isEmpty()) {
-			speelRonde();
-			return false;
-		}
-		return true;
-	}
-
-	private void speelRonde() {
-		vulEindKolomAan();
-		while (!elkeKoningInEindKolom()) {
-			Speler volgendeSpeler = bepaalVolgendeSpeler();
-			// Hier implementeer je de logica voor de speler om zijn beurt te spelen
-		}
-		verplaatsTegelsNaarStartKolom();
-	}
-
-	private void speelBeurt(Speler speler) {
-		// Hier implementeer je de logica voor de speler om zijn beurt te spelen
+	public boolean isEindeSpel() {
+		return dominotegels.isEmpty();
 	}
 
 	private void vulEindKolomAan() {
@@ -225,7 +180,7 @@ public class Spel {
 
 
 	public void sorteerOpScore() {
-		spelers.sort(new ScoreComparator());
+		spelers.sort(new utils.ScoreComparator());
 
 	}
 	public List<Dominotegel> geefBeginOfEindKolom(){
@@ -240,4 +195,21 @@ public class Spel {
 		return kolom;
 	}
 
+	public void berekenWinnaars() {
+
+		sorteerOpScore();
+		Speler topSpeler = spelers.get(0);
+		HashMap<Speler, List<Integer>> spelerScores = geefScores();
+		List<Integer> topScores = spelerScores.get(topSpeler);
+
+		for (Speler speler : spelers) {
+			speler.setAantalGespeeld(speler.getAantalGespeeld() + 1);
+			List<Integer> scores = spelerScores.get(speler);
+			if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
+					&& scores.get(2).equals(topScores.get(2))) {
+				speler.setIsWinnaar(true);
+				speler.setAantalGewonnen(speler.getAantalGewonnen() + 1);
+			}
+		}
+	}
 }

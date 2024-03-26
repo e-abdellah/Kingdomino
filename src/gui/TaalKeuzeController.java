@@ -56,7 +56,7 @@ public class TaalKeuzeController {
 	private void setLanguage(String language, String country) {
 		// Stel de taal in
 		Locale locale = new Locale(language, country);
-		bundle = ResourceBundle.getBundle("cui.resource_bundle", locale);
+		bundle = ResourceBundle.getBundle("utils.resource_bundle", locale);
 		// Update de UI
 		updateUI();
 
