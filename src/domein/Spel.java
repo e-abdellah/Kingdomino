@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.Comparator;
 
 import dto.SpelerDTO;
 
@@ -23,6 +24,9 @@ public class Spel {
 	private Set<Integer> getallen;
 	private List<Dominotegel> dominotegels;
 	private List<Speler> spelers;
+	private List<Dominotegel> stapelDominotegels; // Stapel met alle dominotegels, gesorteerd op nummer
+	private List<Dominotegel> startKolom; // Startkolom met dominotegels voor deze ronde
+	private List<Dominotegel> eindKolom; // Eindkolom met dominotegels voor de volgende ronde
 	protected static final int MAX_LENGTE = 6;
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen) {
@@ -242,8 +246,41 @@ public class Spel {
 	}
 
 	private void speelRonde() {
-
+		vulEindKolomAan();
+		while (!elkeKoningInEindKolom()) {
+			Speler volgendeSpeler = bepaalVolgendeSpeler();
+			// Hier implementeer je de logica voor de speler om zijn beurt te spelen
+		}
+		verplaatsTegelsNaarStartKolom();
 	}
+
+	private void vulEindKolomAan() {
+		eindKolom.clear(); // Zorg dat de eindkolom leeg is voor nieuwe tegels
+		for (int i = 0; i < aantalSpelers.size(); i++) {
+			eindKolom.add(stapelDominotegels.remove(0)); // Neem de bovenste tegel van de stapel
+		}
+		eindKolom.sort(Comparator.comparing(Dominotegel::getNummer));
+	}
+
+	private void verplaatsTegelsNaarStartKolom() {
+		startKolom.addAll(eindKolom);
+		eindKolom.clear(); // Maak de eindkolom leeg na het verplaatsen
+	}
+
+	private boolean elkeKoningInEindKolom() {
+		for (Dominotegel tegel : eindKolom) {
+			if (tegel.getKoning() == null) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private Speler bepaalVolgendeSpeler() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 	public void sorteerOpScore() {
 		// TODO Auto-generated method stub
