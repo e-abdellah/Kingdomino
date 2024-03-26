@@ -18,14 +18,10 @@ public class Spel {
 
 	private List<Dominotegel> dominotegels;
 	private List<Speler> spelers = new ArrayList<>();
-	private List<Dominotegel> stapelDominotegels; // Stapel met alle dominotegels, gesorteerd op nummer
-	private List<Dominotegel> startKolom; // Startkolom met dominotegels voor deze ronde
-	private List<Dominotegel> eindKolom; // Eindkolom met dominotegels voor de volgende ronde
 
 	protected static final int MAX_LENGTE = 6;
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, List<Dominotegel> startKolom, boolean isEindeSpel) {
-		this.startKolom = startKolom;
 		setAantalSpelers(aantalSpelers);
 		getallen = new HashSet<>(36);
 		dominotegels = new ArrayList<>();
@@ -132,8 +128,7 @@ public class Spel {
 		int aantalBenodigdeTegels = (aantalSpelers == 3) ? 36 : 48;
 
 		// Retourneer een sublist met het vereiste aantal tegels
-		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));*/
-		return null;
+		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
 	}
 
 	public HashMap<Speler, List<Integer>> geefScores() {
@@ -147,38 +142,6 @@ public class Spel {
 	public boolean isEindeSpel() {
 		return dominotegels.isEmpty();
 	}
-
-	private void vulEindKolomAan() {
-	/*	eindKolom.clear(); // Zorg dat de eindkolom leeg is voor nieuwe tegels
-		for (int i = 0; i < aantalSpelers.size(); i++) {
-			eindKolom.add(stapelDominotegels.remove(0)); // Neem de bovenste tegel van de stapel
-		}
-		eindKolom.sort(Comparator.comparing(Dominotegel::getNummer));*/
-	}
-
-	private void verplaatsTegelsNaarStartKolom() {
-		startKolom.addAll(eindKolom);
-		eindKolom.clear(); // Maak de eindkolom leeg na het verplaatsen
-	}
-
-	private boolean elkeKoningInEindKolom() {
-/*		for (Dominotegel tegel : eindKolom) {
-			if (tegel.getKoning() == null) {
-				return false;
-			}
-		}
-		return true;*/
-
-
-		return true;
-	}
-
-	private Speler bepaalVolgendeSpeler() {
-		return null;
-	}
-
-
-
 
 	public void sorteerOpScore() {
 		spelers.sort(new utils.ScoreComparator());
@@ -197,7 +160,6 @@ public class Spel {
 	}
 
 	public void berekenWinnaars() {
-
 		sorteerOpScore();
 		Speler topSpeler = spelers.get(0);
 		HashMap<Speler, List<Integer>> spelerScores = geefScores();

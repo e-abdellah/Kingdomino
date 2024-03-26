@@ -27,16 +27,12 @@ public class KingdominoApp {
 	private List<String> kleuren;
 	private List<SpelerDTO> beschikbareSpelers;
 	private Map<SpelerDTO, String> spelerKleurMap;
-	private final Spel spel = new Spel();
 	ResourceBundle messages = null;
 	private SpelDTO spelDTO;
 	private List<Dominotegel> dominotegels;
 
 
-
-
-	public KingdominoApp(DomeinController dc, Spel spel) {
-		this.spel = spel;
+	public KingdominoApp(DomeinController dc) {
 		sc = new Scanner(System.in);
 		this.dc = dc;
 		gekozenSpelers = new ArrayList<>();
@@ -44,24 +40,18 @@ public class KingdominoApp {
 		spelerKleurMap = new HashMap<>();
 		kleuren = DomeinController.geefAlleKleuren();
 		kiesTaal();
-		dominotegels = dc.schudDominotegels(3);
-		spelDTO = dc.geefSpelDTO();
 	}
 
 	public void start() {
 
-		String[] menuKeuzes = { messages.getString("registreerSpeler"), messages.getString("startNieuwSpel"),
-				messages.getString("afsluiten") };
+		String[] menuKeuzes = {messages.getString("registreerSpeler"), messages.getString("startNieuwSpel"),
+				messages.getString("afsluiten")};
 
 		int keuze = maakMenuKeuze(menuKeuzes, messages.getString("kiesOptie"));
 		while (keuze != 6) {
 			switch (keuze) {
-			case 1 -> registreerSpeler();
-			case 2 -> startSpel();
-			case 3 -> speelSpel();
-			case 4 -> speelRonde();
-			case 5 -> speelBeurt();
-
+				case 1 -> registreerSpeler();
+				case 2 -> startSpel();
 
 			}
 			keuze = sc.nextInt();
@@ -268,8 +258,8 @@ public class KingdominoApp {
 		// Voeg de gekozen speler toe aan de lijst en verwijder deze uit de lijst van
 		// beschikbare spelers
 		gekozenSpelers.add(gekozenSpeler);
-		dc.voegSpelerToe(gekozenSpeler.gebruikersnaam());
-		spel.getAantalSpelers().add(gekozenSpeler);
+		dominotegels = dc.schudDominotegels(gekozenSpelers.size());
+		spelDTO = dc.geefSpelDTO();
 
 		String gekozenKleur;
 		do {
@@ -308,7 +298,7 @@ public class KingdominoApp {
 				}
 			} else {
 				System.out.printf("%s%n", messages.getString("ongeldigeInvoer")); // Zorg dat je een bericht hebt voor
-																					// ongeldige invoer
+				// ongeldige invoer
 			}
 		} while (gekozenSpelers.size() < 3);
 
@@ -337,9 +327,8 @@ public class KingdominoApp {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
 		}
-
-		spelDTO = dc.geefSpelDTO();
-		List <Dominotegel> startKolom = spelDTO.kolom();
+		int indexKolom = 0;
+		List<Dominotegel> startKolom = spelDTO.kolommen().get(indexKolom++);
 		for (Dominotegel tegel : startKolom) {
 			System.out.println(tegel);
 		}
@@ -393,23 +382,18 @@ public class KingdominoApp {
 			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(tegelSpeler.get(tegel)));
 		}
 
-		if (aantalDominotegels == 48) {
-			//einde spel + winnaar
-			//sorteert spelerDTO op score
-			Spel.sorteerOpScore();
-			Speler topSpeler = null;
-			int tempMaxScore = 0;
-			HashMap<Speler, List<Integer>> spelerScores = Spel.geefScores();
-			for (Map.Entry<Speler, List<Integer>> entry : spelerScores.entrySet()) {
-				if (entry.getValue().get(0) > tempMaxScore) {
-					tempMaxScore = entry.getValue().get(0);
-					topSpeler = entry.getKey();
+		if (spelDTO.eindeSpel()) {
+			dc.berekenWinnaars();
+			for (SpelerDTO speler : gekozenSpelers) {
+				if (speler.isWinnaar()) {
+					System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld",
+							speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld());
 				}
 			}
-			List<Integer> topScores = spelerScores.get(topSpeler);
+		}
 
-			// kijk wie gelijk is met winnaar
-	/*		System.out.println("Winnaar(s):");
+			/*kijk wie gelijk is met winnaar
+			System.out.println("Winnaar(s):");
 			boolean nietWinnaarGevonden = false;
 			for (Speler speler : spelDTO.spelers()) {
 				List<Integer> scores = spelerScores.get(speler);
@@ -418,7 +402,7 @@ public class KingdominoApp {
 				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
 						&& scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
 					System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
-*/
+
 					// Now check for ties //het zou beter werken als we Speler ipv SpelerDTO gebruiken
 					System.out.println("Winnaar(s):");
 					boolean foundNonWinner = false;
@@ -439,10 +423,9 @@ public class KingdominoApp {
 							System.out.printf("Speler %s met %s", speler.getGebruikersnaam(),
 									scoreDetails);
 						}
-					}
-				}
-			}
-		}
+					}*/
+	}
+}
 
 
 
