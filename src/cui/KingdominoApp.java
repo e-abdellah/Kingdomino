@@ -50,10 +50,14 @@ public class KingdominoApp {
 				messages.getString("afsluiten") };
 
 		int keuze = maakMenuKeuze(menuKeuzes, messages.getString("kiesOptie"));
-		while (keuze != 3) {
+		while (keuze != 6) {
 			switch (keuze) {
 			case 1 -> registreerSpeler();
 			case 2 -> startSpel();
+			case 3 -> speelSpel();
+			case 4 -> speelRonde();
+			case 5 -> speelBeurt();
+
 
 			}
 			keuze = sc.nextInt();
@@ -66,6 +70,15 @@ public class KingdominoApp {
 			System.out.println("Voorkant foto pad: " + tegel1.getVoorkantFotoPad());
 			System.out.println("Achterkant foto pad: " + tegel1.getAchterkantFotoPad());
 		}
+	}
+
+	private void speelSpel() {
+	}
+
+	private void speelRonde() {
+	}
+
+	private void speelBeurt() {
 	}
 
 	// kiesTaal methode om eenmalig een taal te kunnen kiezen bij het opstarten van
@@ -383,10 +396,10 @@ public class KingdominoApp {
 		if (aantalDominotegels == 0) {
 			//einde spel + winnaar
 			//sorteer spelerDTO op score
-			dc.sorteerOpScore();
+			Spel.sorteerOpScore();
 			Speler topSpeler = null;
 			int tempMaxScore = 0;
-			HashMap<Speler, List<Integer>> spelerScores = dc.geefScores();
+			HashMap<Speler, List<Integer>> spelerScores = Spel.geefScores();
 			for (Map.Entry<Speler, List<Integer>> entry : spelerScores.entrySet()) {
 				if (entry.getValue().get(0) > tempMaxScore) {
 					tempMaxScore = entry.getValue().get(0);

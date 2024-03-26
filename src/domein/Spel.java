@@ -7,7 +7,14 @@ import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.Comparator;
 
 import dto.SpelerDTO;
 
@@ -16,10 +23,17 @@ public class Spel {
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
 	private Set<Integer> getallen;
 	private List<Dominotegel> dominotegels;
+	private List<Speler> spelers;
+	private List<Dominotegel> stapelDominotegels; // Stapel met alle dominotegels, gesorteerd op nummer
+	private List<Dominotegel> startKolom; // Startkolom met dominotegels voor deze ronde
+	private List<Dominotegel> eindKolom; // Eindkolom met dominotegels voor de volgende ronde
+
+	private boolean isEindeSpel;
 	private List<Speler> spelers = new ArrayList<>();
 	protected static final int MAX_LENGTE = 6;
 
-	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen) {
+	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, boolean isEindeSpel) {
+		this.isEindeSpel = isEindeSpel;
 		setAantalSpelers(aantalSpelers);
 		getallen = new HashSet<>(36);
 		dominotegels = new ArrayList<>();
@@ -117,8 +131,8 @@ public class Spel {
 
 	}
 
-	protected List<Dominotegel> schudDominotegels(int aantalSpelers) {
-		if (dominotegels == null) {
+	public static List<Dominotegel> schudDominotegels(int aantalSpelers) {
+/*		if (dominotegels == null) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
 			dominotegels = new ArrayList<>();
 			genereerAantalDominotegels(); // Mogelijke actie
@@ -166,8 +180,49 @@ public class Spel {
 	}
 
 	private void speelRonde() {
-
+		vulEindKolomAan();
+		while (!elkeKoningInEindKolom()) {
+			Speler volgendeSpeler = bepaalVolgendeSpeler();
+			// Hier implementeer je de logica voor de speler om zijn beurt te spelen
+		}
+		verplaatsTegelsNaarStartKolom();
 	}
+
+	private void speelBeurt(Speler speler) {
+		// Hier implementeer je de logica voor de speler om zijn beurt te spelen
+	}
+
+	private void vulEindKolomAan() {
+	/*	eindKolom.clear(); // Zorg dat de eindkolom leeg is voor nieuwe tegels
+		for (int i = 0; i < aantalSpelers.size(); i++) {
+			eindKolom.add(stapelDominotegels.remove(0)); // Neem de bovenste tegel van de stapel
+		}
+		eindKolom.sort(Comparator.comparing(Dominotegel::getNummer));*/
+	}
+
+	private void verplaatsTegelsNaarStartKolom() {
+		startKolom.addAll(eindKolom);
+		eindKolom.clear(); // Maak de eindkolom leeg na het verplaatsen
+	}
+
+	private boolean elkeKoningInEindKolom() {
+/*		for (Dominotegel tegel : eindKolom) {
+			if (tegel.getKoning() == null) {
+				return false;
+			}
+		}
+		return true;*/
+
+
+		return true;
+	}
+
+	private Speler bepaalVolgendeSpeler() {
+		return null;
+	}
+
+
+
 
 	public void sorteerOpScore() {
 		spelers.sort(new ScoreComparator());

@@ -1,5 +1,8 @@
-package domein;
+package utils;
 import java.util.Comparator;
+
+import domein.Spel;
+import domein.Speler;
 import dto.SpelerDTO;
 import java.util.List;
 
