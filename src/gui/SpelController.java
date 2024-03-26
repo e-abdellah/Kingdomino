@@ -4,6 +4,7 @@ import java.util.List;
 
 import domein.DomeinController;
 import domein.Dominotegel;
+import domein.Spel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -41,7 +42,7 @@ public class SpelController {
 	}
 
 	private void toonDominotegels() {
-		List<Dominotegel> dominotegels = dc.schudDominotegelsAantal(3); // Veronderstelt dat je een methode hebt om de lijst van tegels te krijgen
+		List<Dominotegel> dominotegels = Spel.schudDominotegelsAantal(3); // Veronderstelt dat je een methode hebt om de lijst van tegels te krijgen
 		for (Dominotegel tegel : dominotegels) {
 			Image image = new Image(tegel.getVoorkantFotoPad());
 			System.out.println(tegel.getVoorkantFotoPad());
