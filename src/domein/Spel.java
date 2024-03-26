@@ -27,9 +27,12 @@ public class Spel {
 	private List<Dominotegel> stapelDominotegels; // Stapel met alle dominotegels, gesorteerd op nummer
 	private List<Dominotegel> startKolom; // Startkolom met dominotegels voor deze ronde
 	private List<Dominotegel> eindKolom; // Eindkolom met dominotegels voor de volgende ronde
+
+	private boolean isEindeSpel;
 	protected static final int MAX_LENGTE = 6;
 
-	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen) {
+	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, boolean isEindeSpel) {
+		this.isEindeSpel = isEindeSpel;
 		setAantalSpelers(aantalSpelers);
 		getallen = new HashSet<>(36);
 		dominotegels = new ArrayList<>();
@@ -121,8 +124,8 @@ public class Spel {
 
 	}
 
-	protected List<Dominotegel> schudDominotegels(int aantalSpelers) {
-		if (dominotegels == null) {
+	public static List<Dominotegel> schudDominotegels(int aantalSpelers) {
+/*		if (dominotegels == null) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
 			dominotegels = new ArrayList<>();
 			genereerAantalDominotegels(); // Mogelijke actie
