@@ -17,6 +17,13 @@ public class DomeinController {
 		spel = new Spel();
 	}
 
+	public void voegSpelersToe(List<SpelerDTO> spelerDTOS){
+		for(SpelerDTO speler : spelerDTOS){
+			spel.voegSpelersToe(new Speler(speler.gebruikersnaam(), speler.geboortejaar(), speler.aantalGewonnen(),
+					speler.aantalGespeeld(), speler.koninkrijk(), speler.scores(), speler.isWinnaar()));
+		}
+	}
+
 	public void registreerSpeler(String gebruikersnaam, int geboortejaar) throws GebruikersnaamInGebruikException {
 		Speler nieuweSpeler = new Speler(gebruikersnaam, geboortejaar);
 		spelerRepository.voegToe(nieuweSpeler);

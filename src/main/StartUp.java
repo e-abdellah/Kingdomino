@@ -8,14 +8,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class StartUp extends Application {
+public class StartUp /*extends Application*/ {
 
 	public static void main(String[] args) {
-		//new KingdominoApp(new DomeinController()).start();
-		launch(args);
+		new KingdominoApp(new DomeinController()).start();
+		//launch(args);
 	}
 
-	@Override
+	/*@Override
 	public void start(Stage primaryStage) throws Exception {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/taalKeuze.fxml"));
 		Scene scene = new Scene(loader.load());
@@ -26,5 +26,5 @@ public class StartUp extends Application {
 		// Voeg de referentie naar het hoofdvenster toe aan de TaalKeuzeController
 		TaalKeuzeController controller = loader.getController();
 		controller.setStage(primaryStage);
-	}
+	}*/
 }

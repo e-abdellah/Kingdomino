@@ -28,6 +28,10 @@ public class Spel {
 		genereerAantalDominotegels();
 	}
 
+	public final void voegSpelersToe(Speler speler){
+		spelers.add(speler);
+	}
+
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels) {
 		setAantalSpelers(aantalSpelers);
 		setDominotegels(dominotegels);

@@ -75,7 +75,7 @@ public class WelkomKDController {
 
 	public void setLanguage(String language) {
 		// Laad de juiste ResourceBundle op basis van de geselecteerde taal
-		resourceBundle = ResourceBundle.getBundle("cui.resource_bundle", new Locale(language));
+		resourceBundle = ResourceBundle.getBundle("utils.resource_bundle", new Locale(language));
 
 		// Set de tekst van de knoppen vanuit de ResourceBundle
 		registreerBtn.setText(resourceBundle.getString("registerButton"));
@@ -183,7 +183,7 @@ public class WelkomKDController {
 			int aantal = Integer.parseInt(aantalSpelers);
 			List<String> spelersNamen = dc.geefOverzichtSpelers().stream().map(SpelerDTO::gebruikersnaam)
 					.collect(Collectors.toList());
-			List<String> beschikbareKleuren = dc.geefAlleKleuren();
+			List<String> beschikbareKleuren = DomeinController.geefAlleKleuren();
 
 			for (int i = 1; i <= aantal; i++) {
 				ChoiceDialog<String> spelerKeuzeDialog = new ChoiceDialog<>(spelersNamen.get(0), spelersNamen);

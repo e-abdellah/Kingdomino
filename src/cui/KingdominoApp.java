@@ -33,8 +33,8 @@ public class KingdominoApp {
 
 
 	public KingdominoApp(DomeinController dc) {
-		sc = new Scanner(System.in);
 		this.dc = dc;
+		sc = new Scanner(System.in);
 		gekozenSpelers = new ArrayList<>();
 		beschikbareSpelers = dc.geefOverzichtSpelers();
 		spelerKleurMap = new HashMap<>();
@@ -121,7 +121,7 @@ public class KingdominoApp {
 		try {
 			// Past het pad aan op basis van de gekozen taal zodat de juiste resource bundle
 			// ingeladen kan worden
-			messages = ResourceBundle.getBundle("cui.resource_bundle", locale);
+			messages = ResourceBundle.getBundle("utils.resource_bundle", locale);
 		} catch (MissingResourceException e) {
 			System.err.println("Error loading resource bundle: " + e.getMessage());
 		}
@@ -260,7 +260,7 @@ public class KingdominoApp {
 		gekozenSpelers.add(gekozenSpeler);
 		dominotegels = dc.schudDominotegels(gekozenSpelers.size());
 		spelDTO = dc.geefSpelDTO();
-
+		dc.voegSpelersToe(gekozenSpelers);
 		String gekozenKleur;
 		do {
 			System.out.printf("%s ", messages.getString("kiesKleurSpeler"));
