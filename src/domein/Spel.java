@@ -259,11 +259,11 @@ public class Spel {
 	}
 
 	private void vulEindKolomAan() {
-		eindKolom.clear(); // Zorg dat de eindkolom leeg is voor nieuwe tegels
+	/*	eindKolom.clear(); // Zorg dat de eindkolom leeg is voor nieuwe tegels
 		for (int i = 0; i < aantalSpelers.size(); i++) {
 			eindKolom.add(stapelDominotegels.remove(0)); // Neem de bovenste tegel van de stapel
 		}
-		eindKolom.sort(Comparator.comparing(Dominotegel::getNummer));
+		eindKolom.sort(Comparator.comparing(Dominotegel::getNummer));*/
 	}
 
 	private void verplaatsTegelsNaarStartKolom() {
@@ -272,18 +272,22 @@ public class Spel {
 	}
 
 	private boolean elkeKoningInEindKolom() {
-		for (Dominotegel tegel : eindKolom) {
+/*		for (Dominotegel tegel : eindKolom) {
 			if (tegel.getKoning() == null) {
 				return false;
 			}
 		}
+		return true;*/
+
+
 		return true;
 	}
 
 	private Speler bepaalVolgendeSpeler() {
-		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 
 	public void sorteerOpScore() {

@@ -47,7 +47,7 @@ public class KingdominoApp {
 				messages.getString("afsluiten") };
 
 		int keuze = maakMenuKeuze(menuKeuzes, messages.getString("kiesOptie"));
-		while (keuze != 3) {
+		while (keuze != 6) {
 			switch (keuze) {
 			case 1 -> registreerSpeler();
 			case 2 -> startSpel();
