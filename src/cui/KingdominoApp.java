@@ -21,16 +21,20 @@ import dto.SpelerDTO;
 public class KingdominoApp {
 
 	private final DomeinController dc;
-	private Scanner sc;
-	private List<SpelerDTO> gekozenSpelers;
-	private List<String> kleuren;
-	private List<SpelerDTO> beschikbareSpelers;
-	private Map<SpelerDTO, String> spelerKleurMap;
-	private Spel spel = new Spel();
-	ResourceBundle messages = null;
-	private List<Dominotegel> dominotegels;
+	private final Scanner sc;
+	private final List<SpelerDTO> gekozenSpelers;
+	private final List<String> kleuren;
+	private final List<SpelerDTO> beschikbareSpelers;
+	private final Map<SpelerDTO, String> spelerKleurMap;
+	private final Spel spel;
+	private ResourceBundle messages;
+	private final List<Dominotegel> dominotegels;
 
-	public KingdominoApp(DomeinController dc) {
+
+
+
+	public KingdominoApp(DomeinController dc, Spel spel) {
+		this.spel = spel;
 		sc = new Scanner(System.in);
 		this.dc = dc;
 		gekozenSpelers = new ArrayList<>();
@@ -97,22 +101,20 @@ public class KingdominoApp {
 
 				// Switch om de taalkeuze te kunnen invoeren, na invoer wordt locale ingesteld
 				switch (taalKeuze) {
-				case 1:
-					locale = new Locale("en", "EN");
-					geldigeTaalKeuze = true;
-					break;
-				case 2:
-					locale = new Locale("nl", "NL");
-					geldigeTaalKeuze = true;
-					break;
-				case 3:
-					locale = new Locale("fr", "FR");
-					geldigeTaalKeuze = true;
-					break;
-				default:
-					System.out.println(
+					case 1 -> {
+						locale = new Locale("en", "EN");
+						geldigeTaalKeuze = true;
+					}
+					case 2 -> {
+						locale = new Locale("nl", "NL");
+						geldigeTaalKeuze = true;
+					}
+					case 3 -> {
+						locale = new Locale("fr", "FR");
+						geldigeTaalKeuze = true;
+					}
+					default -> System.out.println(
 							"Entrée incorrecte. Veuillez choisir 1 ou 2 pour choisir votre langue.// Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
-					break;
 				}
 				// InputMismatchException om ervoor te zorgen dat enkel de cijfers die bij een
 				// taal horen ingevoerd kunnen worden
@@ -129,7 +131,6 @@ public class KingdominoApp {
 			messages = ResourceBundle.getBundle("cui.resource_bundle", locale);
 		} catch (MissingResourceException e) {
 			System.err.println("Error loading resource bundle: " + e.getMessage());
-			return;
 		}
 	}
 
@@ -285,8 +286,7 @@ public class KingdominoApp {
 		spelerKleurMap.put(gekozenSpeler, gekozenKleur);
 		beschikbareSpelers.remove(gekozenSpeler);
 		kleuren.remove(gekozenKleur.toUpperCase());
-		System.out.println(
-				String.format(messages.getString("spelerToegevoegd"), gekozenSpeler.gebruikersnaam(), gekozenKleur));
+		System.out.printf((messages.getString("spelerToegevoegd")) + "%n", gekozenSpeler.gebruikersnaam(), gekozenKleur);
 
 		do {
 			System.out.printf("%s%n", messages.getString("nogEenSpelerToevoegenVraag"));
@@ -337,11 +337,12 @@ public class KingdominoApp {
 		// Print geschudde dominotegels
 		List<Dominotegel> geschuddeDominotegels = Spel.schudDominotegels(aantalSpelers); // Aangepast om aantalSpelers//
 
-		//List<Dominotegel> geschuddeDominotegels = spel.schudDominotegels(aantalSpelers); }
+		//List<Dominotegels> geschuddeDominotegels = spel.schudDominotegels(aantalSpelers); }
 // door te geven
 
 		List<Dominotegel> startKolom = new ArrayList<>();
 		for (int i = 0; i < aantalSpelers; i++) {
+			assert geschuddeDominotegels != null;
 			startKolom.add(geschuddeDominotegels.get(0));
 			geschuddeDominotegels.remove(0);
 		}
@@ -351,7 +352,7 @@ public class KingdominoApp {
 			System.out.println(tegel);
 		}
 		/*
-		 * for (Dominotegel tegel : geschuddeDominotegels) { System.out.println(tegel);
+		 * for (Dominotegel tegel: geschuddeDominotegels) { System.out.println(tegel);
 		 * // Aanroepen van toString() methode van Dominotegel }
 		 */
 
@@ -400,9 +401,9 @@ public class KingdominoApp {
 			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(tegelSpeler.get(tegel)));
 		}
 
-		if (aantalDominotegels == 0) {
+		if (aantalDominotegels == 48) {
 			//einde spel + winnaar
-			//sorteer spelerDTO op score
+			//sorteert spelerDTO op score
 			Spel.sorteerOpScore();
 			Speler topSpeler = null;
 			int tempMaxScore = 0;
@@ -416,7 +417,7 @@ public class KingdominoApp {
 			List<Integer> topScores = spelerScores.get(topSpeler);
 
 			// kijk wie gelijk is met winnaar
-			System.out.println("Winnaar(s):");
+	/*		System.out.println("Winnaar(s):");
 			boolean nietWinnaarGevonden = false;
 			for (Map.Entry<Speler, List<Integer>> persoon : spelerScores.entrySet()) {
 				Speler speler = persoon.getKey();
@@ -426,7 +427,7 @@ public class KingdominoApp {
 				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
 						&& scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
 					System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
-
+*/
 					// Now check for ties //het zou beter werken als we Speler ipv SpelerDTO gebruiken
 					System.out.println("Winnaar(s):");
 					boolean foundNonWinner = false;
@@ -439,9 +440,9 @@ public class KingdominoApp {
 							System.out.printf("Speler %s met kleur %s met een %s", speler.gebruikersnaam(),
 									spelerKleurMap.get(speler), scoreDetails); // This player is a winner
 						} else {
+							boolean nietWinnaarGevonden = false;
 							if (!nietWinnaarGevonden) {
 								System.out.println("Niet-winnaar(s):");
-								nietWinnaarGevonden = true;
 							}
 							System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
 							System.out.printf("Speler %s met kleur %s met %s", speler.gebruikersnaam(),
@@ -451,10 +452,7 @@ public class KingdominoApp {
 				}
 			}
 		}
-	}
 
-	private void ronde() {
 
-	}
 
-}
+

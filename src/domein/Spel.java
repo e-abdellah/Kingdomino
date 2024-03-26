@@ -14,25 +14,24 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.Comparator;
 
 import dto.SpelerDTO;
 
 public class Spel {
 
+
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
-	private Set<Integer> getallen;
+
 	private List<Dominotegel> dominotegels;
-	private List<Speler> spelers;
-	private List<Dominotegel> stapelDominotegels; // Stapel met alle dominotegels, gesorteerd op nummer
+	private static List<Speler> spelers;
+	private final List<Dominotegel> stapelDominotegels = new ArrayList<>(); // Stapel met alle dominotegels, gesorteerd op nummer
 	private List<Dominotegel> startKolom; // Startkolom met dominotegels voor deze ronde
 	private List<Dominotegel> eindKolom; // Eindkolom met dominotegels voor de volgende ronde
 
-	private boolean isEindeSpel;
 	protected static final int MAX_LENGTE = 6;
 
-	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, boolean isEindeSpel) {
-		this.isEindeSpel = isEindeSpel;
+	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, List<Dominotegel> startKolom, boolean isEindeSpel) {
+		this.startKolom = startKolom;
 		setAantalSpelers(aantalSpelers);
 		getallen = new HashSet<>(36);
 		dominotegels = new ArrayList<>();
@@ -42,11 +41,15 @@ public class Spel {
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels) {
 		setAantalSpelers(aantalSpelers);
 		setDominotegels(dominotegels);
-		getallen = new HashSet<>(36);
+		Set<Integer> getallen = new HashSet<>(36);
 	}
 
 	public Spel() {
 		setAantalSpelers(aantalSpelers);
+	}
+
+	public static void setSpelers(List<Speler> spelers) {
+		Spel.spelers = spelers;
 	}
 
 	public List<SpelerDTO> getAantalSpelers() {
@@ -137,10 +140,11 @@ public class Spel {
 		int aantalBenodigdeTegels = (aantalSpelers == 3) ? 36 : 48;
 
 		// Retourneer een sublist met het vereiste aantal tegels
-		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
+		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));*/
+		return null;
 	}
 
-	protected List<Dominotegel> schudDominotegelsAantal(int aantal) {
+	public static List<Dominotegel> schudDominotegelsAantal(int aantal) {
 		if (dominotegels == null) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
 			dominotegels = new ArrayList<>();
@@ -156,7 +160,7 @@ public class Spel {
 		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
 	}
 
-	public HashMap<Speler, List<Integer>> geefScores() {
+	public static HashMap<Speler, List<Integer>> geefScores() {
 		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();
 		for (Speler speler : spelers) {
 			spelerScores.put(speler, speler.getScores());
@@ -164,7 +168,7 @@ public class Spel {
 		return spelerScores;
 	}
 
-	public List<Integer> berekenScore(SpelerDTO speler) {
+	public static List<Integer> berekenScore(SpelerDTO speler) {
 		List<Integer> returnwaarde = new ArrayList<>();
 		int score = 0;
 		int maxgebied = 0;
@@ -192,7 +196,7 @@ public class Spel {
 		return returnwaarde;
 	}
 
-	public List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk) {
+	public static List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk) {
 		List<Integer> score = new ArrayList<>();
 		int aantal = 1;
 		int kronen = Integer.parseInt(koninkrijk[x][y][1]);
@@ -293,9 +297,12 @@ public class Spel {
 
 
 
-	public void sorteerOpScore() {
+	public static void sorteerOpScore() {
 		// TODO Auto-generated method stub
 
 	}
 
+	public List<Dominotegel> getStapelDominotegels() {
+		return stapelDominotegels;
+	}
 }
