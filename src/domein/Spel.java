@@ -254,6 +254,10 @@ public class Spel {
 		verplaatsTegelsNaarStartKolom();
 	}
 
+	private void speelBeurt(Speler speler) {
+		// Hier implementeer je de logica voor de speler om zijn beurt te spelen
+	}
+
 	private void vulEindKolomAan() {
 		eindKolom.clear(); // Zorg dat de eindkolom leeg is voor nieuwe tegels
 		for (int i = 0; i < aantalSpelers.size(); i++) {

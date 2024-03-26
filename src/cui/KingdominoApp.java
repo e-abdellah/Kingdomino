@@ -51,6 +51,10 @@ public class KingdominoApp {
 			switch (keuze) {
 			case 1 -> registreerSpeler();
 			case 2 -> startSpel();
+			case 3 -> speelSpel();
+			case 4 -> speelRonde();
+			case 5 -> speelBeurt();
+
 
 			}
 			keuze = sc.nextInt();
@@ -63,6 +67,15 @@ public class KingdominoApp {
 			System.out.println("Voorkant foto pad: " + tegel1.getVoorkantFotoPad());
 			System.out.println("Achterkant foto pad: " + tegel1.getAchterkantFotoPad());
 		}
+	}
+
+	private void speelSpel() {
+	}
+
+	private void speelRonde() {
+	}
+
+	private void speelBeurt() {
 	}
 
 	// kiesTaal methode om eenmalig een taal te kunnen kiezen bij het opstarten van
