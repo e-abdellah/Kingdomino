@@ -13,19 +13,19 @@ import dto.SpelerDTO;
 
 public class Spel {
 
+
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
-	private Set<Integer> getallen;
+
 	private List<Dominotegel> dominotegels;
 	private List<Speler> spelers = new ArrayList<>();
 	private List<Dominotegel> stapelDominotegels; // Stapel met alle dominotegels, gesorteerd op nummer
 	private List<Dominotegel> startKolom; // Startkolom met dominotegels voor deze ronde
 	private List<Dominotegel> eindKolom; // Eindkolom met dominotegels voor de volgende ronde
 
-	private boolean isEindeSpel;
 	protected static final int MAX_LENGTE = 6;
 
-	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, boolean isEindeSpel) {
-		this.isEindeSpel = isEindeSpel;
+	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, List<Dominotegel> startKolom, boolean isEindeSpel) {
+		this.startKolom = startKolom;
 		setAantalSpelers(aantalSpelers);
 		getallen = new HashSet<>(36);
 		dominotegels = new ArrayList<>();
@@ -35,7 +35,7 @@ public class Spel {
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels) {
 		setAantalSpelers(aantalSpelers);
 		setDominotegels(dominotegels);
-		getallen = new HashSet<>(36);
+		Set<Integer> getallen = new HashSet<>(36);
 	}
 
 	public Spel() {
@@ -132,7 +132,8 @@ public class Spel {
 		int aantalBenodigdeTegels = (aantalSpelers == 3) ? 36 : 48;
 
 		// Retourneer een sublist met het vereiste aantal tegels
-		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
+		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));*/
+		return null;
 	}
 
 	public HashMap<Speler, List<Integer>> geefScores() {

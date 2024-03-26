@@ -7,6 +7,7 @@ module Kingdomino_g36 {
 	exports testen;
 	exports dto;
 	exports exceptions;
+	exports utils;
 
 	requires java.sql;
 	requires javafx.base;
