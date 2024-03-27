@@ -56,6 +56,13 @@ public class DomeinController {
 	public void berekenWinnaars(){
 		spel.berekenWinnaars();
 	}
-	
+	public List<String> geefKleurenInTaal(Locale locale) {
+		ResourceBundle colors = ResourceBundle.getBundle("utils.resource_bundle", locale);
+		List<String> kleurTaal = new ArrayList<>();
+		for (Kleuren kleur : Kleuren.values()) {
+			kleurTaal.add(colors.getString(kleur.name()));
+		}
+		return kleurTaal;
+	}
 
 }
