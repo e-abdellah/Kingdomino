@@ -56,5 +56,6 @@ public class DomeinController {
 	public void berekenWinnaars(){
 		spel.berekenWinnaars();
 	}
+	
 
 }

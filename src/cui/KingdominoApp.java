@@ -30,6 +30,7 @@ public class KingdominoApp {
 	ResourceBundle messages = null;
 	private SpelDTO spelDTO;
 	private List<Dominotegel> dominotegels;
+	private List<String> testkleuren;
 
 
 	public KingdominoApp(DomeinController dc) {
@@ -38,7 +39,7 @@ public class KingdominoApp {
 		gekozenSpelers = new ArrayList<>();
 		beschikbareSpelers = dc.geefOverzichtSpelers();
 		spelerKleurMap = new HashMap<>();
-		kleuren = DomeinController.geefAlleKleuren();
+
 		kiesTaal();
 	}
 

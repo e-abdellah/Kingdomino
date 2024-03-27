@@ -7,5 +7,4 @@ public enum Kleuren {
 
 	GROEN, BLAUW, ROOS, GEEL;
 
-
 }
