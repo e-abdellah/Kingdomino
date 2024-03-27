@@ -1,8 +1,6 @@
 package gui;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 import domein.DomeinController;
 import domein.Dominotegel;
@@ -11,8 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 public class SpelController {
 
@@ -70,6 +66,8 @@ public class SpelController {
 	private void startRonde() {
 		// TODO Plaats spelstapel in het midden
 
+
+
 		// TODO Plaats per speler zijn kasteel op zijn starttegel
 
 	}
@@ -109,6 +107,7 @@ public class SpelController {
 	private Dominotegel kiesTegelInStartKolom() {
 		// TODO: Implementeer de logica om de gebruiker een tegel uit de startkolom te laten kiezen.
 		// Dialoog met de beschikbare tegels.
+		Scanner scanner = new Scanner(System.in);
 
 		Dominotegel gekozenTegel = null; // Placeholder voor de gekozen tegel
 
@@ -116,8 +115,17 @@ public class SpelController {
 
 		while (!isTegelGekozen) {
 
-			gekozenTegel = startKolom.get(0); // Default tegel
+			// gekozenTegel = startKolom.get(0); // Default tegel
 			// TODO speler kiest een tegel in GUI
+			// Veronderstelt dat startKolom een List of Deque van Dominotegels is
+			System.out.println("Beschikbare tegels in de startkolom:");
+			for (int i = 0; i < startKolom.size(); i++) {
+				System.out.println(i + ": " + startKolom.get(i).toString()); // Zorg ervoor dat Dominotegel een zinvolle toString() heeft
+			}
+
+			System.out.println("Kies een tegelnummer:");
+			int gekozenIndex = scanner.nextInt(); // Dit is CLI logica, in GUI zou je een andere manier van selecteren hebben
+
 
 			// Controleer of de gekozen tegel vrij is
 			if (gekozenTegel != null && isTegelVrij(gekozenTegel)) {
@@ -125,12 +133,17 @@ public class SpelController {
 				startKolom.remove(gekozenTegel);
 			} else {
 				// TODO: Toon een bericht aan de gebruiker dat de gekozen tegel niet vrij is
+				System.out.println("De gekozen tegel is niet vrij. Kies een andere tegel.");
+
 				// en vraag om een andere tegel te kiezen.
+				System.out.println("Kies een andere tegelnummer:");
+				gekozenIndex = scanner.nextInt();
 			}
 		}
 
 		// TODO: Implementeer de logica om de gekozen tegel in de GUI te tonen met de landschapszijde naar boven.
 		// Dit kan bijvoorbeeld het updaten van de weergave van de tegel zijn om deze te markeren als gekozen.
+
 
 		return gekozenTegel; // Return de uiteindelijk gekozen en gevalideerde tegel
 	}
