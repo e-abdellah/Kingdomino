@@ -102,11 +102,17 @@ public class WelkomKDController {
 
 		TextField gebruikersnaam = new TextField();
 		gebruikersnaam.setPromptText(resourceBundle.getString("naamSpelerLabel"));
+		gebruikersnaam.setPrefWidth(200); // Zet de voorkeursbreedte
+		gebruikersnaam.setMinWidth(TextField.USE_PREF_SIZE); // Gebruik voorkeursbreedte als minimale breedte
+		gebruikersnaam.setMaxWidth(TextField.USE_PREF_SIZE); // Gebruik voorkeursbreedte als maximale breedte
 		Label gebruikersnaamFout = new Label();
 		gebruikersnaamFout.setStyle("-fx-text-fill: red;");
 
 		TextField geboortejaar = new TextField();
 		geboortejaar.setPromptText(resourceBundle.getString("geboortejaarSpelerLabel"));
+		geboortejaar.setPrefWidth(200); // Zet de voorkeursbreedte
+		geboortejaar.setMinWidth(TextField.USE_PREF_SIZE); // Gebruik voorkeursbreedte als minimale breedte
+		geboortejaar.setMaxWidth(TextField.USE_PREF_SIZE); // Gebruik voorkeursbreedte als maximale breedte
 		Label geboortejaarFout = new Label();
 		geboortejaarFout.setStyle("-fx-text-fill: red;");
 

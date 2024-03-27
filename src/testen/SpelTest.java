@@ -1,3 +1,4 @@
+
 package testen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,6 +23,7 @@ class SpelTest {
 	void voegSpelers_fouteAantalspelers_WerptException(List<SpelerDTO> spelers) {
 		assertThrows(IllegalArgumentException.class, () -> new Spel(spelers, List.of()));
 		// er wordt gecontrollerd of de aantal spelers niet correct is
+
 	}
 
 	@ParameterizedTest
