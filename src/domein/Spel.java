@@ -200,8 +200,8 @@ public class Spel {
 		Deque<Dominotegel> geschuddeDominotegels = schudDominotegels(aantal);
 		List<Dominotegel> kolom = new ArrayList<>();
 		for (int i = 0; i < aantal; i++) {
-			kolom.add(geschuddeDominotegels.get(0));
-			geschuddeDominotegels.remove(0);
+			kolom.add(geschuddeDominotegels.getFirst());
+			geschuddeDominotegels.removeFirst();
 		}
 		kolom.sort(Comparator.comparingInt(Dominotegel::getGetal));
 		return kolom;

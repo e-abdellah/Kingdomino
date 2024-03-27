@@ -33,7 +33,7 @@ public class SpelController {
 		this.dc = new DomeinController();
 		kdController = new WelkomKDController();
 		aantalSpelers = kdController.getAantalSpelersGekozen();
-		stapel = (Deque<Dominotegel>) dc.schudDominotegels(aantalSpelers);
+		stapel = dc.schudDominotegels(aantalSpelers);
 	}
 
 	@FXML
@@ -50,7 +50,7 @@ public class SpelController {
 	}
 
 	private void toonDominotegels() {
-		List<Dominotegel> dominotegels = dc.schudDominotegels(3);
+		Deque<Dominotegel> dominotegels = dc.schudDominotegels(3);
 		for (Dominotegel tegel : dominotegels) {
 			Image image = new Image(tegel.getVoorkantFotoPad());
 			System.out.println(tegel.getVoorkantFotoPad());

@@ -2,7 +2,7 @@ package cui;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -14,10 +14,8 @@ import java.util.Scanner;
 
 import domein.DomeinController;
 import domein.Dominotegel;
-import domein.Spel;
-import domein.Speler;
-import dto.SpelerDTO;
 import dto.SpelDTO;
+import dto.SpelerDTO;
 
 public class KingdominoApp {
 
@@ -29,9 +27,8 @@ public class KingdominoApp {
 	private Map<SpelerDTO, String> spelerKleurMap;
 	ResourceBundle messages = null;
 	private SpelDTO spelDTO;
-	private List<Dominotegel> dominotegels;
+	private Deque<Dominotegel> dominotegels;
 	private List<String> testkleuren;
-
 
 	public KingdominoApp(DomeinController dc) {
 		this.dc = dc;
@@ -43,16 +40,16 @@ public class KingdominoApp {
 
 	}
 
-    public void start() {
+	public void start() {
 
-		String[] menuKeuzes = {messages.getString("registreerSpeler"), messages.getString("startNieuwSpel"),
-				messages.getString("afsluiten")};
+		String[] menuKeuzes = { messages.getString("registreerSpeler"), messages.getString("startNieuwSpel"),
+				messages.getString("afsluiten") };
 
 		int keuze = maakMenuKeuze(menuKeuzes, messages.getString("kiesOptie"));
 		while (keuze != 6) {
 			switch (keuze) {
-				case 1 -> registreerSpeler();
-				case 2 -> startSpel();
+			case 1 -> registreerSpeler();
+			case 2 -> startSpel();
 
 			}
 			keuze = sc.nextInt();
@@ -80,27 +77,26 @@ public class KingdominoApp {
 			System.out.println("2. Nederlands");
 			System.out.println("3. Français");
 
-			
 			try {
 				int taalKeuze = sc.nextInt();
 				sc.nextLine();
 
 				// Switch om de taalkeuze te kunnen invoeren, na invoer wordt locale ingesteld
 				switch (taalKeuze) {
-					case 1 -> {
-						locale = new Locale("en", "EN");
-						geldigeTaalKeuze = true;
-					}
-					case 2 -> {
-						locale = new Locale("nl", "NL");
-						geldigeTaalKeuze = true;
-					}
-					case 3 -> {
-						locale = new Locale("fr", "FR");
-						geldigeTaalKeuze = true;
-					}
-					default -> System.out.println(
-							"Entrée incorrecte. Veuillez choisir 1 ou 2 pour choisir votre langue.// Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
+				case 1 -> {
+					locale = new Locale("en", "EN");
+					geldigeTaalKeuze = true;
+				}
+				case 2 -> {
+					locale = new Locale("nl", "NL");
+					geldigeTaalKeuze = true;
+				}
+				case 3 -> {
+					locale = new Locale("fr", "FR");
+					geldigeTaalKeuze = true;
+				}
+				default -> System.out.println(
+						"Entrée incorrecte. Veuillez choisir 1 ou 2 pour choisir votre langue.// Foutieve invoer, Voer 1 of 2 in om uw taal te kiezen. // Wrong input, Choose 1 or 2 to choose your language.");
 				}
 				// InputMismatchException om ervoor te zorgen dat enkel de cijfers die bij een
 				// taal horen ingevoerd kunnen worden
@@ -272,7 +268,8 @@ public class KingdominoApp {
 		spelerKleurMap.put(gekozenSpeler, gekozenKleur);
 		beschikbareSpelers.remove(gekozenSpeler);
 		kleuren.remove(gekozenKleur.toUpperCase());
-		System.out.printf((messages.getString("spelerToegevoegd")) + "%n", gekozenSpeler.gebruikersnaam(), gekozenKleur);
+		System.out.printf((messages.getString("spelerToegevoegd")) + "%n", gekozenSpeler.gebruikersnaam(),
+				gekozenKleur);
 
 		do {
 			System.out.printf("%s%n", messages.getString("nogEenSpelerToevoegenVraag"));
@@ -373,16 +370,11 @@ public class KingdominoApp {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
 			String[][][] koninkrijk = spelerDTO.koninkrijk();
-			for (int x = 0; x < koninkrijk.length; x++)
-			{
-				for (int y = 0; y < koninkrijk[x].length; y++)
-				{
-					if(x == koninkrijk.length / 2 && y == koninkrijk.length / 2)
-					{
+			for (int x = 0; x < koninkrijk.length; x++) {
+				for (int y = 0; y < koninkrijk[x].length; y++) {
+					if (x == koninkrijk.length / 2 && y == koninkrijk.length / 2) {
 						System.out.printf("%10s", "starttegel");
-					}
-					else
-					{
+					} else {
 						System.out.printf("%10s", koninkrijk[x][y][0] != null ? koninkrijk[x][y][0] : "");
 					}
 				}
@@ -403,41 +395,37 @@ public class KingdominoApp {
 			}
 		}
 
-			/*kijk wie gelijk is met winnaar
-			System.out.println("Winnaar(s):");
-			boolean nietWinnaarGevonden = false;
-			for (Speler speler : spelDTO.spelers()) {
-				List<Integer> scores = spelerScores.get(speler);
-				String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
-						scores.get(1), scores.get(2));
-				if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
-						&& scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
-					System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
-
-					// Now check for ties //het zou beter werken als we Speler ipv SpelerDTO gebruiken
-					System.out.println("Winnaar(s):");
-					boolean foundNonWinner = false;
-					for (Speler speler1 : spelDTO.spelers()) {
-						List<Integer> score = spelerScores.get(speler1);
-						String scoreDetail = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
-								scores.get(1), scores.get(2));
-						if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
-								&& scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
-							System.out.printf("Speler %s met een %s", speler.getGebruikersnaam(),
-									scoreDetails); // This player is a winner
-						} else {
-							boolean nietWinnaarGevonden = false;
-							if (!nietWinnaarGevonden) {
-								System.out.println("Niet-winnaar(s):");
-							}
-							System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
-							System.out.printf("Speler %s met %s", speler.getGebruikersnaam(),
-									scoreDetails);
+		/*kijk wie gelijk is met winnaar
+		System.out.println("Winnaar(s):");
+		boolean nietWinnaarGevonden = false;
+		for (Speler speler : spelDTO.spelers()) {
+			List<Integer> scores = spelerScores.get(speler);
+			String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
+					scores.get(1), scores.get(2));
+			if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
+					&& scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
+				System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
+		
+				// Now check for ties //het zou beter werken als we Speler ipv SpelerDTO gebruiken
+				System.out.println("Winnaar(s):");
+				boolean foundNonWinner = false;
+				for (Speler speler1 : spelDTO.spelers()) {
+					List<Integer> score = spelerScores.get(speler1);
+					String scoreDetail = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
+							scores.get(1), scores.get(2));
+					if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
+							&& scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
+						System.out.printf("Speler %s met een %s", speler.getGebruikersnaam(),
+								scoreDetails); // This player is a winner
+					} else {
+						boolean nietWinnaarGevonden = false;
+						if (!nietWinnaarGevonden) {
+							System.out.println("Niet-winnaar(s):");
 						}
-					}*/
+						System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
+						System.out.printf("Speler %s met %s", speler.getGebruikersnaam(),
+								scoreDetails);
+					}
+				}*/
 	}
 }
-
-
-
-

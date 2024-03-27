@@ -58,7 +58,7 @@ public class DomeinController {
 		return kleuren.stream().map(Enum::toString).collect(Collectors.toList());
 	}
 
-	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
+	public Deque<Dominotegel> schudDominotegels(int aantalSpelers) {
 		return spel.schudDominotegels(aantalSpelers);
 	}
 
