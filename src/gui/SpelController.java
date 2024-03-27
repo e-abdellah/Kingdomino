@@ -11,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class SpelController {
 
@@ -27,6 +29,10 @@ public class SpelController {
 	private WelkomKDController kdController;
 	private Deque<Dominotegel> stapel;
 	private List<Dominotegel> startKolom;
+
+	private ResourceBundle resourceBundle;
+
+	private Locale locale;
 
 	public SpelController() {
 		// Je DomeinController initialiseren, indien nodig
