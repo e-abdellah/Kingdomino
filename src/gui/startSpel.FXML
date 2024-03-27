@@ -7,6 +7,16 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="787.0" prefWidth="1184.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
 	<children>
+      <ImageView fitHeight="787.0" fitWidth="1184.0">
+         <image>
+            <Image url="@../../../../../../../Pictures/kingdomino.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="796.0" fitWidth="940.0" layoutY="-5.0">
+         <image>
+            <Image url="@../../../../../../../Pictures/Kingdomino_Box_Cover.png" />
+         </image>
+      </ImageView>
 		<VBox fx:id="spelerInformatieContainer" layoutX="327.0" layoutY="40.0" prefHeight="96.0" prefWidth="202.0">
 			<!-- Labels voor spelers en kleuren zullen hier programmatisch worden 
 				toegevoegd -->
@@ -19,7 +29,7 @@
             <Image url="@../imgs/starttegel_blauw.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="89.0" fitWidth="88.0" layoutX="667.0" layoutY="136.0">
+      <ImageView fitHeight="89.0" fitWidth="88.0" layoutX="884.0" layoutY="148.0">
          <image>
             <Image url="@../imgs/starttegel_geel.png" />
          </image>
@@ -29,9 +39,14 @@
             <Image url="@../imgs/starttegel_groen.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="89.0" fitWidth="88.0" layoutX="674.0" layoutY="510.0">
+      <ImageView fitHeight="89.0" fitWidth="88.0" layoutX="884.0" layoutY="510.0">
          <image>
             <Image url="@../imgs/starttegel_roos.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="177.0" fitWidth="152.0" layoutX="453.0" layoutY="92.0">
+         <image>
+            <Image url="@../../../../../../../Pictures/stapelKD.png" />
          </image>
       </ImageView>
 <!-- 		<ImageView fitHeight="107.0" fitWidth="186.0" layoutX="634.0" layoutY="35.0" preserveRatio="true" AnchorPane.bottomAnchor="502.0" AnchorPane.leftAnchor="634.0" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="35.0"> -->

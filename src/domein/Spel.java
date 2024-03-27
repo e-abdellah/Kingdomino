@@ -7,12 +7,20 @@ import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Deque;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import dto.SpelerDTO;
 
 public class Spel {
-
 
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
 
@@ -21,14 +29,15 @@ public class Spel {
 
 	protected static final int MAX_LENGTE = 6;
 
-	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen, List<Dominotegel> startKolom, boolean isEindeSpel) {
+	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen,
+			List<Dominotegel> startKolom, boolean isEindeSpel) {
 		setAantalSpelers(aantalSpelers);
 		getallen = new HashSet<>(36);
 		dominotegels = new ArrayList<>();
 		genereerAantalDominotegels();
 	}
 
-	public final void voegSpelersToe(Speler speler){
+	public final void voegSpelersToe(Speler speler) {
 		spelers.add(speler);
 	}
 
@@ -42,7 +51,9 @@ public class Spel {
 		setAantalSpelers(aantalSpelers);
 	}
 
-	public List<Speler> getSpelers(){return spelers;}
+	public List<Speler> getSpelers() {
+		return spelers;
+	}
 
 	public List<SpelerDTO> getAantalSpelers() {
 		return aantalSpelers;
@@ -120,7 +131,7 @@ public class Spel {
 	}
 
 	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
-		if (dominotegels == null) {
+		if (dominotegels == null || dominotegels.isEmpty()) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
 			dominotegels = new ArrayList<>();
 			genereerAantalDominotegels(); // Mogelijke actie
@@ -134,6 +145,37 @@ public class Spel {
 		// Retourneer een sublist met het vereiste aantal tegels
 		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
 	}
+
+	public List<Dominotegel> geefTegels(int aantal) {
+		if (dominotegels == null || dominotegels.isEmpty()) {
+			// Log een fout, initialiseer de lijst, of gooi een exception
+			dominotegels = new ArrayList<>();
+			genereerAantalDominotegels(); // Zorgt dat de lijst met dominotegels wordt gegenereerd
+		}
+
+		Collections.shuffle(dominotegels); // Schud de lijst met dominotegels
+
+		// Zorg ervoor dat je niet meer tegels vraagt dan beschikbaar zijn
+		int aantalBenodigdeTegels = Math.min(aantal, dominotegels.size());
+
+		// Maak een nieuwe lijst van de eerste 'aantalBenodigdeTegels' tegels
+		List<Dominotegel> opgehaaldeTegels = new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels));
+
+		// Verwijder deze tegels uit de oorspronkelijke lijst
+		dominotegels.removeAll(opgehaaldeTegels);
+
+		// Retourneer de opgehaalde tegels
+		return opgehaaldeTegels;
+	}
+
+	public List<Dominotegel> plaatsTegelsInStartkolom(Deque<Dominotegel> gekozenTegels) {
+		return geefTegels(aantalSpelers.size()).stream().sorted(Comparator.comparing(Dominotegel::getGetal))
+				.collect(Collectors.toList());
+	}
+
+	//	public void kiesTegelInStartKolom(Deque<Dominotegel> gekozenTegels) {
+	//
+	//	}
 
 	public HashMap<Speler, List<Integer>> geefScores() {
 		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();
@@ -151,7 +193,8 @@ public class Spel {
 		spelers.sort(new utils.ScoreComparator());
 
 	}
-	public List<Dominotegel> geefBeginOfEindKolom(){
+
+	public List<Dominotegel> geefBeginOfEindKolom() {
 		int aantal = spelers.size();
 		List<Dominotegel> geschuddeDominotegels = schudDominotegels(aantal);
 		List<Dominotegel> kolom = new ArrayList<>();

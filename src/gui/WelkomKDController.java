@@ -53,6 +53,7 @@ public class WelkomKDController {
 	private Button volgendeBtn;
 
 	private ResourceBundle resourceBundle;
+	protected int aantalSpelersGekozen;
 
 	//	public void initialize() {
 	//		// Stel de standaard taal in
@@ -180,12 +181,12 @@ public class WelkomKDController {
 		List<String> spelerEnKleurInformatie = new ArrayList<>(); // Verplaatst om zichtbaar te zijn buiten de lambda
 
 		aantalSpelersResultaat.ifPresent(aantalSpelers -> {
-			int aantal = Integer.parseInt(aantalSpelers);
+			aantalSpelersGekozen = Integer.parseInt(aantalSpelers);
 			List<String> spelersNamen = dc.geefOverzichtSpelers().stream().map(SpelerDTO::gebruikersnaam)
 					.collect(Collectors.toList());
 			List<String> beschikbareKleuren = DomeinController.geefAlleKleuren();
 
-			for (int i = 1; i <= aantal; i++) {
+			for (int i = 1; i <= aantalSpelersGekozen; i++) {
 				ChoiceDialog<String> spelerKeuzeDialog = new ChoiceDialog<>(spelersNamen.get(0), spelersNamen);
 				spelerKeuzeDialog.setTitle("Kies Speler");
 				spelerKeuzeDialog.setHeaderText("Kies speler " + i);
@@ -229,10 +230,6 @@ public class WelkomKDController {
 		}
 	}
 
-	// @FXML
-	// private void afsluiten() {
-	// showAlert("Afsluiten", "Actie nog niet geïmplementeerd");
-	// }
 	@FXML
 	private void afsluiten(Event event) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -259,6 +256,10 @@ public class WelkomKDController {
 		alert.setHeaderText(null);
 		alert.setContentText(content);
 		alert.showAndWait();
+	}
+
+	public int getAantalSpelersGekozen() {
+		return aantalSpelersGekozen;
 	}
 
 }
