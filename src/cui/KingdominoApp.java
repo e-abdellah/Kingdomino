@@ -39,11 +39,10 @@ public class KingdominoApp {
 		gekozenSpelers = new ArrayList<>();
 		beschikbareSpelers = dc.geefOverzichtSpelers();
 		spelerKleurMap = new HashMap<>();
-
 		kiesTaal();
 	}
 
-	public void start() {
+    public void start() {
 
 		String[] menuKeuzes = {messages.getString("registreerSpeler"), messages.getString("startNieuwSpel"),
 				messages.getString("afsluiten")};
@@ -65,15 +64,6 @@ public class KingdominoApp {
 			System.out.println("Voorkant foto pad: " + tegel1.getVoorkantFotoPad());
 			System.out.println("Achterkant foto pad: " + tegel1.getAchterkantFotoPad());
 		}
-	}
-
-	private void speelSpel() {
-	}
-
-	private void speelRonde() {
-	}
-
-	private void speelBeurt() {
 	}
 
 	// kiesTaal methode om eenmalig een taal te kunnen kiezen bij het opstarten van
@@ -124,6 +114,7 @@ public class KingdominoApp {
 			// Past het pad aan op basis van de gekozen taal zodat de juiste resource bundle
 			// ingeladen kan worden
 			messages = ResourceBundle.getBundle("utils.resource_bundle", locale);
+			kleuren = dc.geefKleurenInTaal(locale);
 		} catch (MissingResourceException e) {
 			System.err.println("Error loading resource bundle: " + e.getMessage());
 		}
