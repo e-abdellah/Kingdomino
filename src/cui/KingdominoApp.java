@@ -40,6 +40,7 @@ public class KingdominoApp {
 		beschikbareSpelers = dc.geefOverzichtSpelers();
 		spelerKleurMap = new HashMap<>();
 		kiesTaal();
+
 	}
 
     public void start() {
@@ -168,6 +169,7 @@ public class KingdominoApp {
 		} else {
 			// toonOverzicht();
 			kiesSpeler();
+
 			startKingdomino();
 		}
 	}
@@ -251,9 +253,6 @@ public class KingdominoApp {
 		// Voeg de gekozen speler toe aan de lijst en verwijder deze uit de lijst van
 		// beschikbare spelers
 		gekozenSpelers.add(gekozenSpeler);
-		dominotegels = dc.schudDominotegels(gekozenSpelers.size());
-		spelDTO = dc.geefSpelDTO();
-		dc.voegSpelersToe(gekozenSpelers);
 		String gekozenKleur;
 		do {
 			System.out.printf("%s ", messages.getString("kiesKleurSpeler"));
@@ -312,6 +311,10 @@ public class KingdominoApp {
 	private void startKingdomino() {
 		int aantalSpelers = gekozenSpelers.size();
 		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
+
+		dominotegels = dc.schudDominotegels(gekozenSpelers.size());
+		dc.voegSpelersToe(gekozenSpelers);
+		spelDTO = dc.geefSpelDTO();
 
 		System.out.println("Het spel heeft " + aantalDominotegels + " dominotegels.");
 

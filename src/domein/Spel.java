@@ -62,7 +62,7 @@ public class Spel {
 	public void setDominotegels(List<Dominotegel> dominotegels) {
 		if (aantalSpelers.size() == 3)
 			this.dominotegels = new ArrayList<>(36);
-		else
+		if (aantalSpelers.size() == 4)
 			this.dominotegels = new ArrayList<>(48);
 
 	}
