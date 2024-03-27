@@ -7,6 +7,7 @@ import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -130,7 +131,7 @@ public class Spel {
 
 	}
 
-	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
+	public Deque<Dominotegel> schudDominotegels(int aantalSpelers) {
 		if (dominotegels == null || dominotegels.isEmpty()) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
 			dominotegels = new ArrayList<>();
@@ -143,7 +144,7 @@ public class Spel {
 		int aantalBenodigdeTegels = (aantalSpelers == 3) ? 36 : 48;
 
 		// Retourneer een sublist met het vereiste aantal tegels
-		return new ArrayList<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
+		return new ArrayDeque<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
 	}
 
 	public List<Dominotegel> geefTegels(int aantal) {
@@ -196,7 +197,7 @@ public class Spel {
 
 	public List<Dominotegel> geefBeginOfEindKolom() {
 		int aantal = spelers.size();
-		List<Dominotegel> geschuddeDominotegels = schudDominotegels(aantal);
+		Deque<Dominotegel> geschuddeDominotegels = schudDominotegels(aantal);
 		List<Dominotegel> kolom = new ArrayList<>();
 		for (int i = 0; i < aantal; i++) {
 			kolom.add(geschuddeDominotegels.get(0));

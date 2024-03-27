@@ -6,6 +6,7 @@ import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import dto.SpelDTO;
 import dto.SpelerDTO;
@@ -54,7 +55,7 @@ public class DomeinController {
 
 	public static List<String> geefAlleKleuren() {
 		List<Kleuren> kleuren = Arrays.asList(Kleuren.values());
-		return kleuren.stream().map(Enum::toString).toList();
+		return kleuren.stream().map(Enum::toString).collect(Collectors.toList());
 	}
 
 	public List<Dominotegel> schudDominotegels(int aantalSpelers) {
