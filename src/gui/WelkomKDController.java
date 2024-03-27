@@ -78,7 +78,7 @@ public class WelkomKDController {
 		resourceBundle = ResourceBundle.getBundle("utils.resource_bundle", new Locale(language));
 
 		// Set de tekst van de knoppen vanuit de ResourceBundle
-		registreerBtn.setText(resourceBundle.getString("registerButton"));
+		registreerBtn.setText(resourceBundle.getString("registreerButton"));
 		startBtn.setText(resourceBundle.getString("startButton"));
 		afsluitenBtn.setText(resourceBundle.getString("exitButton"));
 		//		titleLabel.setText(resourceBundle.getString("welcomeMessage"));
@@ -87,11 +87,11 @@ public class WelkomKDController {
 	@FXML
 	private void registreerSpeler() {
 		Dialog<Void> dialog = new Dialog<>();
-		dialog.setTitle("Nieuwe Speler Registratie");
-		dialog.setHeaderText("Voer de gegevens van de nieuwe speler in:");
+		dialog.setTitle(resourceBundle.getString("nieuweSpelerRegistratieLabel"));
+		dialog.setHeaderText(resourceBundle.getString("voerGegevensSpelerIn"));
 
 		// Voeg knoppen toe.
-		ButtonType registreerButtonType = new ButtonType("Registreer");
+		ButtonType registreerButtonType = new ButtonType(resourceBundle.getString("registreerSpelerButton"));
 		dialog.getDialogPane().getButtonTypes().addAll(registreerButtonType, ButtonType.CANCEL);
 
 		// Maak de invoervelden en foutmeldingen.
@@ -100,19 +100,19 @@ public class WelkomKDController {
 		grid.setVgap(10);
 
 		TextField gebruikersnaam = new TextField();
-		gebruikersnaam.setPromptText("Gebruikersnaam");
+		gebruikersnaam.setPromptText(resourceBundle.getString("naamSpelerLabel"));
 		Label gebruikersnaamFout = new Label();
 		gebruikersnaamFout.setStyle("-fx-text-fill: red;");
 
 		TextField geboortejaar = new TextField();
-		geboortejaar.setPromptText("Geboortejaar");
+		geboortejaar.setPromptText(resourceBundle.getString("geboortejaarSpelerLabel"));
 		Label geboortejaarFout = new Label();
 		geboortejaarFout.setStyle("-fx-text-fill: red;");
 
-		grid.add(new Label("Gebruikersnaam:"), 0, 0);
+		grid.add(new Label(resourceBundle.getString("naamSpelerLabel")), 0, 0);
 		grid.add(gebruikersnaam, 1, 0);
 		grid.add(gebruikersnaamFout, 1, 1);
-		grid.add(new Label("Geboortejaar:"), 0, 2);
+		grid.add(new Label(resourceBundle.getString("geboortejaarSpelerLabel")), 0, 2);
 		grid.add(geboortejaar, 1, 2);
 		grid.add(geboortejaarFout, 1, 3);
 
@@ -133,7 +133,7 @@ public class WelkomKDController {
 			boolean validatieFout = false;
 
 			if (naam.trim().isEmpty() || naam.length() < 6) {
-				gebruikersnaamFout.setText("Gebruikersnaam moet minstens 6 tekens lang zijn.");
+				gebruikersnaamFout.setText(resourceBundle.getString("GebruikersnaamError"));
 				validatieFout = true;
 			}
 
@@ -141,12 +141,12 @@ public class WelkomKDController {
 			try {
 				jaar = Integer.parseInt(jaarText);
 			} catch (NumberFormatException e) {
-				geboortejaarFout.setText("Geboortejaar moet een getal zijn.");
+				geboortejaarFout.setText(resourceBundle.getString("GeboortejaarGeenGetalError"));
 				validatieFout = true;
 			}
 
 			if (jaar < 1920 || jaar > 2018) {
-				geboortejaarFout.setText("Ongeldig geboortejaar.");
+				geboortejaarFout.setText(resourceBundle.getString("GeboortejaarOngeldigError"));
 				validatieFout = true;
 			}
 

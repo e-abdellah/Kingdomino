@@ -89,6 +89,7 @@ public class KingdominoApp {
 			System.out.println("2. Nederlands");
 			System.out.println("3. Français");
 
+			
 			try {
 				int taalKeuze = sc.nextInt();
 				sc.nextLine();
