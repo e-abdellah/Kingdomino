@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
+import gui.WelkomKDController;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -70,7 +71,7 @@ public class TaalKeuzeController {
 		// Implementeer deze methode om de teksten in de UI bij te werken met de nieuwe
 		// taal
 		// Voorbeeld: label.setText(bundle.getString("kiesOptie"));
-		
+
 	}
 
 	private void navigateToWelcomePage(String fxmlFileName) {
@@ -79,12 +80,12 @@ public class TaalKeuzeController {
 			Parent root = loader.load();
 			stage.setScene(new Scene(root));
 			// Verkrijg een referentie naar de WelkomKDController
-	        welkomkdController = loader.getController();
-	        // Stel het stage in voor de WelkomKDController
-	       // welkomkdController.setStage(stage);
-	        
-	        // Stel de taal in op de WelkomKDController
-	        welkomkdController.setLanguage("en"); // Stel de gewenste taal in
+			welkomkdController = loader.getController();
+			// Stel het stage in voor de WelkomKDController
+			// welkomkdController.setStage(stage);
+
+			// Stel de taal in op de WelkomKDController
+			welkomkdController.setLanguage("en"); // Stel de gewenste taal in
 		} catch (IOException e) {
 			e.printStackTrace(); // Behandel de fout afhankelijk van de behoefte van je applicatie
 		}
