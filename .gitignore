@@ -1,8 +1,10 @@
 /bin/
 src/persistentie/Connectie.java
 .classpath
+.modulepath
 .project
 .settings/
 *.classpath
+*.modulepath
 *.project
 *.settings/
