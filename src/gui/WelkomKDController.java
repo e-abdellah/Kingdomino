@@ -54,11 +54,12 @@ public class WelkomKDController {
 
 	private ResourceBundle resourceBundle;
 	protected int aantalSpelersGekozen;
+	List<String> beschikbareKleuren;
 
-	//	public void initialize() {
-	//		// Stel de standaard taal in
-	//		setLanguage("fr");
-	//	}
+	// public void initialize() {
+	// // Stel de standaard taal in
+	// setLanguage("fr");
+	// }
 	@FXML
 	private void chooseDutch(ActionEvent event) {
 		setLanguage("nl");
@@ -75,14 +76,16 @@ public class WelkomKDController {
 	}
 
 	public void setLanguage(String language) {
+		Locale locale = new Locale(language);
+		beschikbareKleuren = dc.geefKleurenInTaal(locale);
+		resourceBundle = ResourceBundle.getBundle("utils.resource_bundle", locale);
 		// Laad de juiste ResourceBundle op basis van de geselecteerde taal
-		resourceBundle = ResourceBundle.getBundle("utils.resource_bundle", new Locale(language));
 
 		// Set de tekst van de knoppen vanuit de ResourceBundle
 		registreerBtn.setText(resourceBundle.getString("registreerButton"));
 		startBtn.setText(resourceBundle.getString("startButton"));
 		afsluitenBtn.setText(resourceBundle.getString("exitButton"));
-		//		titleLabel.setText(resourceBundle.getString("welcomeMessage"));
+		// titleLabel.setText(resourceBundle.getString("welcomeMessage"));
 	}
 
 	@FXML
@@ -190,7 +193,6 @@ public class WelkomKDController {
 			aantalSpelersGekozen = Integer.parseInt(aantalSpelers);
 			List<String> spelersNamen = dc.geefOverzichtSpelers().stream().map(SpelerDTO::gebruikersnaam)
 					.collect(Collectors.toList());
-			List<String> beschikbareKleuren = DomeinController.geefAlleKleuren();
 
 			for (int i = 1; i <= aantalSpelersGekozen; i++) {
 				ChoiceDialog<String> spelerKeuzeDialog = new ChoiceDialog<>(spelersNamen.get(0), spelersNamen);
