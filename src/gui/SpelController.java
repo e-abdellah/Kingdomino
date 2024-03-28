@@ -1,6 +1,11 @@
 package gui;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import domein.DomeinController;
 import domein.Dominotegel;
@@ -8,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class SpelController {
@@ -20,7 +26,7 @@ public class SpelController {
 	private VBox spelerInformatieContainer; // Voor speler info
 
 	@FXML
-	private VBox dominotegelInformatieContainer; // Voor dominotegels
+	private HBox dominotegelInformatieContainer; // Voor dominotegels
 	private int aantalSpelers;
 	private WelkomKDController kdController;
 	private Deque<Dominotegel> stapel;
@@ -66,8 +72,6 @@ public class SpelController {
 
 	private void startRonde() {
 		// TODO Plaats spelstapel in het midden
-
-
 
 		// TODO Plaats per speler zijn kasteel op zijn starttegel
 
@@ -127,7 +131,6 @@ public class SpelController {
 			System.out.println("Kies een tegelnummer:");
 			int gekozenIndex = scanner.nextInt(); // Dit is CLI logica, in GUI zou je een andere manier van selecteren hebben
 
-
 			// Controleer of de gekozen tegel vrij is
 			if (gekozenTegel != null && isTegelVrij(gekozenTegel)) {
 				isTegelGekozen = true;
@@ -144,7 +147,6 @@ public class SpelController {
 
 		// TODO: Implementeer de logica om de gekozen tegel in de GUI te tonen met de landschapszijde naar boven.
 		// Dit kan bijvoorbeeld het updaten van de weergave van de tegel zijn om deze te markeren als gekozen.
-
 
 		return gekozenTegel; // Return de uiteindelijk gekozen en gevalideerde tegel
 	}
