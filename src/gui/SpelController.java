@@ -41,7 +41,8 @@ public class SpelController {
 	@FXML
 	public void initialize() {
 		// Initialize je UI componenten indien nodig
-		//		toonDominotegels();
+		toonDominotegels();
+		//		speelRonde();
 	}
 
 	public void setSpelerInformatie(List<String> spelerInformatie) {
