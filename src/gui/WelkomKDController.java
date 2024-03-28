@@ -226,12 +226,14 @@ public class WelkomKDController {
 			Parent root = loader.load();
 
 			SpelController spelController = loader.getController();
+			spelController.setAantalSpelers(aantalSpelersGekozen);
 			spelController.setSpelerInformatie(spelerEnKleurInformatie);
+			spelController.initSpel(); // Dan initialiseer je het spel
 
 			Scene scene = new Scene(root);
 			Stage stage = new Stage();
-			stage.setTitle("Spel");
 			stage.setScene(scene);
+			stage.setTitle("Spel");
 			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -169,14 +169,11 @@ public class Spel {
 		return opgehaaldeTegels;
 	}
 
+	// Plaats de genomen tegels in de startkolom, gesorteerd volgens hun nummer met hun landschapszijde naar boven
 	public List<Dominotegel> plaatsTegelsInStartkolom(Deque<Dominotegel> gekozenTegels) {
 		return geefTegels(aantalSpelers.size()).stream().sorted(Comparator.comparing(Dominotegel::getGetal))
 				.collect(Collectors.toList());
 	}
-
-	//	public void kiesTegelInStartKolom(Deque<Dominotegel> gekozenTegels) {
-	//
-	//	}
 
 	public HashMap<Speler, List<Integer>> geefScores() {
 		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();

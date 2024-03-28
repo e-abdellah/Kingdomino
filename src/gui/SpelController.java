@@ -1,15 +1,20 @@
 package gui;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import domein.DomeinController;
 import domein.Dominotegel;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -31,24 +36,25 @@ public class SpelController {
 	private WelkomKDController kdController;
 	private Deque<Dominotegel> stapel;
 	private List<Dominotegel> startKolom;
+	private Deque<Dominotegel> gekozenTegels;
 
 	private ResourceBundle resourceBundle;
 
 	private Locale locale;
 
+	@FXML
+	private Button startRondeBtn;
+
 	public SpelController() {
-		// Je DomeinController initialiseren, indien nodig
-		this.dc = new DomeinController();
+		dc = new DomeinController();
 		kdController = new WelkomKDController();
 		aantalSpelers = kdController.getAantalSpelersGekozen();
-		stapel = dc.schudDominotegels(aantalSpelers);
 	}
 
-	@FXML
-	public void initialize() {
-		// Initialize je UI componenten indien nodig
-		toonDominotegels();
-		// speelRonde();
+	public void initSpel() {
+		// Verplaats logica die afhankelijk is van aantalSpelers en andere init-waarden hier
+		stapel = dc.schudDominotegels(aantalSpelers);
+		speelRonde(false);
 	}
 
 	public void setSpelerInformatie(List<String> spelerInformatie) {
@@ -58,63 +64,79 @@ public class SpelController {
 		});
 	}
 
-	private void toonDominotegels() {
-		Deque<Dominotegel> dominotegels = dc.schudDominotegels(aantalSpelers);
+	public void toonTegels(Deque<Dominotegel> dominotegels) {
 		VBox vbox = new VBox();
 
-		
-		int tegelCount = 0;
 		for (Dominotegel tegel : dominotegels) {
-			if (tegelCount >= 3){//aantalSpelers) {
-				break;
-			}
-
-			Image image = new Image(tegel.getVoorkantFotoPad());
-			System.out.println(tegel.getVoorkantFotoPad());
+			// Gebruik achterkantFotoPad in plaats van voorkantFotoPad
+			Image image = new Image(tegel.getAchterkantFotoPad());
 			ImageView imageView = new ImageView(image);
 			imageView.setFitWidth(200);
 			imageView.setFitHeight(100);
 
 			vbox.getChildren().add(imageView);
-			tegelCount++;
 		}
 
+		dominotegelInformatieContainer.getChildren().clear();
 		dominotegelInformatieContainer.getChildren().add(vbox);
 	}
 
-	private void startRonde() {
-		// TODO Plaats spelstapel in het midden
+	public void toonTegelsMetBeideZijden(List<Dominotegel> dominotegels) {
+		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
-		// TODO Plaats per speler zijn kasteel op zijn starttegel
+		VBox vboxVoorkant = new VBox(5); // Een beetje spacing voor esthetiek
+		VBox vboxAchterkant = new VBox(5);
 
-	}
+		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
+		List<Dominotegel> gesorteerdeTegels = dominotegels.stream()
+				.sorted(Comparator.comparingInt(Dominotegel::getGetal)).collect(Collectors.toList());
 
-	private void toonTegel(Label label) {
-		// Methode om de label daadwerkelijk in GUI te tonen
-	}
+		for (Dominotegel tegel : gesorteerdeTegels) {
+			Image voorkantImage = new Image(tegel.getVoorkantFotoPad());
+			ImageView voorkantImageView = new ImageView(voorkantImage);
+			voorkantImageView.setFitWidth(100);
+			voorkantImageView.setFitHeight(50);
 
-	private void speelRonde() {
-		Deque<Dominotegel> gekozenTegels = new ArrayDeque<>();
+			Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
+			ImageView achterkantImageView = new ImageView(achterkantImage);
+			achterkantImageView.setFitWidth(100);
+			achterkantImageView.setFitHeight(50);
 
-		// toont 3 of 4 tegels om te kiezen en dan verwijdert ze uit de stapel
-		for (int i = 0; i < aantalSpelers; i++) {
-			Dominotegel tegel = stapel.peek();
-			Label tegelLabel = new Label(tegel.toString());
-			toonTegel(tegelLabel);
-			gekozenTegels.push(tegel);
-			stapel.pop();
+			vboxVoorkant.getChildren().add(voorkantImageView);
+			vboxAchterkant.getChildren().add(achterkantImageView);
 		}
-		// Plaats de genomen tegels in de startkolom,gesorteerd volgens hun nummer van
-		// klein naar groot
-		startKolom = dc.plaatsTegelsInStartkolom(gekozenTegels);
+
+		hbox.getChildren().addAll(vboxVoorkant, vboxAchterkant);
+		dominotegelInformatieContainer.getChildren().clear();
+		dominotegelInformatieContainer.getChildren().add(hbox);
+	}
+
+	public void speelRonde(boolean toonBeideZijden) {
+		gekozenTegels = new ArrayDeque<>();
+
+		// Simuleer het selecteren van tegels voor de speelronde
+		for (int i = 0; i < aantalSpelers; i++) {
+
+			Dominotegel tegel = stapel.pop(); // Haal de bovenste tegel van de stapel
+			gekozenTegels.offer(tegel);
+		}
+
+		// Toon de geselecteerde tegels in de GUI
+		if (toonBeideZijden) {
+			toonTegelsMetBeideZijden(new ArrayList<>(gekozenTegels)); // Toon tegels met beide zijden
+		} else {
+			toonTegels(gekozenTegels); // Toon tegels met enkel de achterkant
+		}
+
+		// Plaats de genomen tegels in de startkolom, gesorteerd volgens hun nummer met hun landschapszijde naar boven
+		//		startKolom = dc.plaatsTegelsInStartkolom(gekozenTegels);
 		// Plaats tegels met hun landschapszijde naar boven
 
-		for (int i = 0; i < aantalSpelers; i++) {
-			kiesTegelInStartKolom();
+		//		for (int i = 0; i < aantalSpelers; i++) {
+		//			kiesTegelInStartKolom();
+		//		}
 
-		}
-
-		toonResultaatVanRonde();
+		//toonResultaatVanRonde();
 	}
 
 	private void toonResultaatVanRonde() {
@@ -172,6 +194,25 @@ public class SpelController {
 	private boolean isTegelVrij(Dominotegel tegel) {
 		return !startKolom.contains(tegel);
 
+	}
+
+	public void setAantalSpelers(int aantal) {
+		this.aantalSpelers = aantal;
+	}
+
+	public Deque<Dominotegel> getStapel() {
+		return stapel;
+	}
+
+	@FXML
+	private void handleStartRondeBtnAction(ActionEvent event) {
+		if (gekozenTegels == null || gekozenTegels.isEmpty()) {
+			// startKolom is null of leeg. Afhandelen van deze situatie.
+			// Bijvoorbeeld, toon een foutmelding of initialiseer startKolom met lege waarden.
+			System.out.println("Er zijn geen tegels beschikbaar om te tonen.");
+			return; // Stop de methode om verdere fouten te voorkomen.
+		}
+		toonTegelsMetBeideZijden(new ArrayList<>(gekozenTegels)); // Gebruik startKolom die al gegenereerd is
 	}
 
 }
