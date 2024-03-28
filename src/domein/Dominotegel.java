@@ -27,7 +27,7 @@ public class Dominotegel {
 		String nummerAlsString = String.format("%02d", this.getGetal()); // Zorgt ervoor dat het getal altijd twee cijfers heeft
 		this.setVoorkantFotoPad(getClass().getResource("/img/tegel_" + nummerAlsString + "_voorkant.png").toExternalForm());
 		this.setAchterkantFotoPad(getClass().getResource("/img/tegel_" + nummerAlsString + "_achterkant.png").toExternalForm());
-
+		//
 		//this.setVoorkantFotoPad(
 		//		"file:///C:/Users/abdey/Documents/2.%20Toegepaste%20info/SDP/sdp1/kingdomino-g36/bin/img/tegel_01_voorkant.png");
 		//this.setAchterkantFotoPad(
