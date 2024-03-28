@@ -191,6 +191,7 @@ public class Speler {
 		int aantal = 1;
 		int kronen = koninkrijk[x][y].getAantalKronen();
 		Vakje huidigVak = koninkrijk[x][y];
+
 		Landschap landschap = huidigVak.getLandschap();
 		koninkrijk[x][y] = null;
 
@@ -247,7 +248,7 @@ public class Speler {
 			copy[i] = new Vakje[original[i].length];
 			for (int j = 0; j < original[i].length; j++) {
 				// Assuming Vakje has a copy constructor. Replace with vakje.clone() if a clone method is used.
-				copy[i][j] = original[i][j] != null ? new Vakje(original[i][j].getLandschap()) : null;
+				copy[i][j] = original[i][j] != null ? new Vakje(original[i][j].getLandschap(), original[i][j].getAantalKronen()) : null;
 			}
 		}
 		return copy;
