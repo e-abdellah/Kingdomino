@@ -9,7 +9,7 @@ public class Speler {
 	private int aantalGewonnen, aantalGespeeld;
 	private static final int MAX_LENGTE = 2;
 
-	private String[][][] koninkrijk = new String[2 * MAX_LENGTE + 1][2 * MAX_LENGTE + 1][1];
+	private Vakje[][] koninkrijk = new Vakje[2 * MAX_LENGTE + 1][2 * MAX_LENGTE + 1];
 	private List<Integer> scores = new ArrayList<>();
 
 	protected static final int MAX_GEBOORTEJAAR = 1924;
@@ -23,11 +23,11 @@ public class Speler {
 	//	private int koning = 1;
 	//	private int kasteel = 1;
 
-	public String[][][] getKoninkrijk() {
+	public Vakje[][] getKoninkrijk() {
 		return koninkrijk;
 	}
 
-	public void setKoninkrijk(String[][][] koninkrijk) {
+	public void setKoninkrijk(Vakje[][] koninkrijk) {
 		this.koninkrijk = koninkrijk;
 	}
 
@@ -41,7 +41,7 @@ public class Speler {
 	}
 
 	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld,
-			String[][][] koninkrijk) {
+			Vakje[][] koninkrijk) {
 		setGebruikersnaam(gebruikersnaam);
 		setGeboortejaar(geboortejaar);
 		setAantalGewonnen(aantalGewonnen);
@@ -51,7 +51,7 @@ public class Speler {
 		setScores();
 	}
 
-	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, String[][][] koninkrijk, List<Integer> scores, boolean isWinnaar) {
+	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, Vakje[][] koninkrijk, List<Integer> scores, boolean isWinnaar) {
 		setGebruikersnaam(gebruikersnaam);
 		setGeboortejaar(geboortejaar);
 		setAantalGewonnen(aantalGewonnen);
@@ -160,10 +160,10 @@ public class Speler {
 		int score = 0;
 		int maxgebied = 0;
 		int maxkronen = 0;
-		String[][][] koninkrijk = deepCopy3DStringArray(this.koninkrijk);
+		Vakje[][] koninkrijk = deepCopy2DVakjeArray(this.koninkrijk);
 		for (int i = 0; i <= 2 * MAX_LENGTE; i++) {
 			for (int j = 0; j <= 2 * MAX_LENGTE; j++) {
-				if (koninkrijk[i][j][0] != null) {
+				if (koninkrijk[i][j] != null) {
 					int tempgebied, tempkroon;
 					List<Integer> temp;
 					temp = berekenScoreRecursief(i, j, koninkrijk);
@@ -186,56 +186,70 @@ public class Speler {
 		return returnwaarde;
 	}
 
-	private List<Integer> berekenScoreRecursief(int x, int y, String[][][] koninkrijk) {
+	private List<Integer> berekenScoreRecursief(int x, int y, Vakje[][] koninkrijk) {
 		List<Integer> score = new ArrayList<>();
 		int aantal = 1;
-		int kronen = Integer.parseInt(koninkrijk[x][y][1]);
-		String huidigVak = koninkrijk[x][y][0];
-		koninkrijk[x][y][0] = null;
-		for (int j = -1; j <= 1; j++) {
-			for (int k = -1; k <= 1; k++) {
-				if ((j == 0 && k == 0) || (j == -1 && k == 1) || (j == 1 && k == -1) || (j == 1 && k == 1)
-						|| (j == -1 && k == -1)) {
-					continue;
-				}
-				if ((x + j < 0) || (y + k < 0) || (x + j > 2 * MAX_LENGTE) || (y + k > 2 * MAX_LENGTE)) {
-					continue;
-				}
-				if (koninkrijk[x + j][y + k][0] != null && koninkrijk[x + j][y + k][0].equals(huidigVak)) {
-					List<Integer> temp;
-					temp = berekenScoreRecursief(x + j, y + k, koninkrijk);
-					aantal += temp.get(0);
-					kronen += temp.get(1);
-				}
+		int kronen = koninkrijk[x][y].getAantalKronen();
+		Vakje huidigVak = koninkrijk[x][y];
+		Landschap landschap = huidigVak.getLandschap();
+		koninkrijk[x][y] = null;
+
+		try{
+			if(koninkrijk[x + 1][y] != null && koninkrijk[x + 1][y].getLandschap().equals(landschap)) {
+				List<Integer> temp;
+				temp = berekenScoreRecursief(x + 1, y, koninkrijk);
+				aantal += temp.get(0);
+				kronen += temp.get(1);
 			}
-		}
+		}catch(IndexOutOfBoundsException ignored){}
+		try{
+			if(koninkrijk[x - 1][y] != null && koninkrijk[x - 1][y].getLandschap().equals(landschap)) {
+				List<Integer> temp;
+				temp = berekenScoreRecursief(x - 1, y, koninkrijk);
+				aantal += temp.get(0);
+				kronen += temp.get(1);
+			}
+		}catch(IndexOutOfBoundsException ignored){}
+		try{
+			if(koninkrijk[x][y + 1] != null && koninkrijk[x][y + 1].getLandschap().equals(landschap)) {
+				List<Integer> temp;
+				temp = berekenScoreRecursief(x, y + 1, koninkrijk);
+				aantal += temp.get(0);
+				kronen += temp.get(1);
+			}
+		}catch(IndexOutOfBoundsException ignored){}
+		try{
+			if(koninkrijk[x][y - 1] != null && koninkrijk[x][y - 1].getLandschap().equals(landschap)) {
+				List<Integer> temp;
+				temp = berekenScoreRecursief(x, y - 1, koninkrijk);
+				aantal += temp.get(0);
+				kronen += temp.get(1);
+			}
+		}catch(IndexOutOfBoundsException ignored){}
+
 		score.add(aantal);
 		score.add(kronen);
 		return score;
 	}
 
-	private static String[][][] deepCopy3DStringArray(String[][][] original) {
+	public static Vakje[][] deepCopy2DVakjeArray(Vakje[][] original) {
 		if (original == null) {
 			return null;
 		}
 
-		String[][][] copy = new String[original.length][][];
+		Vakje[][] copy = new Vakje[original.length][];
 		for (int i = 0; i < original.length; i++) {
 			if (original[i] == null) {
+				copy[i] = null;
 				continue;
 			}
 
-			copy[i] = new String[original[i].length][];
+			copy[i] = new Vakje[original[i].length];
 			for (int j = 0; j < original[i].length; j++) {
-				if (original[i][j] == null) {
-					continue;
-				}
-
-				copy[i][j] = new String[original[i][j].length];
-				System.arraycopy(original[i][j], 0, copy[i][j], 0, original[i][j].length);
+				// Assuming Vakje has a copy constructor. Replace with vakje.clone() if a clone method is used.
+				copy[i][j] = original[i][j] != null ? new Vakje(original[i][j].getLandschap()) : null;
 			}
 		}
-
 		return copy;
 	}
 
