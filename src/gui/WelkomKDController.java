@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 public class WelkomKDController {
 	private DomeinController dc = new DomeinController();
 	private SpelerDTO dto;
+	private List<SpelerDTO> spelers = new ArrayList<>();
 
 	@FXML
 	private AnchorPane root;
@@ -216,6 +217,7 @@ public class WelkomKDController {
 					});
 				});
 			}
+			spelers.add(dto);
 			navigeerNaarSpel(spelerEnKleurInformatie);
 		});
 	}
@@ -270,6 +272,10 @@ public class WelkomKDController {
 
 	public int getAantalSpelersGekozen() {
 		return aantalSpelersGekozen;
+	}
+
+	public List<SpelerDTO> getSpelers() {
+		return spelers;
 	}
 
 }
