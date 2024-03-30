@@ -1,5 +1,6 @@
 package dto;
 
+
 import domein.Vakje;
 
 import java.util.List;
