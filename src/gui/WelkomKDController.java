@@ -229,7 +229,7 @@ public class WelkomKDController {
 
 			SpelController spelController = loader.getController();
 			spelController.setAantalSpelers(aantalSpelersGekozen);
-			spelController.setSpelerInformatie(spelerEnKleurInformatie);
+			spelController.setSpelerInfo(spelerEnKleurInformatie);
 			spelController.initSpel(); // Dan initialiseer je het spel
 
 			Scene scene = new Scene(root);
