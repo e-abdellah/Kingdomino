@@ -1,20 +1,11 @@
 package cui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 import domein.DomeinController;
 import domein.Dominotegel;
 import domein.Vakje;
+import dto.DominotegelDTO;
 import dto.SpelDTO;
 import dto.SpelerDTO;
 
@@ -28,7 +19,7 @@ public class KingdominoApp {
 	private Map<SpelerDTO, String> spelerKleurMap;
 	ResourceBundle messages = null;
 	private SpelDTO spelDTO;
-	private Deque<Dominotegel> dominotegels;
+	private List<DominotegelDTO> dominotegels;
 	private List<String> testkleuren;
 
 	public KingdominoApp(DomeinController dc) {
@@ -56,13 +47,6 @@ public class KingdominoApp {
 			keuze = sc.nextInt();
 		}
 		System.out.printf("%s", messages.getString("afsluitenBericht"));
-
-		Dominotegel tegel = new Dominotegel();
-		for (Dominotegel tegel1 : dominotegels) {
-			tegel1.genereerFotoPaden();
-			System.out.println("Voorkant foto pad: " + tegel1.getVoorkantFotoPad());
-			System.out.println("Achterkant foto pad: " + tegel1.getAchterkantFotoPad());
-		}
 	}
 
 	// kiesTaal methode om eenmalig een taal te kunnen kiezen bij het opstarten van
@@ -309,9 +293,8 @@ public class KingdominoApp {
 	private void startKingdomino() {
 		int aantalSpelers = gekozenSpelers.size();
 		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
-
-		dominotegels = dc.schudDominotegels(gekozenSpelers.size());
 		dc.voegSpelersToe(gekozenSpelers);
+		dominotegels = dc.geefDominotegels(aantalSpelers);
 		spelDTO = dc.geefSpelDTO();
 
 		System.out.println("Het spel heeft " + aantalDominotegels + " dominotegels.");
@@ -321,28 +304,55 @@ public class KingdominoApp {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
 		}
-		int indexKolom = 0;
-		List<Dominotegel> startKolom = spelDTO.kolommen().get(indexKolom++);
-		for (Dominotegel tegel : startKolom) {
-			System.out.println(tegel);
-		}
-		/*
-		 * for (Dominotegel tegel: geschuddeDominotegels) { System.out.println(tegel);
-		 * // Aanroepen van toString() methode van Dominotegel }
-		 */
+		List<DominotegelDTO> startKolom = dc.geefKolom();
+		toonKolom(startKolom);
 
 		Collections.shuffle(gekozenSpelers);// random volgorde van spelers genereren
 
+		Map<DominotegelDTO, SpelerDTO> tegelSpeler = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
+
+		toonKoninkrijk();
+
+		System.out.println("Startkolom:");
+		toonKolomMetSpeler(startKolom, tegelSpeler);
+
+		//UC4
+		System.out.println("Eindkolom:");
+		List<DominotegelDTO> eindKolom = dc.geefKolom();
+		toonKolom(eindKolom);
+
+		//volgorde bepalen voor keuze tegel eindkolom
+		List<SpelerDTO> volgorde = new ArrayList<>();
+		for(DominotegelDTO tegel : startKolom){
+			volgorde.add(tegelSpeler.get(tegel));
+		}
+
+		Map<DominotegelDTO, SpelerDTO> eindTegelSpeler = keuzeKolom(startKolom, aantalSpelers, volgorde);
+
+
+
+		if (spelDTO.eindeSpel()) {
+			dc.berekenWinnaars();
+			for (SpelerDTO speler : gekozenSpelers) {
+				if (speler.isWinnaar()) {
+					System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld",
+							speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld());
+				}
+			}
+		}
+
+	}
+	private Map<DominotegelDTO, SpelerDTO> keuzeKolom(List<DominotegelDTO> startKolom,int aantalSpelers, List<SpelerDTO> volgordeSpelers){
 		List<Integer> tegels = new ArrayList<>();
 		for (int i = 1; i <= aantalSpelers; i++) {
 			tegels.add(i);
 		}
 		int i = 0;
-		Map<Dominotegel, SpelerDTO> tegelSpeler = new HashMap<>();
+		Map<DominotegelDTO, SpelerDTO> tegelSpeler = new HashMap<>();
 		do {
 			// Toont de huidige speler met zijn corresponderende kleur nadat ze geshuffled
 			// werden
-			SpelerDTO currentSpeler = gekozenSpelers.get(i);
+			SpelerDTO currentSpeler = volgordeSpelers.get(i);
 			String spelerNaam = currentSpeler.gebruikersnaam();
 			String spelerKleur = spelerKleurMap.get(currentSpeler);
 			System.out.printf("%nSpeler %s met kleur %s, welke tegel kies je? ", spelerNaam, spelerKleur);
@@ -358,15 +368,19 @@ public class KingdominoApp {
 					break;
 				} else {
 					System.out.printf("Fout antwoord, kies een getal tussen 1 en %d dat vrij is:%n",
-							gekozenSpelers.size());
+							volgordeSpelers.size());
 				}
 			}
-			tegelSpeler.put(startKolom.get(keuze - 1), gekozenSpelers.get(i));
+			tegelSpeler.put(startKolom.get(keuze - 1), volgordeSpelers.get(i));
 			i++;
 			Integer keuzeVerwijderen = keuze;
 			tegels.remove(keuzeVerwijderen);
 		} while (i < aantalSpelers);
+		return tegelSpeler;
 
+	}
+
+	private void toonKoninkrijk(){
 		for (SpelerDTO spelerDTO : gekozenSpelers) {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
@@ -382,51 +396,16 @@ public class KingdominoApp {
 				System.out.println();
 			}
 		}
-		for (Dominotegel tegel : startKolom) {
-			System.out.printf("%s %s%n", tegel, spelerKleurMap.get(tegelSpeler.get(tegel)));
+	}
+	private void toonKolom(List<DominotegelDTO> kolom){
+		for (DominotegelDTO tegel : kolom) {
+			System.out.println(tegel);
 		}
+	}
 
-		if (spelDTO.eindeSpel()) {
-			dc.berekenWinnaars();
-			for (SpelerDTO speler : gekozenSpelers) {
-				if (speler.isWinnaar()) {
-					System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld",
-							speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld());
-				}
-			}
+	private void toonKolomMetSpeler(List<DominotegelDTO> kolom, Map<DominotegelDTO, SpelerDTO> tegelSpeler){
+		for (DominotegelDTO tegel : kolom) {
+			System.out.printf("%s %s%n", tegel.tegel(), spelerKleurMap.get(tegelSpeler.get(tegel)));
 		}
-
-		/*kijk wie gelijk is met winnaar
-		System.out.println("Winnaar(s):");
-		boolean nietWinnaarGevonden = false;
-		for (Speler speler : spelDTO.spelers()) {
-			List<Integer> scores = spelerScores.get(speler);
-			String scoreDetails = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
-					scores.get(1), scores.get(2));
-			if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
-					&& scores.get(2).equals(topScores.get(2)) && !nietWinnaarGevonden) {
-				System.out.printf("Speler %s met een %s%n", speler.getGebruikersnaam(), scoreDetails);
-		
-				// Now check for ties //het zou beter werken als we Speler ipv SpelerDTO gebruiken
-				System.out.println("Winnaar(s):");
-				boolean foundNonWinner = false;
-				for (Speler speler1 : spelDTO.spelers()) {
-					List<Integer> score = spelerScores.get(speler1);
-					String scoreDetail = String.format(" - Score: %d, Gebied: %d, Kronen: %d", scores.get(0),
-							scores.get(1), scores.get(2));
-					if (scores.get(0).equals(topScores.get(0)) && scores.get(1).equals(topScores.get(1))
-							&& scores.get(2).equals(topScores.get(2)) && !foundNonWinner) {
-						System.out.printf("Speler %s met een %s", speler.getGebruikersnaam(),
-								scoreDetails); // This player is a winner
-					} else {
-						boolean nietWinnaarGevonden = false;
-						if (!nietWinnaarGevonden) {
-							System.out.println("Niet-winnaar(s):");
-						}
-						System.out.printf("Speler %s met %s%n", speler.getGebruikersnaam(), scoreDetails);
-						System.out.printf("Speler %s met %s", speler.getGebruikersnaam(),
-								scoreDetails);
-					}
-				}*/
 	}
 }

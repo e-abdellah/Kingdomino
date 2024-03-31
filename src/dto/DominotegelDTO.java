@@ -1,11 +1,8 @@
 package dto;
 
 import domein.Dominotegel;
-import domein.Speler;
 
 import java.util.List;
 
-public record SpelDTO(boolean eindeSpel) {
-
-
+public record DominotegelDTO(Dominotegel tegel) {
 }

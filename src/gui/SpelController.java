@@ -48,7 +48,7 @@ public class SpelController {
 
 	private int aantalSpelers;
 	private WelkomKDController kdController;
-	private Deque<Dominotegel> stapel;
+	private List<Dominotegel> stapel;
 	private List<Dominotegel> startKolom;
 	private Deque<Dominotegel> gekozenTegels;
 	private List<Dominotegel> list = new ArrayList<>();
@@ -78,7 +78,7 @@ public class SpelController {
 
 	public void initSpel() {
 		setSpelerInfo(spelerKleuren);
-		stapel = dc.schudDominotegels(aantalSpelers);
+		stapel = dc.dominotegels(aantalSpelers);
 		speelRonde(false);
 		toonRugzijdeStapel();
 		Platform.runLater(() -> {// zorgt ervoor dat dit pas te zien is wanneer het scherm volledig is geladen
@@ -250,7 +250,7 @@ public class SpelController {
 
 	public void toonRugzijdeStapel() {
 		if (!stapel.isEmpty()) {
-			Dominotegel bovensteTegel = stapel.peek(); // Verkrijg de bovenste tegel zonder deze te verwijderen
+			Dominotegel bovensteTegel = stapel.get(0); // Verkrijg de bovenste tegel zonder deze te verwijderen
 			bovensteTegel.genereerFotoPaden(); // Zorg ervoor dat de paden gegenereerd zijn
 			Image rugzijdeImage = new Image(bovensteTegel.getAchterkantFotoPad());
 			stapelRugzijdeImageView.setImage(rugzijdeImage);
@@ -265,7 +265,8 @@ public class SpelController {
 		// Simuleer het selecteren van tegels voor de speelronde
 		for (int i = 0; i < aantalSpelers; i++) {
 
-			Dominotegel tegel = stapel.pop(); // Haal de bovenste tegel van de stapel
+			Dominotegel tegel = stapel.get(0); // Haal de bovenste tegel van de stapel
+			stapel.remove(0);
 			gekozenTegels.offer(tegel);
 		}
 
@@ -345,7 +346,7 @@ public class SpelController {
 		this.aantalSpelers = aantal;
 	}
 
-	public Deque<Dominotegel> getStapel() {
+	public List<Dominotegel> getStapel() {
 		return stapel;
 	}
 

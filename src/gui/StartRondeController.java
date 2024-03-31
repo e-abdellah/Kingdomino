@@ -17,7 +17,7 @@ public class StartRondeController {
 
 	private DomeinController dc;
 
-	private Deque<Dominotegel> stapel;
+	private List<Dominotegel> stapel;
 
 	public StartRondeController() {
 		dc = new DomeinController();

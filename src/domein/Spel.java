@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import dto.DominotegelDTO;
 import dto.SpelerDTO;
 
 public class Spel {
@@ -27,6 +28,7 @@ public class Spel {
 
 	private List<Dominotegel> dominotegels;
 	private List<Speler> spelers = new ArrayList<>();
+	private boolean isGeschud = false;
 
 	protected static final int MAX_LENGTE = 6;
 
@@ -131,20 +133,22 @@ public class Spel {
 
 	}
 
-	public Deque<Dominotegel> schudDominotegels(int aantalSpelers) {
+	public void schudDominotegels(int aantalSpelers) {
 		if (dominotegels == null || dominotegels.isEmpty()) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
 			dominotegels = new ArrayList<>();
 			genereerAantalDominotegels(); // Mogelijke actie
 		}
 
-		Collections.shuffle(dominotegels); // Schud de lijst met dominotegels
-
 		// Controleer het aantal spelers en bepaal het aantal benodigde tegels
 		int aantalBenodigdeTegels = (aantalSpelers == 3) ? 36 : 48;
 
-		// Retourneer een sublist met het vereiste aantal tegels
-		return new ArrayDeque<>(dominotegels.subList(0, aantalBenodigdeTegels - 1));
+		if(!isGeschud){};
+			Collections.shuffle(dominotegels); // Schud de lijst met dominotegels
+			isGeschud = true; // lijst moet maar 1 keer geschud worden
+
+			// Retourneer een sublist met het vereiste aantal tegels
+			dominotegels = dominotegels.subList(0, aantalBenodigdeTegels - 1);
 	}
 
 	public List<Dominotegel> geefTegels(int aantal) {
@@ -170,7 +174,7 @@ public class Spel {
 	}
 
 	// Plaats de genomen tegels in de startkolom, gesorteerd volgens hun nummer met hun landschapszijde naar boven
-	public List<Dominotegel> plaatsTegelsInStartkolom(Deque<Dominotegel> gekozenTegels) {
+	public List<Dominotegel> plaatsTegelsInStartkolom() {
 		return geefTegels(aantalSpelers.size()).stream().sorted(Comparator.comparing(Dominotegel::getGetal))
 				.collect(Collectors.toList());
 	}
@@ -194,11 +198,11 @@ public class Spel {
 
 	public List<Dominotegel> geefBeginOfEindKolom() {
 		int aantal = spelers.size();
-		Deque<Dominotegel> geschuddeDominotegels = schudDominotegels(aantal);
+		List<Dominotegel> geschuddeDominotegels = dominotegels;
 		List<Dominotegel> kolom = new ArrayList<>();
 		for (int i = 0; i < aantal; i++) {
-			kolom.add(geschuddeDominotegels.getFirst());
-			geschuddeDominotegels.removeFirst();
+			kolom.add(geschuddeDominotegels.get(0));
+			geschuddeDominotegels.remove(0);
 		}
 		kolom.sort(Comparator.comparingInt(Dominotegel::getGetal));
 		return kolom;

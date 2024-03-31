@@ -1,13 +1,9 @@
 package domein;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import dto.DominotegelDTO;
 import dto.SpelDTO;
 import dto.SpelerDTO;
 import exceptions.GebruikersnaamInGebruikException;
@@ -16,6 +12,7 @@ public class DomeinController {
 
 	private final SpelerRepository spelerRepository;
 	private final Spel spel;
+
 
 	public DomeinController() {
 		spelerRepository = new SpelerRepository();
@@ -46,11 +43,7 @@ public class DomeinController {
 	}
 
 	public SpelDTO geefSpelDTO() {
-		List<List<Dominotegel>> kolommen = new ArrayList<>();
-		for (int i = 0; i < 12; i++) {
-			kolommen.add(spel.geefBeginOfEindKolom());
-		}
-		return new SpelDTO(kolommen, spel.isEindeSpel());
+		return new SpelDTO(spel.isEindeSpel());
 	}
 
 	public static List<String> geefAlleKleuren() {
@@ -58,12 +51,27 @@ public class DomeinController {
 		return kleuren.stream().map(Enum::toString).collect(Collectors.toList());
 	}
 
-	public Deque<Dominotegel> schudDominotegels(int aantalSpelers) {
-		return spel.schudDominotegels(aantalSpelers);
+	public List<Dominotegel> dominotegels(int aantalSpelers) {
+		spel.schudDominotegels(aantalSpelers);
+		return spel.getDominotegels();
 	}
 
-	public List<Dominotegel> geefTegels(int aantal) {
-		return spel.geefTegels(aantal);
+	public List<DominotegelDTO> geefDominotegels(int aantalSpelers) {
+		spel.schudDominotegels(aantalSpelers);
+		List<DominotegelDTO> dominotegelDTOS = new ArrayList<>();
+		List<Dominotegel> tegels = spel.getDominotegels();
+		for(Dominotegel dominotegel : tegels){
+			dominotegelDTOS.add(new DominotegelDTO(dominotegel));
+		}
+		return dominotegelDTOS;
+	}
+
+	public List<DominotegelDTO> geefTegels(int aantal) {
+		List<DominotegelDTO> dominotegelDTOS = new ArrayList<>();
+		for(Dominotegel dominotegel : spel.geefTegels(aantal)){
+			dominotegelDTOS.add(new DominotegelDTO(dominotegel));
+		}
+        return dominotegelDTOS;
 	}
 
 	public void berekenWinnaars() {
@@ -79,8 +87,16 @@ public class DomeinController {
 		return kleurTaal;
 	}
 
-	public List<Dominotegel> plaatsTegelsInStartkolom(Deque<Dominotegel> gekozenTegels) {
-		return spel.plaatsTegelsInStartkolom(gekozenTegels);
+	public List<Dominotegel> plaatsTegelsInStartkolom() {
+		return spel.plaatsTegelsInStartkolom();
+	}
+
+	public List<DominotegelDTO> geefKolom(){
+		List<DominotegelDTO> kolom = new ArrayList<>();
+		for(Dominotegel tegel : spel.geefBeginOfEindKolom()){
+			kolom.add(new DominotegelDTO(tegel));
+		}
+		return kolom;
 	}
 
 }
