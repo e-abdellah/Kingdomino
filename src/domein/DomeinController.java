@@ -103,4 +103,7 @@ public class DomeinController {
 		spel.plaatsTegel(tegelDTO.tegel(), x, y, richting, spelerDTO);
 	}
 
+	public boolean kanPlaatsen(DominotegelDTO tegel, int x, int y, String richting, SpelerDTO spelerDTO) {
+		return spel.kanPlaatsen(tegel.tegel(), x, y, richting, spelerDTO);
+	}
 }

@@ -303,50 +303,60 @@ public class KingdominoApp {
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
 		}
-		List<DominotegelDTO> startKolom = dc.geefKolom();
-		toonKolom(startKolom);
 
 		Collections.shuffle(gekozenSpelers);// random volgorde van spelers genereren
 
-		Map<SpelerDTO, DominotegelDTO> spelerTegel = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
+		do {
+			List<DominotegelDTO> startKolom = dc.geefKolom();
+			toonKolom(startKolom);
 
-		toonKoninkrijk();
 
-		System.out.println("Startkolom:");
-		toonKolomMetSpeler(startKolom, spelerTegel);
+			Map<SpelerDTO, DominotegelDTO> spelerTegel = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
 
-		//UC4
-		System.out.println("Eindkolom:");
-		List<DominotegelDTO> eindKolom = dc.geefKolom();
-		toonKolom(eindKolom);
+			toonKoninkrijk();
 
-		//volgorde bepalen voor keuze tegel eindkolom
-		List<SpelerDTO> volgorde = getSpelerDTOS(spelerTegel);
+			System.out.println("Startkolom:");
+			toonKolomMetSpeler(startKolom, spelerTegel);
 
-		Map<SpelerDTO, DominotegelDTO> eindTegelSpeler = keuzeKolom(startKolom, aantalSpelers, volgorde);
-		//toonKolomMetSpeler(eindKolom, eindTegelSpeler);
+			//UC4
+			System.out.println("Eindkolom:");
+			List<DominotegelDTO> eindKolom = dc.geefKolom();
+			toonKolom(eindKolom);
 
-		//UC5
-		for(SpelerDTO speler : volgorde){
-			System.out.printf("Speler %s met kleur %s leg je tegel", speler.gebruikersnaam(), spelerKleurMap.get(speler));
-			System.out.println("eef de x en y coördinaat van het meest centrale vakje:");
-			int x = sc.nextInt();
-			int y = sc.nextInt();
+			//volgorde bepalen voor keuze tegel eindkolom
+			List<SpelerDTO> volgorde = getSpelerDTOS(spelerTegel);
 
-			System.out.println("Richting:");
-			String richting = sc.next();
-			dc.plaatsTegel(spelerTegel.get(speler), x, y, richting, speler);
-		}
+			Map<SpelerDTO, DominotegelDTO> eindTegelSpeler = keuzeKolom(startKolom, aantalSpelers, volgorde);
+			//toonKolomMetSpeler(eindKolom, eindTegelSpeler);
 
-		toonKoninkrijk();
+			//UC5
+			System.out.println(volgorde);
+			for (SpelerDTO speler : volgorde) {
+				int x, y;
+				String richting;
+				boolean kan;
+				System.out.printf("Speler %s met kleur %s leg je tegel%n", speler.gebruikersnaam(), spelerKleurMap.get(speler));
+				System.out.println("Geef de x en y coördinaat van het linkse vakje:");
+				do {
+					x = sc.nextInt();
+					y = sc.nextInt();
 
-		if (spelDTO.eindeSpel()) {
-			dc.berekenWinnaars();
-			for (SpelerDTO speler : gekozenSpelers) {
-				if (speler.isWinnaar()) {
-					System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld",
-							speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld());
-				}
+					System.out.println("Richting:");
+					richting = sc.next();
+					kan = dc.kanPlaatsen(spelerTegel.get(speler), x, y, richting, speler);
+					if(!kan){System.out.println("Kies een vrije plaats binnen het speelveld");}
+				}while (!kan);
+				dc.plaatsTegel(spelerTegel.get(speler), x, y, richting, speler);
+
+			}
+			toonKoninkrijk();
+			dc.geefSpelDTO();
+		}while (!spelDTO.eindeSpel());
+		dc.berekenWinnaars();
+		for (SpelerDTO speler : gekozenSpelers) {
+			if (speler.isWinnaar()) {
+				System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld",
+						speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld());
 			}
 		}
 
@@ -415,7 +425,7 @@ public class KingdominoApp {
 					if (x == koninkrijk.length / 2 && y == koninkrijk.length / 2) {
 						System.out.printf("%10s", "starttegel");
 					} else {
-						System.out.printf("%10s", koninkrijk[x][y] != null ? koninkrijk[x][y] : "");
+						System.out.printf("%10s", koninkrijk[x][y] != null ? koninkrijk[x][y].getLandschap() : "");
 					}
 				}
 				System.out.println();

@@ -1,5 +1,7 @@
 package domein;
 
+import dto.SpelerDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -259,5 +261,48 @@ public class Speler {
 		}
 		return copy;
 	}
+
+	public boolean kanPlaatsen(Dominotegel tegel, int x, int y, String richting) {
+		int dx = 0, dy = 0;
+		switch (richting) {
+			case "boven":
+				dy = -1;
+				break;
+			case "onder":
+				dy = 1;
+				break;
+			case "links":
+				dx = -1;
+				break;
+			case "rechts":
+				dx = 1;
+				break;
+			default:
+				System.out.println("Onbekende richting");
+				return false;
+		}
+
+		// bereken voor 2e vakje
+		int x2 = x + dx;
+		int y2 = y + dy;
+
+		// check voor out of bounds
+		if (x < 0 || x >= koninkrijk.length || y < 0 || y >= koninkrijk[0].length ||
+				x2 < 0 || x2 >= koninkrijk.length || y2 < 0 || y2 >= koninkrijk[0].length) {
+			System.out.println("Positie is buiten de grenzen.");
+			return false;
+		}
+
+		// check of het reeds bezet is
+		if (koninkrijk[x][y] != null || koninkrijk[x2][y2] != null) {
+			System.out.println("Positie is al bezet.");
+			return false;
+		}
+
+		if((x == MAX_LENGTE && y == MAX_LENGTE)||(x2 == MAX_LENGTE && y2 == MAX_LENGTE)){return false;}
+
+		return true;
+	}
+
 
 }

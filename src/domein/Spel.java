@@ -251,4 +251,14 @@ public class Spel {
 		}
 
 	}
+
+	public boolean kanPlaatsen(Dominotegel tegel, int x, int y, String richting, SpelerDTO spelerDTO) {
+		boolean kan = false;
+		for(Speler speler : spelers){
+			if(Objects.equals(speler.getGebruikersnaam(), spelerDTO.gebruikersnaam())){
+				kan = speler.kanPlaatsen(tegel, x, y, richting);
+			}
+		}
+		return  kan;
+	}
 }
