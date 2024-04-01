@@ -216,7 +216,7 @@ public class Spel {
 		}
 	}
 
-	public void plaatsTegel(Dominotegel tegel, int x, int y, String richting, SpelerDTO spelerDTO){
+	public void plaatsTegel(Dominotegel tegel, int y, int x, String richting, SpelerDTO spelerDTO){
 		List<Vakje> vakjes = new ArrayList<>();
 		List<Integer> pos = new ArrayList<>(List.of(0, 0));
 
@@ -252,11 +252,11 @@ public class Spel {
 
 	}
 
-	public boolean kanPlaatsen(Dominotegel tegel, int x, int y, String richting, SpelerDTO spelerDTO) {
+	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, String richting, SpelerDTO spelerDTO) {
 		boolean kan = false;
 		for(Speler speler : spelers){
 			if(Objects.equals(speler.getGebruikersnaam(), spelerDTO.gebruikersnaam())){
-				kan = speler.kanPlaatsen(tegel, x, y, richting);
+				kan = speler.kanPlaatsen(tegel, y, x, richting);
 			}
 		}
 		return  kan;

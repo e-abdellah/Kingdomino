@@ -99,11 +99,11 @@ public class DomeinController {
 		return kolom;
 	}
 
-	public void plaatsTegel(DominotegelDTO tegelDTO, int x, int y, String richting, SpelerDTO spelerDTO){
-		spel.plaatsTegel(tegelDTO.tegel(), x, y, richting, spelerDTO);
+	public void plaatsTegel(DominotegelDTO tegelDTO, int y, int x, String richting, SpelerDTO spelerDTO){
+		spel.plaatsTegel(tegelDTO.tegel(), y, x, richting, spelerDTO);
 	}
 
-	public boolean kanPlaatsen(DominotegelDTO tegel, int x, int y, String richting, SpelerDTO spelerDTO) {
-		return spel.kanPlaatsen(tegel.tegel(), x, y, richting, spelerDTO);
+	public boolean kanPlaatsen(DominotegelDTO tegel, int y, int x, String richting, SpelerDTO spelerDTO) {
+		return spel.kanPlaatsen(tegel.tegel(), y, x, richting, spelerDTO);
 	}
 }

@@ -1,7 +1,5 @@
 package domein;
 
-import dto.SpelerDTO;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +29,7 @@ public class Speler {
 
 	public void setKoninkrijk(Vakje[][] koninkrijk) {
 		this.koninkrijk = koninkrijk;
+		this.koninkrijk[MAX_LENGTE][MAX_LENGTE] = new Vakje(Landschap.KASTEEL);
 	}
 
 	public Speler(String gebruikersnaam, int geboortejaar) {
@@ -262,7 +261,7 @@ public class Speler {
 		return copy;
 	}
 
-	public boolean kanPlaatsen(Dominotegel tegel, int x, int y, String richting) {
+	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, String richting) {
 		int dx = 0, dy = 0;
 		switch (richting) {
 			case "boven":
@@ -294,15 +293,42 @@ public class Speler {
 		}
 
 		// check of het reeds bezet is
-		if (koninkrijk[x][y] != null || koninkrijk[x2][y2] != null) {
+		if (koninkrijk[x][y] != null || koninkrijk[y2][x2] != null) {
 			System.out.println("Positie is al bezet.");
 			return false;
 		}
 
-		if((x == MAX_LENGTE && y == MAX_LENGTE)||(x2 == MAX_LENGTE && y2 == MAX_LENGTE)){return false;}
+		Vakje vakje1 = tegel.getVakje1();
+		Vakje vakje2 = tegel.getVakje2();
+		if(checkOmliggende(vakje1, y, x) && checkOmliggende(vakje2, y2, x2)){
+			System.out.println("Moet naast zelfde landschap liggen of naast een kasteel");
+			return false;
+		}
 
 		return true;
 	}
+
+	private boolean checkOmliggende(Vakje vakje, int y, int x) {
+		Landschap landschap = vakje.getLandschap();
+		int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}}; // Right, Left, Down, Up
+
+		for (int[] dir : directions) {
+			int newY = y + dir[0];
+			int newX = x + dir[1];
+
+			// Check bounds
+			if (newX >= 0 && newX < koninkrijk.length && newY >= 0 && newY < koninkrijk[newX].length) {
+				Vakje adjacentVakje = koninkrijk[newX][newY];
+				// If adjacent vakje is not null and matches the conditions
+				if (adjacentVakje != null &&
+						(adjacentVakje.getLandschap().equals(landschap) || adjacentVakje.getLandschap().equals(Landschap.KASTEEL))) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 
 
 }

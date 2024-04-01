@@ -336,17 +336,17 @@ public class KingdominoApp {
 				String richting;
 				boolean kan;
 				System.out.printf("Speler %s met kleur %s leg je tegel%n", speler.gebruikersnaam(), spelerKleurMap.get(speler));
-				System.out.println("Geef de x en y coördinaat van het linkse vakje:");
+				System.out.println("Geef de y en x coördinaat van het linkse vakje:");
 				do {
-					x = sc.nextInt();
 					y = sc.nextInt();
+					x = sc.nextInt();
 
 					System.out.println("Richting:");
 					richting = sc.next();
-					kan = dc.kanPlaatsen(spelerTegel.get(speler), x, y, richting, speler);
+					kan = dc.kanPlaatsen(spelerTegel.get(speler), y, x, richting, speler);
 					if(!kan){System.out.println("Kies een vrije plaats binnen het speelveld");}
 				}while (!kan);
-				dc.plaatsTegel(spelerTegel.get(speler), x, y, richting, speler);
+				dc.plaatsTegel(spelerTegel.get(speler), y, x, richting, speler);
 
 			}
 			toonKoninkrijk();
