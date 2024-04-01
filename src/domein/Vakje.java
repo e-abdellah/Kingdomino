@@ -4,7 +4,15 @@ public class Vakje {
 	private Landschap landschap;
 	private int aantalKronen;
 
+	private int x;
+
+	private int y;
+
 	public Vakje() {
+	}
+	public Vakje(Landschap landschap, int aantalKronen, int x, int y){
+		this.landschap = landschap;
+		setAantalKronen(aantalKronen);
 	}
 
 	public Vakje(Landschap landschap) {
@@ -14,6 +22,22 @@ public class Vakje {
 	public Vakje(Landschap landschap, int aantalKronen) {
 		this.landschap = landschap;
 		setAantalKronen(aantalKronen);
+	}
+
+	public int getX(){
+		return x;
+	}
+
+	public int getY(){
+		return y;
+	}
+
+	public final void setX(int x){
+		this.x = x;
+	}
+
+	public final void setY(int y){
+		this.y = y;
 	}
 
 	public Landschap getLandschap() {

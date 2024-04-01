@@ -99,4 +99,8 @@ public class DomeinController {
 		return kolom;
 	}
 
+	public void plaatsTegel(DominotegelDTO tegelDTO, int x, int y, String richting, SpelerDTO spelerDTO){
+		spel.plaatsTegel(tegelDTO.tegel(), x, y, richting, spelerDTO);
+	}
+
 }

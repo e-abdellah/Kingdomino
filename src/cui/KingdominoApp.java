@@ -3,7 +3,6 @@ package cui;
 import java.util.*;
 
 import domein.DomeinController;
-import domein.Dominotegel;
 import domein.Vakje;
 import dto.DominotegelDTO;
 import dto.SpelDTO;
@@ -309,12 +308,12 @@ public class KingdominoApp {
 
 		Collections.shuffle(gekozenSpelers);// random volgorde van spelers genereren
 
-		Map<DominotegelDTO, SpelerDTO> tegelSpeler = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
+		Map<SpelerDTO, DominotegelDTO> spelerTegel = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
 
 		toonKoninkrijk();
 
 		System.out.println("Startkolom:");
-		toonKolomMetSpeler(startKolom, tegelSpeler);
+		toonKolomMetSpeler(startKolom, spelerTegel);
 
 		//UC4
 		System.out.println("Eindkolom:");
@@ -322,14 +321,24 @@ public class KingdominoApp {
 		toonKolom(eindKolom);
 
 		//volgorde bepalen voor keuze tegel eindkolom
-		List<SpelerDTO> volgorde = new ArrayList<>();
-		for(DominotegelDTO tegel : startKolom){
-			volgorde.add(tegelSpeler.get(tegel));
+		List<SpelerDTO> volgorde = getSpelerDTOS(spelerTegel);
+
+		Map<SpelerDTO, DominotegelDTO> eindTegelSpeler = keuzeKolom(startKolom, aantalSpelers, volgorde);
+		//toonKolomMetSpeler(eindKolom, eindTegelSpeler);
+
+		//UC5
+		for(SpelerDTO speler : volgorde){
+			System.out.printf("Speler %s met kleur %s leg je tegel", speler.gebruikersnaam(), spelerKleurMap.get(speler));
+			System.out.println("eef de x en y coördinaat van het meest centrale vakje:");
+			int x = sc.nextInt();
+			int y = sc.nextInt();
+
+			System.out.println("Richting:");
+			String richting = sc.next();
+			dc.plaatsTegel(spelerTegel.get(speler), x, y, richting, speler);
 		}
 
-		Map<DominotegelDTO, SpelerDTO> eindTegelSpeler = keuzeKolom(startKolom, aantalSpelers, volgorde);
-
-
+		toonKoninkrijk();
 
 		if (spelDTO.eindeSpel()) {
 			dc.berekenWinnaars();
@@ -342,13 +351,29 @@ public class KingdominoApp {
 		}
 
 	}
-	private Map<DominotegelDTO, SpelerDTO> keuzeKolom(List<DominotegelDTO> startKolom,int aantalSpelers, List<SpelerDTO> volgordeSpelers){
+
+	private List<SpelerDTO> getSpelerDTOS(Map<SpelerDTO, DominotegelDTO> spelerTegel) {
+		List<SpelerDTO> volgorde = new ArrayList<>(gekozenSpelers);
+		volgorde.sort(new Comparator<SpelerDTO>() {
+            @Override
+            public int compare(SpelerDTO speler1, SpelerDTO speler2) {
+                DominotegelDTO tegel1 = spelerTegel.get(speler1);
+                DominotegelDTO tegel2 = spelerTegel.get(speler2);
+
+                // Assuming getGetal returns an int. Use Integer.compare for safety.
+                return Integer.compare(tegel1.tegel().getGetal(), tegel2.tegel().getGetal());
+            }
+        });
+		return volgorde;
+	}
+
+	private Map<SpelerDTO, DominotegelDTO> keuzeKolom(List<DominotegelDTO> startKolom,int aantalSpelers, List<SpelerDTO> volgordeSpelers){
 		List<Integer> tegels = new ArrayList<>();
 		for (int i = 1; i <= aantalSpelers; i++) {
 			tegels.add(i);
 		}
 		int i = 0;
-		Map<DominotegelDTO, SpelerDTO> tegelSpeler = new HashMap<>();
+		Map<SpelerDTO, DominotegelDTO> tegelSpeler = new HashMap<>();
 		do {
 			// Toont de huidige speler met zijn corresponderende kleur nadat ze geshuffled
 			// werden
@@ -371,7 +396,7 @@ public class KingdominoApp {
 							volgordeSpelers.size());
 				}
 			}
-			tegelSpeler.put(startKolom.get(keuze - 1), volgordeSpelers.get(i));
+			tegelSpeler.put(volgordeSpelers.get(i), startKolom.get(keuze - 1));
 			i++;
 			Integer keuzeVerwijderen = keuze;
 			tegels.remove(keuzeVerwijderen);
@@ -403,9 +428,9 @@ public class KingdominoApp {
 		}
 	}
 
-	private void toonKolomMetSpeler(List<DominotegelDTO> kolom, Map<DominotegelDTO, SpelerDTO> tegelSpeler){
-		for (DominotegelDTO tegel : kolom) {
-			System.out.printf("%s %s%n", tegel.tegel(), spelerKleurMap.get(tegelSpeler.get(tegel)));
+	private void toonKolomMetSpeler(List<DominotegelDTO> kolom, Map<SpelerDTO, DominotegelDTO> spelerTegel){
+		for (SpelerDTO speler : gekozenSpelers) {
+			System.out.printf("%s %s%n", spelerTegel.get(speler).tegel(), spelerKleurMap.get(speler));
 		}
 	}
 }

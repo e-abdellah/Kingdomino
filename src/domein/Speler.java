@@ -233,6 +233,12 @@ public class Speler {
 		return score;
 	}
 
+	public void plaatsTegel(List<Vakje> vakjes){
+		for(Vakje vakje : vakjes){
+			koninkrijk[vakje.getY()][vakje.getX()] = vakje;
+		}
+	}
+
 	public static Vakje[][] deepCopy2DVakjeArray(Vakje[][] original) {
 		if (original == null) {
 			return null;

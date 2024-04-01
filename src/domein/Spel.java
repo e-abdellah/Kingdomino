@@ -7,16 +7,7 @@ import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import dto.DominotegelDTO;
@@ -223,5 +214,41 @@ public class Spel {
 				speler.setAantalGewonnen(speler.getAantalGewonnen() + 1);
 			}
 		}
+	}
+
+	public void plaatsTegel(Dominotegel tegel, int x, int y, String richting, SpelerDTO spelerDTO){
+		List<Vakje> vakjes = new ArrayList<>();
+		List<Integer> pos = new ArrayList<>(List.of(0, 0));
+
+		switch (richting) {
+			case "boven": // Up
+				pos.set(1, pos.get(1) - 1);
+				break;
+			case "onder": // Down
+				pos.set(1, pos.get(1) + 1);
+				break;
+			case "links": // Left
+				pos.set(0, pos.get(0) - 1);
+				break;
+			case "rechts": // Right
+				pos.set(0, pos.get(0) + 1);
+				break;
+			default:
+				System.out.println("Onbekende richting"); // Unknown direction
+				break;
+		}
+
+		tegel.getVakje1().setX(x);
+		tegel.getVakje1().setY(y);
+		tegel.getVakje2().setX(x + pos.get(0));
+		tegel.getVakje2().setY(y + pos.get(1));
+		vakjes.add(tegel.getVakje1());
+		vakjes.add(tegel.getVakje2());
+		for(Speler speler : spelers){
+			if(Objects.equals(speler.getGebruikersnaam(), spelerDTO.gebruikersnaam())){
+				speler.plaatsTegel(vakjes);
+			}
+		}
+
 	}
 }
