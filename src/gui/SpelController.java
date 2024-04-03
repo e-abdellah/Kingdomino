@@ -27,6 +27,7 @@ import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -47,6 +48,7 @@ public class SpelController {
 	private HBox tegelEnKleurBox;
 	@FXML
 	private HBox eindkolom;
+    
 
 	private int aantalSpelers;
 	private int teller = 0;
@@ -71,6 +73,7 @@ public class SpelController {
 
 	@FXML
 	private Button startRondeBtn;
+	
 
 	public SpelController() {
 		dc = new DomeinController();
@@ -85,6 +88,7 @@ public class SpelController {
 	}
 
 	public void initSpel() {
+		
 		setSpelerInfo(spelerKleuren);
 		stapel = dc.dominotegels(aantalSpelers);
 		speelRonde(false, gekozenTegels);
@@ -93,6 +97,7 @@ public class SpelController {
 			toonWelkomPopup();
 		});
 		speelRonde(false, eindkolomTegels);
+
 	}
 
 	// public void setSpelerInformatie(List<String> spelerInformatie) {
