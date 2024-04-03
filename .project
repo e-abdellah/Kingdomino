@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/imgs/backgroundimage.jpg</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Downloads/backgroundimage.jpg</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

@@ -2,9 +2,9 @@ package main;
 
 import java.util.Scanner;
 
+
 import cui.KingdominoApp;
 import domein.DomeinController;
-import gui.TaalKeuzeController; // Importeer de TaalKeuzeController-klasse
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -46,11 +46,11 @@ public class StartUp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/taalKeuze.fxml"));
+	    FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/WelkomKD.fxml"));
 	    Scene scene = new Scene(loader.load());
 	    primaryStage.setScene(scene);
-	    TaalKeuzeController controller = loader.getController();
-	    controller.setStage(primaryStage); // This will also maximize the stage
+	    primaryStage.setTitle("KingDomino");
+	    primaryStage.setMaximized(true);
 	    primaryStage.show();
 	    
 	}

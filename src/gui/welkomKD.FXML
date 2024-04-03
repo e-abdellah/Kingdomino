@@ -7,22 +7,23 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="648.0" prefWidth="805.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.WelkomKDController">
+<AnchorPane fx:id="root" prefHeight="1024.0" prefWidth="1026.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.WelkomKDController">
+    <ImageView fx:id="imageView" fitHeight="1024.0" fitWidth="1026.0" preserveRatio="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <image>
+            <Image url="@../imgs/_ad801f1c-e483-4621-8325-8282bd0a8423.jpg" />
+        </image>
+    </ImageView>
 
-	<ImageView preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-		<image>
-			<Image url="@../imgs/_ad801f1c-e483-4621-8325-8282bd0a8423.jpg" />
-		</image>
-	</ImageView>
 
+	<Label layoutX="301.0" layoutY="225.0" style="-fx-font-size: 36px;-fx-text-fill: red; -fx-font-weight: bold;" text="Welcome to Kingdomino" textFill="#ffe30c" />
 
-	<Label layoutX="200.0" layoutY="20.0" style="-fx-font-size: 36px;-fx-text-fill: red; -fx-font-weight: bold;" text="Welcome to Kingdomino" textFill="RED" />
-
-	<HBox alignment="CENTER" layoutX="20" layoutY="120" spacing="20">
-		<Button fx:id="startBtn" mnemonicParsing="false" onAction="#startSpel" style="-fx-font-size: 18px;" text="Start New Game" />
-		<Button fx:id="registreerBtn" mnemonicParsing="false" onAction="#registreerSpeler" style="-fx-font-size: 18px;" text="Register New Player" />
-	</HBox>
+	<HBox alignment="CENTER" layoutX="20" layoutY="120" spacing="20" />
 
 <!-- 	<Button fx:id="volgendeBtn" layoutX="706.0" layoutY="506.0" mnemonicParsing="false" onAction="#volgende" style="-fx-font-size: 18px;" text="Next" /> -->
-		<Button fx:id="afsluitenBtn" layoutX="661.0" layoutY="566.0" mnemonicParsing="false" onAction="#afsluiten" prefHeight="40.0" prefWidth="112.0" style="-fx-font-size: 18px;" text="Exit" />
+		<Button fx:id="afsluitenBtn" layoutX="773.0" layoutY="717.0" mnemonicParsing="false" onAction="#afsluiten" prefHeight="40.0" prefWidth="112.0" style="-fx-font-size: 18px;" text="Exit" />
+   <Button fx:id="nlBtn" layoutX="773.0" layoutY="34.0" mnemonicParsing="false" onAction="#chooseDutch" text="NL" />
+   <Button fx:id="enBtn" layoutX="821.0" layoutY="34.0" mnemonicParsing="false" onAction="#chooseEnglish" text="EN" />
+   <Button fx:id="frBtn" layoutX="869.0" layoutY="34.0" mnemonicParsing="false" onAction="#chooseFrench" text="FR" />
+		<Button fx:id="startBtn" layoutX="301.0" layoutY="390.0" mnemonicParsing="false" onAction="#startSpel" style="-fx-font-size: 18px;" text="Start New Game" />
+		<Button fx:id="registreerBtn" layoutX="541.0" layoutY="390.0" mnemonicParsing="false" onAction="#registreerSpeler" style="-fx-font-size: 18px;" text="Register New Player" />
 </AnchorPane>

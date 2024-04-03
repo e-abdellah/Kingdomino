@@ -1,4 +1,4 @@
-package gui;
+/*package gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -108,3 +108,5 @@ public class TaalKeuzeController {
         stage.setY(screenBounds.getMinY());
     }
 }
+
+*/
