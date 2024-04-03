@@ -92,9 +92,11 @@ public class WelkomKDController {
     @FXML
     public void initialize() {
         setLanguage("nl"); //Stelt de standaard taal in op Nederlands
+        //Past de achtergrond image aan op basis van de grootte vh scherm vd gebruiker
         imageView.fitWidthProperty().bind(root.widthProperty());
         imageView.fitHeightProperty().bind(root.heightProperty());
         imageView.setPreserveRatio(false);
+
     }
 
 	public void setLanguage(String language) {

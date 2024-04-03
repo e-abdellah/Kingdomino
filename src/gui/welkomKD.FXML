@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 
-<AnchorPane fx:id="root" prefHeight="1024.0" prefWidth="1026.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.WelkomKDController">
-    <ImageView fx:id="imageView" fitHeight="1024.0" fitWidth="1026.0" preserveRatio="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <image>
-            <Image url="@../imgs/_ad801f1c-e483-4621-8325-8282bd0a8423.jpg" />
-        </image>
+<AnchorPane fx:id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.WelkomKDController">
+    <ImageView fx:id="imageView" fitHeight="1080.0" fitWidth="1920.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <image>
+         <Image url="@../imgs/KDBG6.jpg" />
+      </image>
     </ImageView>
 
+    <!-- Overige knoppen -->
+    <HBox alignment="CENTER" spacing="20" AnchorPane.bottomAnchor="315.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Button fx:id="startBtn" mnemonicParsing="false" onAction="#startSpel" style="-fx-font-size: 18px;" text="Start New Game" />
+        <Button fx:id="registreerBtn" mnemonicParsing="false" onAction="#registreerSpeler" style="-fx-font-size: 18px;" text="Register New Player" />
+    </HBox>
 
-	<Label layoutX="301.0" layoutY="225.0" style="-fx-font-size: 36px;-fx-text-fill: red; -fx-font-weight: bold;" text="Welcome to Kingdomino" textFill="#ffe30c" />
+    <HBox alignment="CENTER_RIGHT" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0">
+        <Button fx:id="afsluitenBtn" mnemonicParsing="false" onAction="#afsluiten" prefHeight="40.0" prefWidth="112.0" style="-fx-font-size: 18px;" text="Exit" />
+    </HBox>
 
-	<HBox alignment="CENTER" layoutX="20" layoutY="120" spacing="20" />
+    <StackPane AnchorPane.bottomAnchor="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <ImageView fx:id="logoImageView" fitHeight="312.0" fitWidth="699.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../imgs/KDLogo.png" />
+            </image>
+        </ImageView>
+    </StackPane>
 
-<!-- 	<Button fx:id="volgendeBtn" layoutX="706.0" layoutY="506.0" mnemonicParsing="false" onAction="#volgende" style="-fx-font-size: 18px;" text="Next" /> -->
-		<Button fx:id="afsluitenBtn" layoutX="773.0" layoutY="717.0" mnemonicParsing="false" onAction="#afsluiten" prefHeight="40.0" prefWidth="112.0" style="-fx-font-size: 18px;" text="Exit" />
-   <Button fx:id="nlBtn" layoutX="773.0" layoutY="34.0" mnemonicParsing="false" onAction="#chooseDutch" text="NL" />
-   <Button fx:id="enBtn" layoutX="821.0" layoutY="34.0" mnemonicParsing="false" onAction="#chooseEnglish" text="EN" />
-   <Button fx:id="frBtn" layoutX="869.0" layoutY="34.0" mnemonicParsing="false" onAction="#chooseFrench" text="FR" />
-		<Button fx:id="startBtn" layoutX="301.0" layoutY="390.0" mnemonicParsing="false" onAction="#startSpel" style="-fx-font-size: 18px;" text="Start New Game" />
-		<Button fx:id="registreerBtn" layoutX="541.0" layoutY="390.0" mnemonicParsing="false" onAction="#registreerSpeler" style="-fx-font-size: 18px;" text="Register New Player" />
+    <!-- Taal keuze knoppen Container -->
+    <HBox layoutX="1685.0" layoutY="20.0" spacing="10" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
+        <Button fx:id="nlBtn" mnemonicParsing="false" onAction="#chooseDutch" prefHeight="50.0" prefWidth="50.0" text="NL" />
+        <Button fx:id="enBtn" mnemonicParsing="false" onAction="#chooseEnglish" prefHeight="50.0" prefWidth="50.0" text="EN" />
+        <Button fx:id="frBtn" mnemonicParsing="false" onAction="#chooseFrench" prefHeight="50.0" prefWidth="50.0" text="FR" />
+    </HBox>
 </AnchorPane>
