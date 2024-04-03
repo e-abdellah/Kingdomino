@@ -249,7 +249,7 @@ public class WelkomKDController {
 		alert.setContentText(resourceBundle.getString("alertSetContextText"));
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
-			System.out.println(resourceBundle.getString("printLnAfsluiten"));
+			System.out.println(resourceBundle.getString("kleurDialogToonBeschikbareKleuren"));
 			Platform.exit();
 		} else // Cancel
 		{

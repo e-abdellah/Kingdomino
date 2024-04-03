@@ -2,9 +2,11 @@ package gui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import gui.WelkomKDController;
 
@@ -16,7 +18,7 @@ public class TaalKeuzeController {
 
 	// ResourceBundle voor het laden van vertalingen
 	private ResourceBundle bundle;
-	private Stage stage; // Referentie naar het hoofdvenster
+	private static Stage stage; // Referentie naar het hoofdvenster
 	private WelkomKDController welkomkdController;
 
 	// Koppel de FXML-elementen aan de controller
@@ -79,6 +81,7 @@ public class TaalKeuzeController {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFileName));
 			Parent root = loader.load();
 			stage.setScene(new Scene(root));
+			maximizeStage();
 			// Verkrijg een referentie naar de WelkomKDController
 			welkomkdController = loader.getController();
 			// Stel het stage in voor de WelkomKDController
@@ -93,5 +96,15 @@ public class TaalKeuzeController {
 
 	public void setStage(Stage stage) {
 		this.stage = stage;
+		maximizeStage();
 	}
+	
+	//Methode om de X & Y waarden van het scherm van de gebruiker op te halen om die vervolgens in te kunnen stellen in de verschillende schermen
+    public static void maximizeStage() {
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        stage.setWidth(screenBounds.getWidth());
+        stage.setHeight(screenBounds.getHeight());
+        stage.setX(screenBounds.getMinX());
+        stage.setY(screenBounds.getMinY());
+    }
 }
