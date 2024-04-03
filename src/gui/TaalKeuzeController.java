@@ -63,7 +63,7 @@ public class TaalKeuzeController {
 
 		// Stel de titel van het venster in op basis van de gekozen taal
 		if (stage != null) {
-			stage.setTitle(bundle.getString("windowTitle"));
+			stage.setTitle(bundle.getString("welkomSchermTitel"));
 		}
 	}
 

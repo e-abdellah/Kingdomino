@@ -166,9 +166,9 @@ public class WelkomKDController {
 				try {
 					dc.registreerSpeler(naam, jaar);
 					// Registreer de nieuwe speler als er geen fouten zijn en toon succesmelding.
-					showAlert("Registratie Voltooid", "De nieuwe speler is succesvol geregistreerd.");
+					showAlert(resourceBundle.getString("spelerSuccesvolGeregistreerd"), naam);
 				} catch (GebruikersnaamInGebruikException ex) {
-					gebruikersnaamFout.setText("Gebruikersnaam reeds in gebruik.");
+					gebruikersnaamFout.setText(resourceBundle.getString("spelerGebruikersnaamAlInGebruik"));
 					event.consume(); // Voorkom dat het dialoog sluit.
 				}
 			} else {
@@ -183,9 +183,9 @@ public class WelkomKDController {
 	private void startSpel() {
 		List<String> keuzes = Arrays.asList("3", "4");
 		ChoiceDialog<String> aantalSpelersDialog = new ChoiceDialog<>("3", keuzes);
-		aantalSpelersDialog.setTitle("Aantal Spelers");
-		aantalSpelersDialog.setHeaderText("Hoeveel spelers gaan er spelen?");
-		aantalSpelersDialog.setContentText("Kies het aantal spelers:");
+		aantalSpelersDialog.setTitle(resourceBundle.getString("aantalSpelersDialogTitel"));
+		aantalSpelersDialog.setHeaderText(resourceBundle.getString("aantalSpelersDialogHeader"));
+		aantalSpelersDialog.setContentText(resourceBundle.getString("aantalSpelersDialogKiesAantalSpelers"));
 
 		Optional<String> aantalSpelersResultaat = aantalSpelersDialog.showAndWait();
 		List<String> spelerEnKleurInformatie = new ArrayList<>(); // Verplaatst om zichtbaar te zijn buiten de lambda
@@ -197,17 +197,17 @@ public class WelkomKDController {
 
 			for (int i = 1; i <= aantalSpelersGekozen; i++) {
 				ChoiceDialog<String> spelerKeuzeDialog = new ChoiceDialog<>(spelersNamen.get(0), spelersNamen);
-				spelerKeuzeDialog.setTitle("Kies Speler");
-				spelerKeuzeDialog.setHeaderText("Kies speler " + i);
-				spelerKeuzeDialog.setContentText("Beschikbare spelers:");
+				spelerKeuzeDialog.setTitle(resourceBundle.getString("aantalSpelersDialogTitel"));
+				spelerKeuzeDialog.setHeaderText(resourceBundle.getString("spelersKeuzeDialogHeader") + i);
+				spelerKeuzeDialog.setContentText(resourceBundle.getString("spelersKeuzeDialogBeschikbareSpelers"));
 
 				Optional<String> spelerKeuzeResultaat = spelerKeuzeDialog.showAndWait();
 				spelerKeuzeResultaat.ifPresent(spelerNaam -> {
 					ChoiceDialog<String> kleurDialog = new ChoiceDialog<>(beschikbareKleuren.get(0),
 							beschikbareKleuren);
-					kleurDialog.setTitle("Kleurkeuze voor " + spelerNaam);
-					kleurDialog.setHeaderText("Kies een kleur voor " + spelerNaam + ":");
-					kleurDialog.setContentText("Beschikbare kleuren:");
+					kleurDialog.setTitle(resourceBundle.getString("kleurDialogTitel") + spelerNaam);
+					kleurDialog.setHeaderText(resourceBundle.getString("kleurDialogHeader") + spelerNaam + ":");
+					kleurDialog.setContentText(resourceBundle.getString("kleurDialogToonBeschikbareKleuren"));
 
 					Optional<String> kleurResultaat = kleurDialog.showAndWait();
 					kleurResultaat.ifPresent(kleur -> {
@@ -235,7 +235,7 @@ public class WelkomKDController {
 			Scene scene = new Scene(root);
 			Stage stage = new Stage();
 			stage.setScene(scene);
-			stage.setTitle("Spel");
+			stage.setTitle("KingDomino");
 			stage.show();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -245,11 +245,11 @@ public class WelkomKDController {
 	@FXML
 	private void afsluiten(Event event) {
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle("Bevestig");
-		alert.setContentText("Wil je de applicatie afsluiten?");
+		alert.setTitle(resourceBundle.getString("alertSetTitle"));
+		alert.setContentText(resourceBundle.getString("alertSetContextText"));
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK) {
-			System.out.println("We sluiten het venster en dus... ook de applicatie");
+			System.out.println(resourceBundle.getString("printLnAfsluiten"));
 			Platform.exit();
 		} else // Cancel
 		{

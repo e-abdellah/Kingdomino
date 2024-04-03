@@ -241,7 +241,7 @@ public class SpelController {
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setTitle("Tegel Gekozen");
 			alert.setContentText("U heeft tegel " + tegel + " gekozen.");
-			alert.showAndWait();
+			alert.showAndWait(); 
 		} else {
 			System.out.println("Selecteer een tegel");
 		}
