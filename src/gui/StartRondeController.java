@@ -1,6 +1,5 @@
 package gui;
 
-import java.util.Deque;
 import java.util.List;
 
 import domein.DomeinController;
@@ -26,11 +25,11 @@ public class StartRondeController {
 	}
 
 	public void initSpel() {
-		toonDominotegels((List<Dominotegel>) stapel);
+		toonDominotegels(stapel);
 	}
 
 	public void toonDominotegels(List<Dominotegel> dominotegels) {
-		spelController.toonTegelsMetBeideZijden(dominotegels);
+		spelController.toonStartKolom(dominotegels);
 	}
 
 }

@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,11 +21,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -37,61 +33,61 @@ public class SpelController {
 
 	@FXML
 	private Label spelLabel;
-	private DomeinController dc;
-
 	@FXML
 	private VBox spelerInformatieContainer; // Voor speler info
-
 	@FXML
-	private HBox dominotegelInformatieContainer; // Voor dominotegels
+	private VBox dominotegelInformatieContainer; // Voor dominotegels
 	@FXML
 	private HBox tegelEnKleurBox;
 	@FXML
 	private HBox eindkolom;
-    
-
-	private int aantalSpelers;
-	private int teller = 0;
-	private WelkomKDController kdController;
-	private List<Dominotegel> stapel;
-	private List<Dominotegel> startKolom;
-	private Deque<Dominotegel> gekozenTegels;
-	private Deque<Dominotegel> eindkolomTegels;
-	private List<Dominotegel> list = new ArrayList<>();
-	private List<String> spelerKleuren;
-
-	private final Random rand = new Random();
-	private final Set<Integer> gekozenSpelerIndices = new HashSet<>();
-	private Map<Integer, Dominotegel> spelerTegelMap = new HashMap<>();
-
-	private ResourceBundle resourceBundle;
 	@FXML
 	private ImageView stapelRugzijdeImageView;
-	private int huidigeSpelerIndex = -1; // Standaardwaarde die aangeeft dat nog geen speler is geselecteerd
-
-	private Locale locale;
-
 	@FXML
 	private Button startRondeBtn;
-	
+	@FXML
+	private VBox gekozenDominotegels;
+	@FXML
+	private VBox gekozenDominotegelsEindKolom;
+
+	private DomeinController dc;
+	private int aantalSpelers;
+	private final WelkomKDController kdController;
+	private List<Dominotegel> stapel;
+	private Deque<Dominotegel> startKolom;
+	private Deque<Dominotegel> eindkolomTegels;
+	private List<Dominotegel> gekozenTegels = new ArrayList<>();
+	private List<String> spelerKleuren;
+	private Map<Integer, Dominotegel> spelerTegelMap = new HashMap<>();
+	private boolean isEersteClick = true; // Flag to track if it's the first button click
+	private boolean isVolgendeRonde = false; // This flag will determine the button state
+
+	private Set<Integer> startkolomSpelers = new HashSet<>();
+	private Set<Integer> eindkolomSpelers = new HashSet<>();
+
+	//	private final Random rand = new Random();
+
+	private ResourceBundle resourceBundle;
+	private int huidigeSpelerIndex = 0; // Standaardwaarde die aangeeft dat nog geen speler is geselecteerd
+
+	private Locale locale;
 
 	public SpelController() {
 		dc = new DomeinController();
 		kdController = new WelkomKDController();
 		aantalSpelers = kdController.getAantalSpelersGekozen();
-		startKolom = new ArrayList<>();
 		spelerKleuren = new ArrayList<>();
 		eindkolomTegels = new ArrayDeque<>();
-		gekozenTegels = new ArrayDeque<>();
-		eindkolom = new HBox();
+		startKolom = new ArrayDeque<>();
+		eindkolom = new HBox(5);
 		tegelEnKleurBox = new HBox(5);
 	}
 
 	public void initSpel() {
-		
+
 		setSpelerInfo(spelerKleuren);
 		stapel = dc.dominotegels(aantalSpelers);
-		speelRonde(false, gekozenTegels);
+		speelRonde(false, startKolom);
 		toonRugzijdeStapel();
 		Platform.runLater(() -> {// zorgt ervoor dat dit pas te zien is wanneer het scherm volledig is geladen
 			toonWelkomPopup();
@@ -100,35 +96,28 @@ public class SpelController {
 
 	}
 
-	// public void setSpelerInformatie(List<String> spelerInformatie) {
-	// spelerInformatie.forEach(info -> {
-	// Label label = new Label(info);
-	// spelerInformatieContainer.getChildren().add(label);
-	// });
-	// }
-
 	public void setSpelerInfo(List<String> spelerEnKleurInformatie) {
 		spelerEnKleurInformatie.forEach(info -> {
 			String[] parts = info.split("-");
 			if (parts.length == 2) {
-				String playerName = parts[0];
-				String colorValue = parts[1];
-				System.out.println(colorValue.toLowerCase());
+				String naam = parts[0];
+				String kleur = parts[1];
+				System.out.println(kleur.toLowerCase());
 
 				// Create a label for the player name
-				Label label = new Label(playerName);
+				Label label = new Label(naam);
 
 				// Create a circle with the player's color
 				Circle circle = new Circle(10); // Circle with radius 10
-				switch (colorValue.toLowerCase().trim()) {
-				case "groen" -> circle.setFill(Color.GREEN);
-				case "geel" -> circle.setFill(Color.YELLOW);
-				case "roos" -> circle.setFill(Color.PINK);
-				case "blauw" -> circle.setFill(Color.BLUE);
+				switch (kleur.toLowerCase().trim()) {
+				case "groen", "green" -> circle.setFill(Color.GREEN);
+				case "geel", "yellow" -> circle.setFill(Color.YELLOW);
+				case "roos", "pink" -> circle.setFill(Color.PINK);
+				case "blauw", "blue" -> circle.setFill(Color.BLUE);
 				default -> circle.setFill(Color.WHITE);
 				}
 
-				spelerKleuren.add(colorValue);
+				spelerKleuren.add(kleur);
 
 				HBox hbox = new HBox();
 				hbox.getChildren().addAll(circle, label);
@@ -168,7 +157,7 @@ public class SpelController {
 		}
 	}
 
-	public void toonTegelsMetBeideZijden(List<Dominotegel> dominotegels) {
+	public void toonStartKolom(List<Dominotegel> dominotegels) {
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
 		VBox vboxVoorkant = new VBox(5); // Een beetje spacing voor esthetiek
@@ -185,8 +174,7 @@ public class SpelController {
 			// Image(tegel.getVoorkantFotoPad()));
 			voorkantImageView.setFitWidth(100);
 			voorkantImageView.setFitHeight(50);
-			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel));
-
+			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel, true));
 			Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
 			ImageView achterkantImageView = new ImageView(achterkantImage);
 			achterkantImageView.setFitWidth(100);
@@ -218,7 +206,7 @@ public class SpelController {
 			// Image(tegel.getVoorkantFotoPad()));
 			voorkantImageView.setFitWidth(100);
 			voorkantImageView.setFitHeight(50);
-			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel));
+			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel, false));
 
 			Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
 			ImageView achterkantImageView = new ImageView(achterkantImage);
@@ -234,66 +222,135 @@ public class SpelController {
 		eindkolom.getChildren().add(hbox);
 	}
 
-	private void kiesTegel(Dominotegel tegel) {
+	private void kiesTegel(Dominotegel tegel, boolean isStartKolom) {
 		System.out.println(huidigeSpelerIndex);
-		if (list.contains(tegel)) {
-			// Toon een bericht dat deze tegel al gekozen is
+
+		if (handleNullTegel(tegel))
+			return;
+		if (tegelIsAlGekozen(tegel))
+			return;
+
+		voegGekozenTegelToe(tegel);
+		toonTegelEnSpelerKleur(tegel, isStartKolom);
+		updateSpelStatus(isStartKolom);
+	}
+
+	private boolean handleNullTegel(Dominotegel tegel) {
+		if (tegel == null) {
+			vraagVolgendeSpeler();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean tegelIsAlGekozen(Dominotegel tegel) {
+		if (gekozenTegels.contains(tegel)) {
 			Alert alert = new Alert(Alert.AlertType.WARNING);
 			alert.setTitle("Tegel Al Gekozen");
-			alert.setHeaderText(null);
 			alert.setContentText("Deze tegel is al gekozen. Kies een andere tegel.");
 			alert.showAndWait();
+			return true;
 		}
-		// Veronderstellend dat 'huidigeSpelerIndex' correct is ingesteld op de index
-		// van de huidige speler
-		if (list.contains(tegel)) {
-			// Bericht dat de tegel al gekozen is
-		} else if (tegel != null) {
-			list.add(tegel);
-			// Voeg de tegel toe aan de map met de huidige spelerindex
-			spelerTegelMap.put(huidigeSpelerIndex, tegel);
+		return false;
+	}
 
-			// Haal de kleur op van de huidige speler
-			String kleurCode = spelerKleuren.get(huidigeSpelerIndex);
-			Color spelerKleur;
+	private void voegGekozenTegelToe(Dominotegel tegel) {
+		gekozenTegels.add(tegel);
+		spelerTegelMap.put(huidigeSpelerIndex, tegel);
+	}
 
-			switch (kleurCode.toLowerCase().trim()) {
-			case "groen":
-				spelerKleur = Color.GREEN;
-				break;
-			case "geel":
-				spelerKleur = Color.YELLOW;
-				break;
-			case "roos":
-				spelerKleur = Color.PINK;
-				break;
-			case "blauw":
-				spelerKleur = Color.BLUE;
-				break;
-			default:
-				spelerKleur = Color.WHITE;
+	private void toonTegelEnSpelerKleur(Dominotegel tegel, boolean isStartKolom) {
+		Color spelerKleur = getSpelerKleur(huidigeSpelerIndex);
+		Circle kleurIndicator = new Circle(10, spelerKleur);
+		kleurIndicator.setStroke(Color.BLACK);
+
+		Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
+		ImageView tegelImageView = new ImageView(tegelAfbeelding);
+		tegelImageView.setFitWidth(100);
+		tegelImageView.setFitHeight(50);
+
+		HBox tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
+		VBox container = isStartKolom ? gekozenDominotegels : gekozenDominotegelsEindKolom;
+		container.getChildren().add(tegelEnKleurBox);
+
+		//		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		//		alert.setTitle("Tegel Gekozen");
+		//		alert.setContentText("U heeft tegel " + tegel + " gekozen.");
+		//		alert.showAndWait();
+	}
+
+	private Color getSpelerKleur(int huidigeSpelerIndex) {
+		String kleurCode = spelerKleuren.get(huidigeSpelerIndex).toLowerCase().trim();
+		switch (kleurCode) {
+		case "groen":
+			return Color.GREEN;
+		case "geel":
+			return Color.YELLOW;
+		case "roos":
+			return Color.PINK;
+		case "blauw":
+			return Color.BLUE;
+		default:
+			return Color.WHITE;
+		}
+	}
+
+	private void updateSpelStatus(boolean isStartKolom) {
+		if (isStartKolom) {
+			startkolomSpelers.add(huidigeSpelerIndex);
+			if (startkolomSpelers.size() >= aantalSpelers) {
+				toonEindkolom(new ArrayList<>(eindkolomTegels));
+				isVolgendeRonde = true;
+				// Reset huidigeSpelerIndex voor de volgende kolom als dat nodig is.
+				huidigeSpelerIndex = 0; // Dit hangt af van je spelregels.
 			}
-
-			Circle kleurIndicator = new Circle(10);
-			kleurIndicator.setFill(spelerKleur);
-			kleurIndicator.setStroke(Color.BLACK);
-
-			Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
-			ImageView tegelImageView = new ImageView(tegelAfbeelding);
-			tegelImageView.setFitWidth(100);
-			tegelImageView.setFitHeight(50);
-
-			HBox tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
-			dominotegelInformatieContainer.getChildren().add(tegelEnKleurBox);
-
-			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setTitle("Tegel Gekozen");
-			alert.setContentText("U heeft tegel " + tegel + " gekozen.");
-			alert.showAndWait();
 		} else {
-			System.out.println("Selecteer een tegel");
+			eindkolomSpelers.add(huidigeSpelerIndex);
+			if (eindkolomSpelers.size() >= aantalSpelers) {
+				startVolgendeRonde();
+				return; // Voorkomt het dubbel aanroepen van vraagVolgendeSpeler.
+			}
 		}
 
+		// Verplaats dit naar het einde om te zorgen dat we altijd naar de volgende speler gaan.
+		huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelerInformatieContainer.getChildren().size();
+		vraagVolgendeSpeler();
+	}
+
+	private void vraagVolgendeSpeler() {
+		// Check if we need to increment huidigeSpelerIndex
+		if (isEersteClick || startkolomSpelers.size() == aantalSpelers && !isVolgendeRonde) {
+			huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelerInformatieContainer.getChildren().size();
+		}
+
+		Node selecteerdeNode = spelerInformatieContainer.getChildren().get(huidigeSpelerIndex);
+		String spelerInfo = (String) selecteerdeNode.getUserData();
+
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Kies een Tegel");
+		alert.setHeaderText(null);
+		alert.setContentText("Het is aan uw beurt speler: " + spelerInfo + "\nKies één van de beschikbare tegels.");
+		alert.showAndWait();
+
+		// If it's the start of the round, then we just prompted the first player
+		if (isEersteClick) {
+			isEersteClick = false;
+		}
+	}
+
+	private void startVolgendeRonde() {
+		// Reset the game state for the next round, including clearing tracking sets
+		isVolgendeRonde = false;
+		isEersteClick = true;
+		huidigeSpelerIndex = 0; // Optionally reset to the first player
+		startkolomSpelers.clear();
+		eindkolomSpelers.clear();
+		gekozenTegels.clear(); // Assuming you want to reset the selections for a new round
+		Alert volgendeRondeAlert = new Alert(Alert.AlertType.INFORMATION);
+		volgendeRondeAlert.setTitle("Volgende Ronde");
+		volgendeRondeAlert.setHeaderText(null);
+		volgendeRondeAlert.setContentText("De volgende ronde is begonnen.");
+		volgendeRondeAlert.showAndWait();
 	}
 
 	public void toonRugzijdeStapel() {
@@ -319,74 +376,15 @@ public class SpelController {
 
 		// Toon de geselecteerde tegels in de GUI
 		if (toonBeideZijden) {
-			toonTegelsMetBeideZijden(new ArrayList<>(list)); // Toon tegels met beide zijden
+			toonStartKolom(new ArrayList<>(list)); // Toon tegels met beide zijden
 		} else {
 			toonTegels(list); // Toon tegels met enkel de achterkant
 		}
 
-		// Plaats de genomen tegels in de startkolom, gesorteerd volgens hun nummer met
-		// hun landschapszijde naar boven
-		// startKolom = dc.plaatsTegelsInStartkolom(gekozenTegels);
-		// Plaats tegels met hun landschapszijde naar boven
-
-		// for (int i = 0; i < aantalSpelers; i++) {
-		// kiesTegelInStartKolom();
-		// }
-
-		// toonResultaatVanRonde();
 	}
 
 	private void toonResultaatVanRonde() {
 		// Alert met: info van alle spelers + resterende tegels in stapel + startkolom
-
-	}
-
-	private Dominotegel kiesTegelInStartKolom() {
-		if (startKolom.isEmpty()) {
-			// Toon een bericht dat er geen tegels zijn om uit te kiezen of handel dit
-			// anderszins af
-			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setTitle("Geen Tegels Beschikbaar");
-			alert.setHeaderText(null);
-			alert.setContentText("Er zijn momenteel geen tegels beschikbaar om uit te kiezen.");
-			alert.showAndWait();
-			return null; // Terugkeren aangezien er niets te kiezen valt
-		}
-
-		List<String> keuzes = startKolom.stream().map(Dominotegel::toString).collect(Collectors.toList());
-
-		ChoiceDialog<String> dialog = new ChoiceDialog<>(keuzes.get(0), keuzes);
-		dialog.setTitle("Kies een tegel");
-		dialog.setHeaderText("Selecteer een tegel uit de startkolom:");
-		dialog.setContentText("Beschikbare tegels:");
-
-		// Toon de dialog en wacht op de gebruikersinput
-		Optional<String> resultaat = dialog.showAndWait();
-		Dominotegel gekozenTegel = null;
-
-		if (resultaat.isPresent()) {
-			String gekozenTegelString = resultaat.get();
-			// Vind de overeenkomende Dominotegel in je startKolom gebaseerd op de keuze
-			for (Dominotegel tegel : startKolom) {
-				if (tegel.toString().equals(gekozenTegelString)) {
-					gekozenTegel = tegel;
-					break;
-				}
-			}
-		}
-
-		if (gekozenTegel != null) {
-			// Voer hier acties uit met de gekozen tegel
-			System.out.println("Je hebt gekozen: " + gekozenTegel);
-
-		}
-
-		return gekozenTegel;
-	}
-
-	private boolean isTegelVrij(Dominotegel tegel) {
-		return !startKolom.contains(tegel);
-
 	}
 
 	public void setAantalSpelers(int aantal) {
@@ -399,33 +397,26 @@ public class SpelController {
 
 	@FXML
 	private void handleStartRondeBtnAction(ActionEvent event) {
+		Button startRondeButton = (Button) event.getSource(); // Get the button that was clicked
+
 		if (spelerInformatieContainer.getChildren().isEmpty()) {
 			System.out.println("Er zijn geen spelers.");
 			return;
 		}
 
-		// Verhoog de index voor de volgende speler
-		huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelerInformatieContainer.getChildren().size();
-		teller++;
+		// If it's the first click and not yet the next round, begin the first selection phase
+		if (isEersteClick && !isVolgendeRonde) {
+			toonStartKolom(new ArrayList<>(startKolom)); // Display the start column with tegels
+			isEersteClick = false;
+			kiesTegel(null, true); // Initiate the first player's turn to choose a tegel
+		}
 
-		// Controleer of alle spelers hebben gekozen
-		if (teller > aantalSpelers) {
-			toonEindkolom(new ArrayList<>(eindkolomTegels));
-			teller = 0; // Reset teller voor de volgende ronde
-			toonRugzijdeStapel();
-		} else {
-			// Toon een pop-upvenster met de geselecteerde spelerinformatie
-			Node geselecteerdeNode = spelerInformatieContainer.getChildren().get(huidigeSpelerIndex);
-			String spelerInfo = (String) geselecteerdeNode.getUserData();
-
-			toonTegelsMetBeideZijden(new ArrayList<>(gekozenTegels));
-
-			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setTitle("Begin van de Ronde");
-			alert.setHeaderText(null);
-			alert.setContentText(
-					"Het is aan uw beurt speler: " + spelerInfo + " \nKies één van de beschikbare tegels.");
-			alert.showAndWait();
+		// If the button is clicked when it's already the next round
+		//		if (!isEersteClick && isVolgendeRonde && eindkolomSpelers.size() >= aantalSpelers) {
+		else {
+			System.out.println("btn clicked");
+			startRondeButton.setText("Start Ronde");
+			startVolgendeRonde();
 		}
 	}
 
