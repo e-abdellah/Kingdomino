@@ -65,7 +65,7 @@ public class SpelController {
 	private Set<Integer> startkolomSpelers = new HashSet<>();
 	private Set<Integer> eindkolomSpelers = new HashSet<>();
 
-	//	private final Random rand = new Random();
+	// private final Random rand = new Random();
 
 	private ResourceBundle resourceBundle;
 	private int huidigeSpelerIndex = 0; // Standaardwaarde die aangeeft dat nog geen speler is geselecteerd
@@ -134,8 +134,7 @@ public class SpelController {
 		Alert welkomAlert = new Alert(Alert.AlertType.INFORMATION);
 		welkomAlert.setTitle("Welkom bij Kingdomino!");
 		welkomAlert.setHeaderText(null);
-		welkomAlert.setContentText(
-				"Welkom bij het spel! Klik op 'Kies Tegel' om het spel te beginnen. Herhaal dit voor elke speler!");
+		welkomAlert.setContentText("Welkom bij het spel! Klik op 'Kies Tegel' om het spel te beginnen.");
 		welkomAlert.showAndWait();
 	}
 
@@ -273,10 +272,10 @@ public class SpelController {
 		VBox container = isStartKolom ? gekozenDominotegels : gekozenDominotegelsEindKolom;
 		container.getChildren().add(tegelEnKleurBox);
 
-		//		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		//		alert.setTitle("Tegel Gekozen");
-		//		alert.setContentText("U heeft tegel " + tegel + " gekozen.");
-		//		alert.showAndWait();
+		// Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		// alert.setTitle("Tegel Gekozen");
+		// alert.setContentText("U heeft tegel " + tegel + " gekozen.");
+		// alert.showAndWait();
 	}
 
 	private Color getSpelerKleur(int huidigeSpelerIndex) {
@@ -312,7 +311,8 @@ public class SpelController {
 			}
 		}
 
-		// Verplaats dit naar het einde om te zorgen dat we altijd naar de volgende speler gaan.
+		// Verplaats dit naar het einde om te zorgen dat we altijd naar de volgende
+		// speler gaan.
 		huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelerInformatieContainer.getChildren().size();
 		vraagVolgendeSpeler();
 	}
@@ -329,7 +329,14 @@ public class SpelController {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Kies een Tegel");
 		alert.setHeaderText(null);
-		alert.setContentText("Het is aan uw beurt speler: " + spelerInfo + "\nKies één van de beschikbare tegels.");
+		if (startkolomSpelers.size() == aantalSpelers) {
+			//System.out.println("We zijn in de eerste deel van de conditie");
+			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo + "\nKies één van de beschikbare tegels uit de eindkolom.");
+		} else {
+			//System.out.println("We zijn in de tweede deel van de conditie");
+			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo + "\nKies één van de beschikbare tegels uit de startkolom.");
+		}
+
 		alert.showAndWait();
 
 		// If it's the start of the round, then we just prompted the first player
@@ -404,7 +411,8 @@ public class SpelController {
 			return;
 		}
 
-		// If it's the first click and not yet the next round, begin the first selection phase
+		// If it's the first click and not yet the next round, begin the first selection
+		// phase
 		if (isEersteClick && !isVolgendeRonde) {
 			toonStartKolom(new ArrayList<>(startKolom)); // Display the start column with tegels
 			isEersteClick = false;
@@ -412,7 +420,8 @@ public class SpelController {
 		}
 
 		// If the button is clicked when it's already the next round
-		//		if (!isEersteClick && isVolgendeRonde && eindkolomSpelers.size() >= aantalSpelers) {
+		// if (!isEersteClick && isVolgendeRonde && eindkolomSpelers.size() >=
+		// aantalSpelers) {
 		else {
 			System.out.println("btn clicked");
 			startRondeButton.setText("Start Ronde");
