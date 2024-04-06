@@ -2,6 +2,7 @@ package gui;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import domein.DomeinController;
 import domein.Dominotegel;
@@ -96,6 +98,7 @@ public class SpelController {
 		gridBlauw = new GridPane();
 		gridGeel = new GridPane();
 		gridRoos = new GridPane();
+
 	}
 
 	public void initSpel() {
@@ -106,7 +109,9 @@ public class SpelController {
 		Platform.runLater(() -> {// zorgt ervoor dat dit pas te zien is wanneer het scherm volledig is geladen
 			toonWelkomPopup();
 		});
+
 		speelRonde(false, eindkolomTegels);
+		startRondeBtn.setDisable(false); // Zet de knop op actief
 
 	}
 
@@ -174,7 +179,7 @@ public class SpelController {
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
 		VBox vboxVoorkant = new VBox(5); // Een beetje spacing voor esthetiek
-		//		VBox vboxAchterkant = new VBox(5);
+		// VBox vboxAchterkant = new VBox(5);
 
 		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
 		List<Dominotegel> gesorteerdeTegels = dominotegels.stream()
@@ -188,16 +193,16 @@ public class SpelController {
 			voorkantImageView.setFitWidth(100);
 			voorkantImageView.setFitHeight(50);
 			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel, true));
-			//			Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
-			//			ImageView achterkantImageView = new ImageView(achterkantImage);
-			//			achterkantImageView.setFitWidth(100);
-			//			achterkantImageView.setFitHeight(50);
+			// Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
+			// ImageView achterkantImageView = new ImageView(achterkantImage);
+			// achterkantImageView.setFitWidth(100);
+			// achterkantImageView.setFitHeight(50);
 
 			vboxVoorkant.getChildren().add(voorkantImageView);
-			//			vboxAchterkant.getChildren().add(achterkantImageView);
+			// vboxAchterkant.getChildren().add(achterkantImageView);
 		}
 
-		hbox.getChildren().addAll(vboxVoorkant /*, vboxAchterkant*/);
+		hbox.getChildren().addAll(vboxVoorkant /* , vboxAchterkant */);
 		dominotegelInformatieContainer.getChildren().clear();
 		dominotegelInformatieContainer.getChildren().add(hbox);
 	}
@@ -206,7 +211,7 @@ public class SpelController {
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
 		VBox vboxVoorkant = new VBox(5); // Een beetje spacing voor esthetiek
-		//		VBox vboxAchterkant = new VBox(5);
+		// VBox vboxAchterkant = new VBox(5);
 
 		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
 		List<Dominotegel> gesorteerdeTegels = dominotegels.stream()
@@ -221,21 +226,29 @@ public class SpelController {
 			voorkantImageView.setFitHeight(50);
 			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel, false));
 
-			//			Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
-			//			ImageView achterkantImageView = new ImageView(achterkantImage);
-			//			achterkantImageView.setFitWidth(100);
-			//			achterkantImageView.setFitHeight(50);
+			// Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
+			// ImageView achterkantImageView = new ImageView(achterkantImage);
+			// achterkantImageView.setFitWidth(100);
+			// achterkantImageView.setFitHeight(50);
 
 			vboxVoorkant.getChildren().add(voorkantImageView);
-			//			vboxAchterkant.getChildren().add(achterkantImageView);
+			// vboxAchterkant.getChildren().add(achterkantImageView);
 		}
 
-		hbox.getChildren().addAll(vboxVoorkant/*, vboxAchterkant*/);
+		hbox.getChildren().addAll(vboxVoorkant/* , vboxAchterkant */);
 		eindkolom.getChildren().clear();
 		eindkolom.getChildren().add(hbox);
 	}
 
 	private void kiesTegel(Dominotegel tegel, boolean isStartKolom) {
+		// Check of de huidige speler al een keuze heeft gemaakt
+		if ((isStartKolom && startkolomSpelers.contains(huidigeSpelerIndex))
+				|| (!isStartKolom && eindkolomSpelers.contains(huidigeSpelerIndex))) {
+			// Toon foutmelding
+			showAlert("Al Gekozen", "Je hebt al een tegel gekozen uit deze kolom. Wacht op de volgende ronde.");
+			return; // Vroegtijdig beëindigen van de methode
+		}
+
 		System.out.println(huidigeSpelerIndex);
 
 		if (handleNullTegel(tegel))
@@ -245,9 +258,18 @@ public class SpelController {
 
 		voegGekozenTegelToe(tegel);
 		toonTegelEnSpelerKleur(tegel, isStartKolom);
+
+		// Toevoegen van de huidige spelerindex aan de respectievelijke set
+		if (isStartKolom) {
+			startkolomSpelers.add(huidigeSpelerIndex);
+		} else {
+			eindkolomSpelers.add(huidigeSpelerIndex);
+		}
+
 		// Veronderstel dat je een dialoogvenster toont om rij en kolom te krijgen
 		if (isStartKolom) {
-			int[] positie = vraagTegelPositie(); // Deze methode toont een dialoogvenster en retourneert de gekozen positie als een array [rij, kolom]
+			int[] positie = vraagTegelPositie(); // Deze methode toont een dialoogvenster en retourneert de gekozen
+													// positie als een array [rij, kolom]
 			if (positie != null) {
 				plaatsTegelInGrid(tegel, positie[0], positie[1]);
 			}
@@ -354,13 +376,13 @@ public class SpelController {
 
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Kies een Tegel");
-		//		alert.setHeaderText(null);
+		// alert.setHeaderText(null);
 		if (startkolomSpelers.size() == aantalSpelers) {
-			//System.out.println("We zijn in de eerste deel van de conditie");
+			// System.out.println("We zijn in de eerste deel van de conditie");
 			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
 					+ "\nKies één van de beschikbare tegels uit de eindkolom.");
 		} else {
-			//System.out.println("We zijn in de tweede deel van de conditie");
+			// System.out.println("We zijn in de tweede deel van de conditie");
 			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
 					+ "\nKies één van de beschikbare tegels uit de startkolom.");
 		}
@@ -375,6 +397,7 @@ public class SpelController {
 
 	private void startVolgendeRonde() {
 		// Reset the game state for the next round, including clearing tracking sets
+		startRondeBtn.setDisable(false);
 		isVolgendeRonde = false;
 		isEersteClick = true;
 		huidigeSpelerIndex = 0; // Optionally reset to the first player
@@ -445,6 +468,7 @@ public class SpelController {
 			toonStartKolom(new ArrayList<>(startKolom)); // Display the start column with tegels
 			isEersteClick = false;
 			kiesTegel(null, true); // Initiate the first player's turn to choose a tegel
+			startRondeButton.setDisable(true); // Deactiveer de knop
 		}
 
 		// If the button is clicked when it's already the next round
@@ -458,24 +482,35 @@ public class SpelController {
 	}
 
 	private int[] vraagTegelPositie() {
-		TextInputDialog dialog = new TextInputDialog();
-		dialog.setTitle("Tegel Plaatsen");
-		dialog.setHeaderText(
-				"Geef de rij en kolom in waar je de tegel wilt plaatsen, gescheiden door een komma (bijv. 1,2)");
-		Optional<String> result = dialog.showAndWait();
+		while (true) { // Begin een oneindige lus die breekt wanneer geldige invoer wordt ontvangen
+			TextInputDialog dialog = new TextInputDialog();
+			dialog.setTitle("Tegel Plaatsen");
+			dialog.setHeaderText(
+					"Geef de rij en kolom in waar je de tegel wilt plaatsen, gescheiden door een komma (bijv. 1,2)");
+			Optional<String> result = dialog.showAndWait();
 
-		if (result.isPresent()) {
-			try {
-				String[] parts = result.get().split(",");
-				int rij = Integer.parseInt(parts[0].trim()) - 1; // -1 omdat GridPane indexen bij 0 beginnen
-				int kolom = Integer.parseInt(parts[1].trim()) - 1;
-				return new int[] { rij, kolom };
-			} catch (NumberFormatException e) {
-				// Toon foutmelding als de input niet correct is
-				showAlert("Foutieve Input", "Voer alstublieft geldige getallen in gescheiden door een komma.");
+			if (result.isPresent()) {
+				try {
+					String[] parts = result.get().split(",");
+					if (parts.length != 2) { // Controleer of er precies twee delen zijn na het splitsen
+						showAlert("Ongeldige Input", "Voer alstublieft twee getallen in gescheiden door een komma.");
+						continue; // Ga terug naar het begin van de lus voor nieuwe invoer
+					}
+					int rij = Integer.parseInt(parts[0].trim()) - 1; // -1 omdat GridPane indexen bij 0 beginnen
+					int kolom = Integer.parseInt(parts[1].trim()) - 1;
+					// Voeg hier eventueel extra validatie toe om te controleren of de coördinaten
+					// binnen de verwachte grenzen vallen
+					return new int[] { rij, kolom };
+				} catch (NumberFormatException e) {
+					// Toon foutmelding als de input niet correct is
+					showAlert("Foutieve Input", "Voer alstublieft geldige getallen in gescheiden door een komma.");
+				}
+			} else {
+				// Gebruiker heeft het dialoogvenster geannuleerd; retourneer null of handel dit
+				// scenario op een andere manier af
+				return null;
 			}
 		}
-		return null;
 	}
 
 	private void showAlert(String title, String message) {
@@ -492,8 +527,10 @@ public class SpelController {
 		tegelImageView.setFitWidth(100); // Pas de grootte aan aan jouw grid
 		tegelImageView.setFitHeight(50);
 
-		// Aanname: je weet al in welke GridPane deze moet (bijv. op basis van de huidige speler)
-		// Dit is een voorbeeld, vervang gridGroen door de juiste grid op basis van speler/logica
+		// Aanname: je weet al in welke GridPane deze moet (bijv. op basis van de
+		// huidige speler)
+		// Dit is een voorbeeld, vervang gridGroen door de juiste grid op basis van
+		// speler/logica
 		GridPane doelGridPane = bepaalDoelGridPane(getSpelerKleur(huidigeSpelerIndex));
 		doelGridPane.add(tegelImageView, kolom, rij);
 	}
