@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
 	<children>
       <ImageView fx:id="imageView" fitHeight="1080.0" fitWidth="1776.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -130,6 +130,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
+      <Button fx:id="volgendeRondeBtn" layoutX="890.0" layoutY="702.0" mnemonicParsing="false" onAction="#handleVolgendeRondeBtn" text="Volgende Ronde" />
      
 
 	</children>

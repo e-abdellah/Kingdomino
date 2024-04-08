@@ -562,38 +562,38 @@ public class SpelController {
 	@FXML
 	private void handleVolgendeRondeBtn(ActionEvent event) {
 
-		//		toonStartKolom(new ArrayList<>());
-		toonEindkolom(new ArrayList<>());
-		gekozenDominotegels = new VBox();
-		gekozenDominotegels.getChildren().clear();
-		tegelEnKleurBox = new HBox();
-
-		toonTegelEnSpelerKleur(null, true);
-
-		System.out.println(gekozenDominotegels.getChildren());
-		System.out.println(tegelEnKleurBox.getChildren());
-
-		dominotegelInformatieContainer.getChildren().clear();
-
-		//		System.out.println("op  handleVolgendeRondeBtn");
-		//		System.out.println(startKolom);
-		//		System.out.println(eindkolomTegels);
-
-		// Maak de nieuwe startkolom met de tegels die in de eindkolom (gekozenTegels) waren
-		startKolom.clear(); // Zorg dat de startkolom leeg is
-
-		startKolom.addAll(eindkolomTegels); // Voeg de gekozen tegels toe aan de startkolom
-		gekozenTegels.clear(); // Maak de lijst van gekozen tegels leeg voor de volgende ronde
-
-		// Bereid de nieuwe eindkolom voor
-		eindkolomTegels.clear(); // Maak de eindkolom leeg voor de volgende ronde
-		// Hier zou je de logica toevoegen om nieuwe tegels aan de eindkolom toe te voegen, indien nodig
-
-		// Toon de startkolom als de nieuwe set tegels die beschikbaar zijn om te kiezen
-		toonStartKolom(new ArrayList<>(startKolom));
-
-		// Eventuele verdere initialisaties voor de nieuwe ronde
-		speelRonde(false, startKolom);
+//		//		toonStartKolom(new ArrayList<>());
+//		toonEindkolom(new ArrayList<>());
+//		gekozenDominotegels = new VBox();
+//		gekozenDominotegels.getChildren().clear();
+//		tegelEnKleurBox = new HBox();
+//
+//		toonTegelEnSpelerKleur(null, true);
+//
+//		System.out.println(gekozenDominotegels.getChildren());
+//		System.out.println(tegelEnKleurBox.getChildren());
+//
+//		dominotegelInformatieContainer.getChildren().clear();
+//
+//		//		System.out.println("op  handleVolgendeRondeBtn");
+//		//		System.out.println(startKolom);
+//		//		System.out.println(eindkolomTegels);
+//
+//		// Maak de nieuwe startkolom met de tegels die in de eindkolom (gekozenTegels) waren
+//		startKolom.clear(); // Zorg dat de startkolom leeg is
+//
+//		startKolom.addAll(eindkolomTegels); // Voeg de gekozen tegels toe aan de startkolom
+//		gekozenTegels.clear(); // Maak de lijst van gekozen tegels leeg voor de volgende ronde
+//
+//		// Bereid de nieuwe eindkolom voor
+//		eindkolomTegels.clear(); // Maak de eindkolom leeg voor de volgende ronde
+//		// Hier zou je de logica toevoegen om nieuwe tegels aan de eindkolom toe te voegen, indien nodig
+//
+//		// Toon de startkolom als de nieuwe set tegels die beschikbaar zijn om te kiezen
+//		toonStartKolom(new ArrayList<>(startKolom));
+//
+//		// Eventuele verdere initialisaties voor de nieuwe ronde
+//		speelRonde(false, startKolom);
 	}
 
 }
