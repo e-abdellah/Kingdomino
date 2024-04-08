@@ -134,12 +134,15 @@ public class Spel {
 		// Controleer het aantal spelers en bepaal het aantal benodigde tegels
 		int aantalBenodigdeTegels = (aantalSpelers == 3) ? 36 : 48;
 
-		if(!isGeschud){};
+		if(!isGeschud){
 			Collections.shuffle(dominotegels); // Schud de lijst met dominotegels
 			isGeschud = true; // lijst moet maar 1 keer geschud worden
 
 			// Retourneer een sublist met het vereiste aantal tegels
-			dominotegels = dominotegels.subList(0, aantalBenodigdeTegels - 1);
+			if(aantalSpelers == 3){
+				dominotegels = dominotegels.subList(0, 36);
+			}
+		}
 	}
 
 	public List<Dominotegel> geefTegels(int aantal) {
@@ -189,11 +192,11 @@ public class Spel {
 
 	public List<Dominotegel> geefBeginOfEindKolom() {
 		int aantal = spelers.size();
-		List<Dominotegel> geschuddeDominotegels = dominotegels;
+		System.out.println(dominotegels.size());
 		List<Dominotegel> kolom = new ArrayList<>();
 		for (int i = 0; i < aantal; i++) {
-			kolom.add(geschuddeDominotegels.get(0));
-			geschuddeDominotegels.remove(0);
+			kolom.add(dominotegels.get(0));
+			dominotegels.remove(0);
 		}
 		kolom.sort(Comparator.comparingInt(Dominotegel::getGetal));
 		return kolom;

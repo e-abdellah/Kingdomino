@@ -5,7 +5,6 @@ import java.util.*;
 import domein.DomeinController;
 import domein.Vakje;
 import dto.DominotegelDTO;
-import dto.SpelDTO;
 import dto.SpelerDTO;
 
 public class KingdominoApp {
@@ -17,7 +16,6 @@ public class KingdominoApp {
 	private List<SpelerDTO> beschikbareSpelers;
 	private Map<SpelerDTO, String> spelerKleurMap;
 	ResourceBundle messages = null;
-	private SpelDTO spelDTO;
 	private List<DominotegelDTO> dominotegels;
 	private List<String> testkleuren;
 
@@ -294,7 +292,6 @@ public class KingdominoApp {
 		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
 		dc.voegSpelersToe(gekozenSpelers);
 		dominotegels = dc.geefDominotegels(aantalSpelers);
-		spelDTO = dc.geefSpelDTO();
 
 		System.out.println("Het spel heeft " + aantalDominotegels + " dominotegels.");
 
@@ -305,15 +302,18 @@ public class KingdominoApp {
 		}
 
 		Collections.shuffle(gekozenSpelers);// random volgorde van spelers genereren
-
+		List<DominotegelDTO> startKolom = new ArrayList<>();
+		int beurtTeller = 1;
+		Map<SpelerDTO, DominotegelDTO> spelerTegel = new HashMap<>();
+		System.out.println();
 		do {
-			List<DominotegelDTO> startKolom = dc.geefKolom();
-			toonKolom(startKolom);
-
-
-			Map<SpelerDTO, DominotegelDTO> spelerTegel = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
-
-			toonKoninkrijk();
+			System.out.printf("Begin van ronde %d%n%n", beurtTeller++);
+			if(startKolom.isEmpty()) {
+				startKolom = dc.geefKolom();
+				toonKolom(startKolom);
+			}
+			if(spelerTegel.isEmpty())
+				spelerTegel = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
 
 			System.out.println("Startkolom:");
 			toonKolomMetSpeler(startKolom, spelerTegel);
@@ -326,7 +326,7 @@ public class KingdominoApp {
 			//volgorde bepalen voor keuze tegel eindkolom
 			List<SpelerDTO> volgorde = getSpelerDTOS(spelerTegel);
 
-			Map<SpelerDTO, DominotegelDTO> eindTegelSpeler = keuzeKolom(startKolom, aantalSpelers, volgorde);
+			Map<SpelerDTO, DominotegelDTO> eindSpelerTegel = keuzeKolom(startKolom, aantalSpelers, volgorde);
 			//toonKolomMetSpeler(eindKolom, eindTegelSpeler);
 
 			//UC5
@@ -349,9 +349,12 @@ public class KingdominoApp {
 				dc.plaatsTegel(spelerTegel.get(speler), y, x, richting, speler);
 
 			}
+			startKolom = eindKolom;
+			spelerTegel = eindSpelerTegel;
 			toonKoninkrijk();
-			dc.geefSpelDTO();
-		}while (!spelDTO.eindeSpel());
+			dc.berekenEindeSpel();
+
+		}while (!dc.isEindeSpel());
 		dc.berekenWinnaars();
 		for (SpelerDTO speler : gekozenSpelers) {
 			if (speler.isWinnaar()) {
@@ -371,7 +374,7 @@ public class KingdominoApp {
                 DominotegelDTO tegel2 = spelerTegel.get(speler2);
 
                 // Assuming getGetal returns an int. Use Integer.compare for safety.
-                return Integer.compare(tegel1.tegel().getGetal(), tegel2.tegel().getGetal());
+                return Integer.compare(tegel1.getal(), tegel2.getal());
             }
         });
 		return volgorde;

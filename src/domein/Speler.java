@@ -135,10 +135,6 @@ public class Speler {
 		this.aantalGespeeld = aantalGespeeld;
 	}
 
-	public int getStarttegel() {
-		return starttegel;
-	}
-
 	private void setStarttegel(int starttegel) {
 		this.starttegel = starttegel;
 	}
@@ -293,7 +289,7 @@ public class Speler {
 		}
 
 		// check of het reeds bezet is
-		if (koninkrijk[x][y] != null || koninkrijk[y2][x2] != null) {
+		if (koninkrijk[y][x] != null || koninkrijk[y2][x2] != null) {
 			System.out.println("Positie is al bezet.");
 			return false;
 		}
@@ -322,11 +318,11 @@ public class Speler {
 				// If adjacent vakje is not null and matches the conditions
 				if (adjacentVakje != null &&
 						(adjacentVakje.getLandschap().equals(landschap) || adjacentVakje.getLandschap().equals(Landschap.KASTEEL))) {
-					return true;
+					return false;
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 
