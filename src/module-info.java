@@ -21,5 +21,6 @@ module Kingdomino_g36 {
 	requires org.junit.jupiter.api;
 	requires org.junit.jupiter.params;
 	requires org.junit.platform.commons;
+	requires jsch;
 	opens gui to javafx.fxml;
 }
