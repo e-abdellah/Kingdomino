@@ -15,7 +15,7 @@ module Kingdomino_g36 {
 	requires javafx.controls;
 	requires javafx.fxml;
 	requires javafx.graphics;
-	requires jsch;
+	//requires jsch;
 
 	requires org.junit.jupiter.engine;
 	requires org.junit.jupiter.api;

@@ -1,8 +1,6 @@
 <component name="libraryTable">
   <library name="javafx">
-    <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../../../../../../Program Files/JavaFX21/javafx-sdk-21.0.2/lib" />
-    </CLASSES>
+    <CLASSES />
     <JAVADOC />
     <SOURCES>
       <root url="file://$USER_HOME$/iCloud Drive (Archive) - 1/Desktop/javafx-sdk-18.0.2/src/javafx.base" />
@@ -10,6 +8,5 @@
       <root url="file://$USER_HOME$/iCloud Drive (Archive) - 1/Desktop/javafx-sdk-18.0.2/src/javafx.fxml" />
       <root url="file://$USER_HOME$/iCloud Drive (Archive) - 1/Desktop/javafx-sdk-18.0.2/src/javafx.graphics" />
     </SOURCES>
-    <jarDirectory url="file://$PROJECT_DIR$/../../../../../../../../Program Files/JavaFX21/javafx-sdk-21.0.2/lib" recursive="false" />
   </library>
 </component>

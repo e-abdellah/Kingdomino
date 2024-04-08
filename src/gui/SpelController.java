@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.Iterator;
 
 import domein.DomeinController;
 import domein.Dominotegel;
@@ -443,8 +444,55 @@ public class SpelController {
 
 	}
 
+	/*public void speelRonde(boolean isEersteRonde) {
+		// Vul de eindkolom aan volgens DR_VUL_AAN
+		if (isEersteRonde) {
+			eindkolomTegels.clear();
+			eindkolomTegels.addAll(stapel.subList(0, aantalSpelers));
+			// Verwijder de toegevoegde tegels uit de stapel
+			stapel.removeAll(eindkolomTegels);
+		}
+
+		// Bepaal de volgende speler aan de beurt volgens DR_RONDE_BEURT
+		String volgendeSpelerInfo = (String) spelerInformatieContainer.getChildren().get(huidigeSpelerIndex).getUserData();
+		System.out.println("Het is aan de beurt van speler: " + volgendeSpelerInfo);
+
+		// Toon een overzicht volgens DR_SPEL_SITUATIE
+		toonSpelSituatie();
+		// De speler speelt zijn beurt
+    // Hier voeg je logica toe om de speler zijn beurt te laten spelen, bijvoorbeeld door een tegel te kiezen en te plaatsen
+
+    // Zolang niet elke koning in de eindkolom staat, keer terug naar stap 3
+    while (!alleKoningenInEindkolom()) {
+        // Bepaal de volgende speler
+        huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelerInformatieContainer.getChildren().size();
+        volgendeSpelerInfo = (String) spelerInformatieContainer.getChildren().get(huidigeSpelerIndex).getUserData();
+        System.out.println("Het is aan de beurt van speler: " + volgendeSpelerInfo);
+        // Toon een overzicht volgens DR_SPEL_SITUATIE
+        toonSpelSituatie();
+        // De speler speelt zijn beurt
+        // Hier voeg je opnieuw logica toe om de speler zijn beurt te laten spelen
+    }
+
+    // Het systeem verplaatst elke dominotegel en zijn bijhorende koning van de eindkolom naar de startkolom
+    Iterator<Dominotegel> iterator = eindkolomTegels.iterator();
+    while (iterator.hasNext()) {
+        Dominotegel tegel = iterator.next();
+        startKolom.offer(tegel);
+        iterator.remove();
+    } }
+		*/
+
 	private void toonResultaatVanRonde() {
 		// Alert met: info van alle spelers + resterende tegels in stapel + startkolom
+		Alert resultaatAlert = new Alert(Alert.AlertType.INFORMATION);
+		resultaatAlert.setTitle("Resultaat van de ronde");
+		resultaatAlert.setHeaderText(null);
+		resultaatAlert.setContentText("De ronde is afgelopen. Hier is het resultaat van de ronde:\n\n"
+				+ "Spelers: " + spelerInformatieContainer.getChildren() + "\n\n" + "Resterende tegels in de stapel: "
+				+ stapel.size() + "\n\n" + "Startkolom: " + startKolom);
+		resultaatAlert.showAndWait();
+
 	}
 
 	public void setAantalSpelers(int aantal) {
@@ -521,6 +569,8 @@ public class SpelController {
 		alert.setHeaderText(null);
 		alert.setContentText(message);
 		alert.showAndWait();
+
+
 	}
 
 	private void plaatsTegelInGrid(Dominotegel tegel, int rij, int kolom) {
@@ -596,4 +646,11 @@ public class SpelController {
 //		speelRonde(false, startKolom);
 	}
 
+	public boolean isTegelCorrectGeplaatst(Dominotegel tegel, int i, int i1) {
+		return false;
+	}
+
+	public String bepaalWinnaar() {
+		return null;
+	}
 }

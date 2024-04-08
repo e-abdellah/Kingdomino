@@ -8,3 +8,4 @@ src/persistentie/Connectie.java
 *.modulepath
 *.project
 *.settings/
+/.metadata/
