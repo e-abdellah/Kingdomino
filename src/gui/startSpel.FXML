@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
+<AnchorPane fx:id="root" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
 	<children>
-      <ImageView fx:id="imageView" fitHeight="1080.0" fitWidth="1776.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../imgs/KDBG6.jpg" />
-         </image>
-      </ImageView>
+		<ImageView fx:id="imageView" preserveRatio="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+		    <image>
+		        <Image url="@../imgs/KDBG6.jpg" />
+		    </image>
+		</ImageView>
 		<VBox fx:id="spelerInformatieContainer" layoutX="659.0" layoutY="14.0" prefHeight="96.0" prefWidth="202.0">
 			<!-- Labels voor spelers en kleuren zullen hier programmatisch worden 
 				toegevoegd -->
@@ -27,11 +27,17 @@
          <effect>
             <DropShadow />
          </effect></ImageView>
-      <VBox fx:id="gekozenDominotegelsEindKolom" layoutX="881.0" layoutY="219.0" prefHeight="283.0" prefWidth="130.0" />
+      <VBox fx:id="gekozenDominotegelsEindKolom" layoutX="881.0" layoutY="219.0" prefHeight="283.0" prefWidth="130.0">
+         <effect>
+            <DropShadow />
+         </effect></VBox>
       <VBox fx:id="gekozenDominotegels" layoutX="620.0" layoutY="219.0" prefHeight="283.0" prefWidth="122.0" />
       <HBox fx:id="eindkolom" layoutX="760.0" layoutY="219.0" prefHeight="283.0" prefWidth="130.0">
          <children>
-      		<VBox fx:id="startKolom" prefHeight="283.0" prefWidth="130.0" />
+      		<VBox fx:id="startKolom" prefHeight="283.0" prefWidth="130.0">
+               <effect>
+                  <DropShadow />
+               </effect></VBox>
          </children>
       </HBox>
       <GridPane fx:id="gridBlauw" layoutX="14.0" layoutY="21.0" prefHeight="395.0" prefWidth="497.0">
@@ -50,7 +56,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-      		<ImageView fitHeight="89.0" fitWidth="88.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      		<ImageView fitHeight="89.0" fitWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
       			<image>
       				<Image url="@../imgs/starttegel_blauw.png" />
       			</image>
@@ -76,7 +82,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-      		<ImageView fitHeight="89.0" fitWidth="88.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      		<ImageView fitHeight="89.0" fitWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
       			<image>
       				<Image url="@../imgs/starttegel_groen.png" />
       			</image>
@@ -102,7 +108,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-      		<ImageView fitHeight="89.0" fitWidth="88.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      		<ImageView fitHeight="89.0" fitWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
       			<image>
       				<Image url="@../imgs/starttegel_roos.png" />
       			</image>
@@ -128,7 +134,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-      		<ImageView fitHeight="89.0" fitWidth="88.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+      		<ImageView fitHeight="89.0" fitWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
       			<image>
       				<Image url="@../imgs/starttegel_geel.png" />
       			</image>
@@ -140,7 +146,7 @@
       </GridPane>
       <Button fx:id="volgendeRondeBtn" layoutX="890.0" layoutY="702.0" mnemonicParsing="false" onAction="#handleVolgendeRondeBtn" text="Volgende Ronde" />
      <Button fx:id="rotateBtn" layoutX="708.0" layoutY="702.0" text="Rotate" />
-	 <Button fx:id="acceptBtn" text="accept" onAction="#rotateImageView" />
+	 <Button fx:id="acceptBtn" onAction="#rotateImageView" text="accept" />
      
      
 

@@ -28,6 +28,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -68,6 +69,10 @@ public class SpelController {
 	private Button rotateBtn;
 	@FXML
 	private Button acceptBtn;
+    @FXML
+    private AnchorPane root;
+    @FXML
+    private ImageView imageView;
 
 	private DomeinController dc;
 	private int aantalSpelers;
@@ -106,28 +111,8 @@ public class SpelController {
 		gridRoos = new GridPane();
 
 	}
-	//Methode om correct aantal kingdoms te tonen
-	public void setupAantalKingdoms() {
-	    int playerCount = aantalSpelers; 
-	    //Zet de aangemaakte grids onzichtbaar
-	    gridGroen.setVisible(false);
-	    gridBlauw.setVisible(false);
-	    gridGeel.setVisible(false);
-	    gridRoos.setVisible(false);
+	
 
-	    if (playerCount == 3) {
-	       // Als er 3 spelers willen spelen, toon 3 grids
-	        gridGroen.setVisible(true);
-	        gridBlauw.setVisible(true);
-	        gridGeel.setVisible(true);
-	    } else if (playerCount == 4) {
-	    	// Als er 4 spelers willen spelen, toon 4 grids
-	        gridGroen.setVisible(true);
-	        gridBlauw.setVisible(true);
-	        gridGeel.setVisible(true);
-	        gridRoos.setVisible(true);
-	    }
-	}
 
 
 	public void initSpel() {
@@ -150,6 +135,38 @@ public class SpelController {
 		gridGeel.setGridLinesVisible(true);
 		gridRoos.setGridLinesVisible(true);
 
+
+	}
+	
+	
+    @FXML
+    //Methode om de anchorpane & achtergrond responsive te maken
+    private void initialize() {
+        imageView.fitWidthProperty().bind(root.widthProperty());
+        imageView.fitHeightProperty().bind(root.heightProperty());
+    }
+	
+	//Methode om correct aantal kingdoms te tonen
+	public void setupAantalKingdoms() {
+	    int playerCount = aantalSpelers; 
+	    //Zet de aangemaakte grids onzichtbaar
+	    gridGroen.setVisible(false);
+	    gridBlauw.setVisible(false);
+	    gridGeel.setVisible(false);
+	    gridRoos.setVisible(false);
+
+	    if (playerCount == 3) {
+	       // Als er 3 spelers willen spelen, toon 3 grids
+	        gridGroen.setVisible(true);
+	        gridBlauw.setVisible(true);
+	        gridGeel.setVisible(true);
+	    } else if (playerCount == 4) {
+	    	// Als er 4 spelers willen spelen, toon 4 grids
+	        gridGroen.setVisible(true);
+	        gridBlauw.setVisible(true);
+	        gridGeel.setVisible(true);
+	        gridRoos.setVisible(true);
+	    }
 	}
 
 	public void setSpelerInfo(List<String> spelerEnKleurInformatie) {
