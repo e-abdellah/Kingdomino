@@ -22,6 +22,7 @@ public class Spel {
 	private boolean isGeschud = false;
 
 	protected static final int MAX_LENGTE = 6;
+	
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen,
 			List<Dominotegel> startKolom, boolean isEindeSpel) {

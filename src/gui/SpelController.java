@@ -106,8 +106,32 @@ public class SpelController {
 		gridRoos = new GridPane();
 
 	}
+	//Methode om correct aantal kingdoms te tonen
+	public void setupAantalKingdoms() {
+	    int playerCount = aantalSpelers; 
+	    //Zet de aangemaakte grids onzichtbaar
+	    gridGroen.setVisible(false);
+	    gridBlauw.setVisible(false);
+	    gridGeel.setVisible(false);
+	    gridRoos.setVisible(false);
+
+	    if (playerCount == 3) {
+	       // Als er 3 spelers willen spelen, toon 3 grids
+	        gridGroen.setVisible(true);
+	        gridBlauw.setVisible(true);
+	        gridGeel.setVisible(true);
+	    } else if (playerCount == 4) {
+	    	// Als er 4 spelers willen spelen, toon 4 grids
+	        gridGroen.setVisible(true);
+	        gridBlauw.setVisible(true);
+	        gridGeel.setVisible(true);
+	        gridRoos.setVisible(true);
+	    }
+	}
+
 
 	public void initSpel() {
+		setupAantalKingdoms();
 		setSpelerInfo(spelerKleuren);
 		stapel = dc.dominotegels(aantalSpelers);
 		speelRonde(true, startKolomTegels);
