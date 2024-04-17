@@ -21,6 +21,8 @@ import dto.SpelerDTO;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -144,6 +146,7 @@ public class SpelController {
     private void initialize() {
         imageView.fitWidthProperty().bind(root.widthProperty());
         imageView.fitHeightProperty().bind(root.heightProperty());
+        
     }
 	
 	//Methode om correct aantal kingdoms te tonen
@@ -155,17 +158,21 @@ public class SpelController {
 	    gridGeel.setVisible(false);
 	    gridRoos.setVisible(false);
 
-	    if (playerCount == 3) {
-	       // Als er 3 spelers willen spelen, toon 3 grids
-	        gridGroen.setVisible(true);
-	        gridBlauw.setVisible(true);
-	        gridGeel.setVisible(true);
-	    } else if (playerCount == 4) {
-	    	// Als er 4 spelers willen spelen, toon 4 grids
-	        gridGroen.setVisible(true);
-	        gridBlauw.setVisible(true);
-	        gridGeel.setVisible(true);
-	        gridRoos.setVisible(true);
+	    for (String color : spelerKleuren) {
+	        switch (color.toLowerCase().trim()) {
+	            case "groen":
+	                gridGroen.setVisible(true);
+	                break;
+	            case "blauw":
+	                gridBlauw.setVisible(true);
+	                break;
+	            case "geel":
+	                gridGeel.setVisible(true);
+	                break;
+	            case "roos":
+	                gridRoos.setVisible(true);
+	                break;
+	        }
 	    }
 	}
 
@@ -179,7 +186,7 @@ public class SpelController {
 
 				// Create a label for the player name
 				Label label = new Label(naam);
-
+				label.setStyle("-fx-text-fill: white; -fx-opacity: 0.95");
 				// Create a circle with the player's color
 				Circle circle = new Circle(10); // Circle with radius 10
 				switch (kleur.toLowerCase().trim()) {
@@ -191,13 +198,12 @@ public class SpelController {
 				}
 
 				spelerKleuren.add(kleur);
-
-				HBox hbox = new HBox();
-				hbox.getChildren().addAll(circle, label);
-
-				// Set UserData to HBox to store player information
-				hbox.setUserData(info); // Gebruik de volledige string "info" als UserData
-
+				//Hboxes met de speler informatie voor in het spel scherm
+	            HBox hbox = new HBox(60, circle, label); 
+	            hbox.setAlignment(Pos.CENTER_LEFT);
+	            hbox.setPadding(new Insets(5, 10, 60, 10)); 
+	            hbox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: rgba(0, 0, 0, 0.1); -fx-border-radius: 5;");
+	            hbox.setMaxWidth(Double.MAX_VALUE); 
 				spelerInformatieContainer.getChildren().add(hbox);
 			}
 		});
@@ -652,19 +658,18 @@ public class SpelController {
 	}
 
 	private GridPane bepaalDoelGridPane(Color spelerKleur) {
-		if (spelerKleur.equals(Color.BLUE)) {
-			return gridBlauw;
-		} else if (spelerKleur.equals(Color.GREEN)) {
-			return gridGroen;
-		} else if (spelerKleur.equals(Color.YELLOW)) {
-			return gridGeel;
-		} else if (spelerKleur.equals(Color.PINK)) {
-			return gridRoos;
-		} else {
-			return null; // Of een default GridPane als fallback
-		}
+	    if (spelerKleur.equals(Color.GREEN)) {
+	        return gridGroen;
+	    } else if (spelerKleur.equals(Color.BLUE)) {
+	        return gridBlauw;
+	    } else if (spelerKleur.equals(Color.YELLOW)) {
+	        return gridGeel;
+	    } else if (spelerKleur.equals(Color.PINK)) {
+	        return gridRoos;
+	    } else {
+	        return null; // Or handle unexpected color
+	    }
 	}
-
 	private void rotate() {
 
 	}
