@@ -217,8 +217,8 @@ public class SpelController {
 		for (Dominotegel tegel : dominotegels) {
 			// Maak en configureer de ImageView voor de tegel...
 			ImageView tegelImageView = new ImageView(new Image(tegel.getVoorkantFotoPad()));
-			tegelImageView.setFitWidth(100);
-			tegelImageView.setFitHeight(50);
+			tegelImageView.setFitWidth(150);
+			tegelImageView.setFitHeight(75);
 
 			// Maak een nieuwe HBox voor elke tegel...
 			HBox tegelBox = new HBox(tegelImageView);
@@ -244,8 +244,8 @@ public class SpelController {
 			ImageView voorkantImageView = new ImageView(voorkantImage);
 			// ImageView voorkantImageView = new ImageView(new
 			// Image(tegel.getVoorkantFotoPad()));
-			voorkantImageView.setFitWidth(100);
-			voorkantImageView.setFitHeight(50);
+			voorkantImageView.setFitWidth(150);
+			voorkantImageView.setFitHeight(75);
 			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel, true));
 			// Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
 			// ImageView achterkantImageView = new ImageView(achterkantImage);
@@ -276,8 +276,8 @@ public class SpelController {
 			ImageView voorkantImageView = new ImageView(voorkantImage);
 			// ImageView voorkantImageView = new ImageView(new
 			// Image(tegel.getVoorkantFotoPad()));
-			voorkantImageView.setFitWidth(100);
-			voorkantImageView.setFitHeight(50);
+			voorkantImageView.setFitWidth(150);
+			voorkantImageView.setFitHeight(75);
 			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel, false));
 
 			// Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
@@ -369,8 +369,8 @@ public class SpelController {
 
 		Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
 		ImageView tegelImageView = new ImageView(tegelAfbeelding);
-		tegelImageView.setFitWidth(100);
-		tegelImageView.setFitHeight(50);
+		tegelImageView.setFitWidth(150);
+		tegelImageView.setFitHeight(75);
 
 		HBox tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
 
@@ -498,7 +498,7 @@ public class SpelController {
 			toonStartKolom(new ArrayList<>(list)); // Toon tegels met beide zijden
 		} else {
 			toonTegels(list); // Toon tegels met enkel de achterkant
-		}
+		} 
 
 	}
 
@@ -639,8 +639,8 @@ public class SpelController {
 	private void plaatsTegelInGrid(Dominotegel tegel, int rij, int kolom) {
 		Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
 		ImageView tegelImageView = new ImageView(tegelAfbeelding);
-		tegelImageView.setFitWidth(100); // Pas de grootte aan aan jouw grid
-		tegelImageView.setFitHeight(50);
+		tegelImageView.setFitWidth(150); // Pas de grootte aan aan jouw grid
+		tegelImageView.setFitHeight(75);
 
 		// Aanname: je weet al in welke GridPane deze moet (bijv. op basis van de
 		// huidige speler)
