@@ -332,15 +332,20 @@ public class KingdominoApp {
 			//UC5
 			System.out.println(volgorde);
 			for (SpelerDTO speler : volgorde) {
-				int x, y;
-				String richting;
+				int x = 0, y = 0;
+				String richting = "";
 				boolean kan;
 				System.out.printf("Speler %s met kleur %s leg je tegel%n", speler.gebruikersnaam(), spelerKleurMap.get(speler));
 				System.out.println("Geef de y en x coördinaat van het linkse vakje:");
 				do {
-					y = sc.nextInt();
-					x = sc.nextInt();
-
+					try {
+						do {
+							y = sc.nextInt();
+						} while (y < 0 || y > 4);
+						do {
+							x = sc.nextInt();
+						} while (x < 0 || x > 4);
+					}catch (InputMismatchException ignored){}
 					System.out.println("Richting:");
 					richting = sc.next();
 					kan = dc.kanPlaatsen(spelerTegel.get(speler), y, x, richting, speler);
