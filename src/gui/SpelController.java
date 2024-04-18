@@ -196,6 +196,9 @@ public class SpelController {
 				case "blauw", "blue" -> circle.setFill(Color.BLUE);
 				default -> circle.setFill(Color.WHITE);
 				}
+				
+
+
 
 				spelerKleuren.add(kleur);
 				//Hboxes met de speler informatie voor in het spel scherm
@@ -204,6 +207,7 @@ public class SpelController {
 	            hbox.setPadding(new Insets(5, 10, 60, 10)); 
 	            hbox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: rgba(0, 0, 0, 0.1); -fx-border-radius: 5;");
 	            hbox.setMaxWidth(Double.MAX_VALUE); 
+	        	hbox.setUserData(info);
 				spelerInformatieContainer.getChildren().add(hbox);
 			}
 		});
@@ -336,9 +340,9 @@ public class SpelController {
 		}
 
 		showAlert("Draai tegel", "Je kan nu uw tegel draaien");
-		rotate();
+		//rotate();
 		//		rotateImageView(tegel);
-		rotateTegel(rotateBtn);
+		//rotateTegel(rotateBtn);
 
 		updateSpelStatus(isStartKolom);
 
@@ -503,7 +507,7 @@ public class SpelController {
 		if (toonBeideZijden) {
 			toonStartKolom(new ArrayList<>(list)); // Toon tegels met beide zijden
 		} else {
-			toonTegels(list); // Toon tegels met enkel de achterkant
+			//toonTegels(list); // Toon tegels met enkel de achterkant
 		} 
 
 	}
