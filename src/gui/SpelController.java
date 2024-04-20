@@ -2,6 +2,7 @@ package gui;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
@@ -71,10 +72,10 @@ public class SpelController {
 	private Button rotateBtn;
 	@FXML
 	private Button acceptBtn;
-    @FXML
-    private AnchorPane root;
-    @FXML
-    private ImageView imageView;
+	@FXML
+	private AnchorPane root;
+	@FXML
+	private ImageView imageView;
 
 	private DomeinController dc;
 	private int aantalSpelers;
@@ -90,6 +91,9 @@ public class SpelController {
 
 	private Set<Integer> startkolomSpelers = new HashSet<>();
 	private Set<Integer> eindkolomSpelers = new HashSet<>();
+
+	List<Node> spelers;
+	//	private boolean isStartKolom;
 
 	// private final Random rand = new Random();
 
@@ -113,9 +117,6 @@ public class SpelController {
 		gridRoos = new GridPane();
 
 	}
-	
-
-
 
 	public void initSpel() {
 		setupAantalKingdoms();
@@ -137,43 +138,44 @@ public class SpelController {
 		gridGeel.setGridLinesVisible(true);
 		gridRoos.setGridLinesVisible(true);
 
+		spelers = new ArrayList<>(spelerInformatieContainer.getChildren());
+		Collections.shuffle(spelers); // Shuffle de kopie van de lijst
 
 	}
-	
-	
-    @FXML
-    //Methode om de anchorpane & achtergrond responsive te maken
-    private void initialize() {
-        imageView.fitWidthProperty().bind(root.widthProperty());
-        imageView.fitHeightProperty().bind(root.heightProperty());
-        
-    }
-	
+
+	@FXML
+	//Methode om de anchorpane & achtergrond responsive te maken
+	private void initialize() {
+		imageView.fitWidthProperty().bind(root.widthProperty());
+		imageView.fitHeightProperty().bind(root.heightProperty());
+
+	}
+
 	//Methode om correct aantal kingdoms te tonen
 	public void setupAantalKingdoms() {
-	    int playerCount = aantalSpelers; 
-	    //Zet de aangemaakte grids onzichtbaar
-	    gridGroen.setVisible(false);
-	    gridBlauw.setVisible(false);
-	    gridGeel.setVisible(false);
-	    gridRoos.setVisible(false);
+		int playerCount = aantalSpelers;
+		//Zet de aangemaakte grids onzichtbaar
+		gridGroen.setVisible(false);
+		gridBlauw.setVisible(false);
+		gridGeel.setVisible(false);
+		gridRoos.setVisible(false);
 
-	    for (String color : spelerKleuren) {
-	        switch (color.toLowerCase().trim()) {
-	            case "groen":
-	                gridGroen.setVisible(true);
-	                break;
-	            case "blauw":
-	                gridBlauw.setVisible(true);
-	                break;
-	            case "geel":
-	                gridGeel.setVisible(true);
-	                break;
-	            case "roos":
-	                gridRoos.setVisible(true);
-	                break;
-	        }
-	    }
+		for (String color : spelerKleuren) {
+			switch (color.toLowerCase().trim()) {
+			case "groen":
+				gridGroen.setVisible(true);
+				break;
+			case "blauw":
+				gridBlauw.setVisible(true);
+				break;
+			case "geel":
+				gridGeel.setVisible(true);
+				break;
+			case "roos":
+				gridRoos.setVisible(true);
+				break;
+			}
+		}
 	}
 
 	public void setSpelerInfo(List<String> spelerEnKleurInformatie) {
@@ -196,18 +198,16 @@ public class SpelController {
 				case "blauw", "blue" -> circle.setFill(Color.BLUE);
 				default -> circle.setFill(Color.WHITE);
 				}
-				
-
-
 
 				spelerKleuren.add(kleur);
 				//Hboxes met de speler informatie voor in het spel scherm
-	            HBox hbox = new HBox(60, circle, label); 
-	            hbox.setAlignment(Pos.CENTER_LEFT);
-	            hbox.setPadding(new Insets(5, 10, 60, 10)); 
-	            hbox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: rgba(0, 0, 0, 0.1); -fx-border-radius: 5;");
-	            hbox.setMaxWidth(Double.MAX_VALUE); 
-	        	hbox.setUserData(info);
+				HBox hbox = new HBox(60, circle, label);
+				hbox.setAlignment(Pos.CENTER_LEFT);
+				hbox.setPadding(new Insets(5, 10, 60, 10));
+				hbox.setStyle(
+						"-fx-border-color: black; -fx-border-width: 1; -fx-background-color: rgba(0, 0, 0, 0.1); -fx-border-radius: 5;");
+				hbox.setMaxWidth(Double.MAX_VALUE);
+				hbox.setUserData(info);
 				spelerInformatieContainer.getChildren().add(hbox);
 			}
 		});
@@ -308,17 +308,15 @@ public class SpelController {
 		// Check of de huidige speler al een keuze heeft gemaakt
 		if ((isStartKolom && startkolomSpelers.contains(huidigeSpelerIndex))
 				|| (!isStartKolom && eindkolomSpelers.contains(huidigeSpelerIndex))) {
-			// Toon foutmelding
+			// Toon foutmelding en sla deze speler over
 			showAlert("Al Gekozen", "Je hebt al een tegel gekozen uit deze kolom. Wacht op de volgende ronde.");
-			return; // Vroegtijdig beëindigen van de methode
+			vraagVolgendeSpeler(); // ga naar de volgende speler
+			return; // Beëindig deze methode om verdere acties te voorkomen
 		}
 
-		System.out.println(huidigeSpelerIndex);
-
-		if (handleNullTegel(tegel))
-			return;
-		if (tegelIsAlGekozen(tegel))
-			return;
+		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
+			return; // Als de tegel null is of al gekozen, stop de methode hier
+		}
 
 		voegGekozenTegelToe(tegel);
 		toonTegelEnSpelerKleur(tegel, isStartKolom);
@@ -330,16 +328,11 @@ public class SpelController {
 			eindkolomSpelers.add(huidigeSpelerIndex);
 		}
 
-		// Veronderstel dat je een dialoogvenster toont om rij en kolom te krijgen
-		if (isStartKolom) {
-			int[] positie = vraagTegelPositie(); // Deze methode toont een dialoogvenster en retourneert de gekozen
-													// positie als een array [rij, kolom]
-			if (positie != null) {
-				plaatsTegelInGrid(tegel, positie[0], positie[1]);
-			}
+		int[] positie = vraagTegelPositie(); // Veronderstel dat je een dialoogvenster toont
+		if (positie != null) {
+			plaatsTegelInGrid(tegel, positie[0], positie[1]);
 		}
-
-		showAlert("Draai tegel", "Je kan nu uw tegel draaien");
+		//		showAlert("Draai tegel", "Je kan nu uw tegel draaien");
 		//rotate();
 		//		rotateImageView(tegel);
 		//rotateTegel(rotateBtn);
@@ -393,7 +386,7 @@ public class SpelController {
 		// alert.showAndWait();
 	}
 
-	public Color getSpelerKleur(int huidigeSpelerIndex) {
+	private Color getSpelerKleur(int huidigeSpelerIndex) {
 		String kleurCode = spelerKleuren.get(huidigeSpelerIndex).toLowerCase().trim();
 		switch (kleurCode) {
 		case "groen":
@@ -437,32 +430,30 @@ public class SpelController {
 	}
 
 	private void vraagVolgendeSpeler() {
-		// Check if we need to increment huidigeSpelerIndex
-		if (isEersteClick || startkolomSpelers.size() == aantalSpelers && !isVolgendeRonde) {
-			huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelerInformatieContainer.getChildren().size();
-		}
+		// Veronderstel dat er een lijst 'spelers' is die de volgorde van spelers behoudt na een initiële shuffle aan het begin van het spel.
+		Node gekozenSpeler = spelers.get(huidigeSpelerIndex); // Gebruik de huidige speler index om de volgende speler te kiezen
 
-		Node selecteerdeNode = spelerInformatieContainer.getChildren().get(huidigeSpelerIndex);
-		String spelerInfo = (String) selecteerdeNode.getUserData();
-
+		// Presenteer de gekozen speler
+		String spelerInfo = (String) gekozenSpeler.getUserData();
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Kies een Tegel");
-		// alert.setHeaderText(null);
-		if (startkolomSpelers.size() == aantalSpelers) {
-			// System.out.println("We zijn in de eerste deel van de conditie");
-			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
-					+ "\nKies één van de beschikbare tegels uit de eindkolom.");
-		} else {
-			// System.out.println("We zijn in de tweede deel van de conditie");
+
+		if (isStartKolom) {
 			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
 					+ "\nKies één van de beschikbare tegels uit de startkolom.");
+		} else {
+			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
+					+ "\nKies één van de beschikbare tegels uit de eindkolom.");
 		}
 
 		alert.showAndWait();
 
-		// If it's the start of the round, then we just prompted the first player
-		if (isEersteClick) {
-			isEersteClick = false;
+		// Update de spelerindex voor de volgende beurt
+		huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelers.size(); // Zorgt ervoor dat de index cyclisch is
+
+		// Reset eventuele vlaggen of sets aan het begin van een nieuwe ronde
+		if (huidigeSpelerIndex == 0) {
+			startkolomSpelers.clear(); // Reset alleen aan het begin van een nieuwe ronde
 		}
 	}
 
@@ -508,7 +499,7 @@ public class SpelController {
 			toonStartKolom(new ArrayList<>(list)); // Toon tegels met beide zijden
 		} else {
 			//toonTegels(list); // Toon tegels met enkel de achterkant
-		} 
+		}
 
 	}
 
@@ -662,18 +653,19 @@ public class SpelController {
 	}
 
 	private GridPane bepaalDoelGridPane(Color spelerKleur) {
-	    if (spelerKleur.equals(Color.GREEN)) {
-	        return gridGroen;
-	    } else if (spelerKleur.equals(Color.BLUE)) {
-	        return gridBlauw;
-	    } else if (spelerKleur.equals(Color.YELLOW)) {
-	        return gridGeel;
-	    } else if (spelerKleur.equals(Color.PINK)) {
-	        return gridRoos;
-	    } else {
-	        return null; // Or handle unexpected color
-	    }
+		if (spelerKleur.equals(Color.GREEN)) {
+			return gridGroen;
+		} else if (spelerKleur.equals(Color.BLUE)) {
+			return gridBlauw;
+		} else if (spelerKleur.equals(Color.YELLOW)) {
+			return gridGeel;
+		} else if (spelerKleur.equals(Color.PINK)) {
+			return gridRoos;
+		} else {
+			return null; // Or handle unexpected color
+		}
 	}
+
 	private void rotate() {
 
 	}
