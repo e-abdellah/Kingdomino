@@ -17,7 +17,6 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -30,7 +29,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 public class WelkomKDController {
@@ -38,11 +36,11 @@ public class WelkomKDController {
 	private SpelerDTO dto;
 	private List<SpelerDTO> spelers = new ArrayList<>();
 
-    @FXML
-    private ImageView imageView;
+	@FXML
+	private ImageView imageView;
 
-    @FXML
-    private AnchorPane root;
+	@FXML
+	private AnchorPane root;
 
 	@FXML
 	private Label titleLabel;
@@ -58,17 +56,15 @@ public class WelkomKDController {
 
 	@FXML
 	private Button volgendeBtn;
-	
+
 	@FXML
 	private Button nlBtn;
-	
+
 	@FXML
 	private Button enBtn;
-	
+
 	@FXML
 	private Button frBtn;
-	
-	
 
 	private ResourceBundle resourceBundle;
 	protected int aantalSpelersGekozen;
@@ -88,16 +84,16 @@ public class WelkomKDController {
 	private void chooseFrench(ActionEvent event) {
 		setLanguage("fr");
 	}
-	
-    @FXML
-    public void initialize() {
-        setLanguage("nl"); //Stelt de standaard taal in op Nederlands
-        //Past de achtergrond image aan op basis van de grootte vh scherm vd gebruiker
-        imageView.fitWidthProperty().bind(root.widthProperty());
-        imageView.fitHeightProperty().bind(root.heightProperty());
-        imageView.setPreserveRatio(false);
 
-    }
+	@FXML
+	public void initialize() {
+		setLanguage("nl"); //Stelt de standaard taal in op Nederlands
+		//Past de achtergrond image aan op basis van de grootte vh scherm vd gebruiker
+		imageView.fitWidthProperty().bind(root.widthProperty());
+		imageView.fitHeightProperty().bind(root.heightProperty());
+		imageView.setPreserveRatio(false);
+
+	}
 
 	public void setLanguage(String language) {
 		Locale locale = new Locale(language);
@@ -205,7 +201,7 @@ public class WelkomKDController {
 	@FXML
 	private void startSpel() {
 		List<String> keuzes = Arrays.asList("3", "4");
-		ChoiceDialog<String> aantalSpelersDialog = new ChoiceDialog<>("3", keuzes);
+		ChoiceDialog<String> aantalSpelersDialog = new ChoiceDialog<>("4", keuzes);
 		aantalSpelersDialog.setTitle(resourceBundle.getString("aantalSpelersDialogTitel"));
 		aantalSpelersDialog.setHeaderText(resourceBundle.getString("aantalSpelersDialogHeader"));
 		aantalSpelersDialog.setContentText(resourceBundle.getString("aantalSpelersDialogKiesAantalSpelers"));
@@ -301,8 +297,5 @@ public class WelkomKDController {
 	public List<SpelerDTO> getSpelers() {
 		return spelers;
 	}
-	
-
-
 
 }

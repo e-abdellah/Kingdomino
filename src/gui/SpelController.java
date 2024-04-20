@@ -8,10 +8,8 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -92,15 +90,9 @@ public class SpelController {
 	private Set<Integer> startkolomSpelers = new HashSet<>();
 	private Set<Integer> eindkolomSpelers = new HashSet<>();
 
-	List<Node> spelers;
-	//	private boolean isStartKolom;
+	private List<Node> spelers;
 
-	// private final Random rand = new Random();
-
-	private ResourceBundle resourceBundle;
 	private int huidigeSpelerIndex = 0; // Standaardwaarde die aangeeft dat nog geen speler is geselecteerd
-
-	private Locale locale;
 
 	public SpelController() {
 		dc = new DomeinController();
@@ -139,8 +131,7 @@ public class SpelController {
 		gridRoos.setGridLinesVisible(true);
 
 		spelers = new ArrayList<>(spelerInformatieContainer.getChildren());
-		Collections.shuffle(spelers); // Shuffle de kopie van de lijst
-
+		Collections.shuffle(spelers);
 	}
 
 	@FXML
@@ -184,7 +175,6 @@ public class SpelController {
 			if (parts.length == 2) {
 				String naam = parts[0];
 				String kleur = parts[1];
-				System.out.println(kleur.toLowerCase());
 
 				// Create a label for the player name
 				Label label = new Label(naam);
@@ -305,14 +295,6 @@ public class SpelController {
 	}
 
 	private void kiesTegel(Dominotegel tegel, boolean isStartKolom) {
-		// Check of de huidige speler al een keuze heeft gemaakt
-		if ((isStartKolom && startkolomSpelers.contains(huidigeSpelerIndex))
-				|| (!isStartKolom && eindkolomSpelers.contains(huidigeSpelerIndex))) {
-			// Toon foutmelding en sla deze speler over
-			showAlert("Al Gekozen", "Je hebt al een tegel gekozen uit deze kolom. Wacht op de volgende ronde.");
-			vraagVolgendeSpeler(); // ga naar de volgende speler
-			return; // Beëindig deze methode om verdere acties te voorkomen
-		}
 
 		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
 			return; // Als de tegel null is of al gekozen, stop de methode hier
@@ -328,10 +310,11 @@ public class SpelController {
 			eindkolomSpelers.add(huidigeSpelerIndex);
 		}
 
-		int[] positie = vraagTegelPositie(); // Veronderstel dat je een dialoogvenster toont
-		if (positie != null) {
-			plaatsTegelInGrid(tegel, positie[0], positie[1]);
-		}
+		//		int[] positie = vraagTegelPositie(); // Veronderstel dat je een dialoogvenster toont
+		//		if (positie != null) {
+		//			plaatsTegelInGrid(tegel, positie[0], positie[1]);
+		//		}
+
 		//		showAlert("Draai tegel", "Je kan nu uw tegel draaien");
 		//rotate();
 		//		rotateImageView(tegel);
@@ -409,14 +392,11 @@ public class SpelController {
 				toonEindkolom(new ArrayList<>(eindkolomTegels));
 				toonRugzijdeStapel();
 				isVolgendeRonde = true;
-				// Reset huidigeSpelerIndex voor de volgende kolom als dat nodig is.
-				huidigeSpelerIndex = 0; // Dit hangt af van je spelregels.
+				huidigeSpelerIndex = 0; // voor de eindkolom
 			}
 		} else {
 			eindkolomSpelers.add(huidigeSpelerIndex);
 			if (eindkolomSpelers.size() >= aantalSpelers) {
-				System.out.println("einde eindkolom");
-				//				plaatsTegel();
 				startVolgendeRonde();
 				volgendeRondeBtn.setDisable(false);
 				return; // Voorkomt het dubbel aanroepen van vraagVolgendeSpeler.
@@ -430,31 +410,34 @@ public class SpelController {
 	}
 
 	private void vraagVolgendeSpeler() {
-		// Veronderstel dat er een lijst 'spelers' is die de volgorde van spelers behoudt na een initiële shuffle aan het begin van het spel.
-		Node gekozenSpeler = spelers.get(huidigeSpelerIndex); // Gebruik de huidige speler index om de volgende speler te kiezen
+		if (spelers.isEmpty()) {
+			resetSpelersLijst(); // Vul de spelerslijst opnieuw als alle spelers geweest zijn
+		}
 
-		// Presenteer de gekozen speler
+		Node gekozenSpeler = spelers.get(0);
 		String spelerInfo = (String) gekozenSpeler.getUserData();
+
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Kies een Tegel");
-
-		if (isStartKolom) {
-			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
-					+ "\nKies één van de beschikbare tegels uit de startkolom.");
-		} else {
+		if (startkolomSpelers.size() == aantalSpelers) {
+			// Het is nu tijd om uit de eindkolom te kiezen
 			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
 					+ "\nKies één van de beschikbare tegels uit de eindkolom.");
+		} else {
+			// Het is nu tijd om uit de startkolom te kiezen
+			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
+					+ "\nKies één van de beschikbare tegels uit de startkolom.");
 		}
-
 		alert.showAndWait();
 
-		// Update de spelerindex voor de volgende beurt
-		huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelers.size(); // Zorgt ervoor dat de index cyclisch is
+		spelers.remove(0); // Verwijder de speler uit de lijst nadat zijn beurt is afgerond
+	}
 
-		// Reset eventuele vlaggen of sets aan het begin van een nieuwe ronde
-		if (huidigeSpelerIndex == 0) {
-			startkolomSpelers.clear(); // Reset alleen aan het begin van een nieuwe ronde
-		}
+	private void resetSpelersLijst() {
+		spelers = new ArrayList<>(spelerInformatieContainer.getChildren());
+		Collections.shuffle(spelers); // Shuffle om een nieuwe volgorde te garanderen
+		startkolomSpelers.clear();
+		eindkolomSpelers.clear();
 	}
 
 	private void startVolgendeRonde() {
@@ -465,7 +448,7 @@ public class SpelController {
 		huidigeSpelerIndex = 0; // Optionally reset to the first player
 		startkolomSpelers.clear();
 		eindkolomSpelers.clear();
-		gekozenTegels.clear(); // Assuming you want to reset the selections for a new round
+		gekozenTegels.clear();
 		Alert volgendeRondeAlert = new Alert(Alert.AlertType.INFORMATION);
 		volgendeRondeAlert.setTitle("Volgende Ronde");
 		volgendeRondeAlert.setHeaderText(null);
