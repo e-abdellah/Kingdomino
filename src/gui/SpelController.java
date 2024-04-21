@@ -93,6 +93,7 @@ public class SpelController {
 	private List<Node> spelers;
 
 	private int huidigeSpelerIndex = 0; // Standaardwaarde die aangeeft dat nog geen speler is geselecteerd
+	private int tempSpelerIndex;
 
 	public SpelController() {
 		dc = new DomeinController();
@@ -300,8 +301,9 @@ public class SpelController {
 			return; // Als de tegel null is of al gekozen, stop de methode hier
 		}
 
+		tempSpelerIndex = huidigeSpelerIndex; // Leg de huidige spelerindex vast
 		voegGekozenTegelToe(tegel);
-		toonTegelEnSpelerKleur(tegel, isStartKolom);
+		toonTegelEnSpelerKleur(tegel, isStartKolom); // Gebruik tempSpelerIndex binnen deze methode
 
 		// Toevoegen van de huidige spelerindex aan de respectievelijke set
 		if (isStartKolom) {
@@ -349,7 +351,7 @@ public class SpelController {
 	}
 
 	private void toonTegelEnSpelerKleur(Dominotegel tegel, boolean isStartKolom) {
-		Color spelerKleur = getSpelerKleur(huidigeSpelerIndex);
+		Color spelerKleur = getSpelerKleur(tempSpelerIndex); // Gebruik de tijdelijk opgeslagen index
 		Circle kleurIndicator = new Circle(10, spelerKleur);
 		kleurIndicator.setStroke(Color.BLACK);
 
@@ -392,7 +394,7 @@ public class SpelController {
 				toonEindkolom(new ArrayList<>(eindkolomTegels));
 				toonRugzijdeStapel();
 				isVolgendeRonde = true;
-				huidigeSpelerIndex = 0; // voor de eindkolom
+				huidigeSpelerIndex = 0; // Reset voor de eindkolom
 			}
 		} else {
 			eindkolomSpelers.add(huidigeSpelerIndex);
@@ -403,9 +405,8 @@ public class SpelController {
 			}
 		}
 
-		// Verplaats dit naar het einde om te zorgen dat we altijd naar de volgende
-		// speler gaan.
-		huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelerInformatieContainer.getChildren().size();
+		// Update de spelerindex cyclisch na elke actie
+		huidigeSpelerIndex = (huidigeSpelerIndex + 1) % spelers.size();
 		vraagVolgendeSpeler();
 	}
 
@@ -414,23 +415,20 @@ public class SpelController {
 			resetSpelersLijst(); // Vul de spelerslijst opnieuw als alle spelers geweest zijn
 		}
 
-		Node gekozenSpeler = spelers.get(0);
+		// Haal de huidige spelerinfo op basis van huidigeSpelerIndex
+		Node gekozenSpeler = spelers.get(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpeler.getUserData();
 
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Kies een Tegel");
 		if (startkolomSpelers.size() == aantalSpelers) {
-			// Het is nu tijd om uit de eindkolom te kiezen
 			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
 					+ "\nKies één van de beschikbare tegels uit de eindkolom.");
 		} else {
-			// Het is nu tijd om uit de startkolom te kiezen
 			alert.setContentText("Het is aan uw beurt speler: " + spelerInfo
 					+ "\nKies één van de beschikbare tegels uit de startkolom.");
 		}
 		alert.showAndWait();
-
-		spelers.remove(0); // Verwijder de speler uit de lijst nadat zijn beurt is afgerond
 	}
 
 	private void resetSpelersLijst() {
