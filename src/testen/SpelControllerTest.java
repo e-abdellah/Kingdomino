@@ -2,10 +2,13 @@ package testen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import domein.Dominotegel;
 import gui.SpelController;
 import org.junit.jupiter.api.Test;
+
+
 
 
 
@@ -26,3 +29,16 @@ public class SpelControllerTest {
         assertEquals("Speler X", controller.bepaalWinnaar());
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
