@@ -137,6 +137,7 @@ public class SpelController {
 
 		spelers = new ArrayList<>(spelerInformatieContainer.getChildren());
 		Collections.shuffle(spelers);
+
 	}
 
 	@FXML
@@ -146,6 +147,9 @@ public class SpelController {
 		imageView.fitHeightProperty().bind(root.heightProperty());
 
 	}
+	
+	
+	
 
 	//Methode om correct aantal kingdoms te tonen
 	public void setupAantalKingdoms() {
@@ -175,37 +179,43 @@ public class SpelController {
 	}
 
 	public void setSpelerInfo(List<String> spelerEnKleurInformatie) {
-		spelerEnKleurInformatie.forEach(info -> {
-			String[] parts = info.split("-");
-			if (parts.length == 2) {
-				String naam = parts[0];
-				String kleur = parts[1];
 
-				// Create a label for the player name
-				Label label = new Label(naam);
-				label.setStyle("-fx-text-fill: white; -fx-opacity: 0.95");
-				// Create a circle with the player's color
-				Circle circle = new Circle(10); // Circle with radius 10
-				switch (kleur.toLowerCase().trim()) {
-				case "groen", "green" -> circle.setFill(Color.GREEN);
-				case "geel", "yellow" -> circle.setFill(Color.YELLOW);
-				case "roos", "pink" -> circle.setFill(Color.PINK);
-				case "blauw", "blue" -> circle.setFill(Color.BLUE);
-				default -> circle.setFill(Color.WHITE);
-				}
+	    for (String info : spelerEnKleurInformatie) {
+	        String[] parts = info.split("-");
+	        if (parts.length == 2) {
+	            String naam = parts[0].trim();
+	            String kleur = parts[1].trim();
 
-				spelerKleuren.add(kleur);
-				//Hboxes met de speler informatie voor in het spel scherm
-				HBox hbox = new HBox(60, circle, label);
-				hbox.setAlignment(Pos.CENTER_LEFT);
-				hbox.setPadding(new Insets(5, 10, 60, 10));
-				hbox.setStyle(
-						"-fx-border-color: black; -fx-border-width: 1; -fx-background-color: rgba(0, 0, 0, 0.1); -fx-border-radius: 5;");
-				hbox.setMaxWidth(Double.MAX_VALUE);
-				hbox.setUserData(info);
-				spelerInformatieContainer.getChildren().add(hbox);
-			}
-		});
+	            // Create a label for the player name
+	            Label label = new Label(naam);
+	            label.setStyle("-fx-text-fill: white; -fx-opacity: 0.95");
+
+	            // Create a circle with the player's color
+	            Circle circle = new Circle(10); // Circle with radius 10
+	            circle.setFill(getColorForName(kleur.toLowerCase().trim()));  // Use a method to get the color
+
+	            spelerKleuren.add(kleur);  // Store player color in the list
+
+	            // Hboxes with player information for the game screen
+	            HBox hbox = new HBox(60, circle, label);
+	            hbox.setAlignment(Pos.CENTER_LEFT);
+	            hbox.setPadding(new Insets(5, 10, 60, 10));
+	            hbox.setStyle("-fx-border-color: black; -fx-border-width: 1; -fx-background-color: rgba(0, 0, 0, 0.1); -fx-border-radius: 5;");
+	            hbox.setMaxWidth(Double.MAX_VALUE);
+	            hbox.setUserData(info);
+	            spelerInformatieContainer.getChildren().add(hbox);
+	        }
+	    }
+	}
+
+	private Color getColorForName(String colorName) {
+	    return switch (colorName) {
+	        case "groen", "green" -> Color.GREEN;
+	        case "geel", "yellow" -> Color.YELLOW;
+	        case "roos", "pink" -> Color.PINK;
+	        case "blauw", "blue" -> Color.BLUE;
+	        default -> Color.WHITE;
+	    };
 	}
 
 	public void toonWelkomPopup() {

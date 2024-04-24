@@ -264,6 +264,10 @@ public class WelkomKDController {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
 
 	@FXML
 	private void afsluiten(Event event) {
