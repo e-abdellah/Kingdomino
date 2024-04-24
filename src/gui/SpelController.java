@@ -684,7 +684,11 @@ public class SpelController {
 
 	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, String richting, SpelerDTO spelerDTO) {
 		//voorlopig
+<<<<<<< Updated upstream
 //		dc.kanPlaatsen(tegelDTO, y, x, richting, null);
+=======
+		//dc.kanPlaatsen(tegelDTO, y, x, richting, null);
+>>>>>>> Stashed changes
 		return false;
 	}
 

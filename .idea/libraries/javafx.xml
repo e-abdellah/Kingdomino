@@ -2,11 +2,6 @@
   <library name="javafx">
     <CLASSES />
     <JAVADOC />
-    <SOURCES>
-      <root url="file://$USER_HOME$/iCloud Drive (Archive) - 1/Desktop/javafx-sdk-18.0.2/src/javafx.base" />
-      <root url="file://$USER_HOME$/iCloud Drive (Archive) - 1/Desktop/javafx-sdk-18.0.2/src/javafx.controls" />
-      <root url="file://$USER_HOME$/iCloud Drive (Archive) - 1/Desktop/javafx-sdk-18.0.2/src/javafx.fxml" />
-      <root url="file://$USER_HOME$/iCloud Drive (Archive) - 1/Desktop/javafx-sdk-18.0.2/src/javafx.graphics" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>
