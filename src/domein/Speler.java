@@ -257,50 +257,30 @@ public class Speler {
 		return copy;
 	}
 
-	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, String richting) {
-		int dx = 0, dy = 0;
-		switch (richting) {
-			case "boven":
-				dy = -1;
-				break;
-			case "onder":
-				dy = 1;
-				break;
-			case "links":
-				dx = -1;
-				break;
-			case "rechts":
-				dx = 1;
-				break;
-			default:
-				System.out.println("Onbekende richting");
-				return false;
-		}
-
-		// bereken voor 2e vakje
-		int x2 = x + dx;
-		int y2 = y + dy;
+	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int y2, int x2) {
 
 		// check voor out of bounds
 		if (x < 0 || x >= koninkrijk.length || y < 0 || y >= koninkrijk[0].length ||
 				x2 < 0 || x2 >= koninkrijk.length || y2 < 0 || y2 >= koninkrijk[0].length) {
-			System.out.println("Positie is buiten de grenzen.");
 			return false;
 		}
 
 		// check of het reeds bezet is
 		if (koninkrijk[y][x] != null || koninkrijk[y2][x2] != null) {
-			System.out.println("Positie is al bezet.");
 			return false;
 		}
 
 		Vakje vakje1 = tegel.getVakje1();
 		Vakje vakje2 = tegel.getVakje2();
 		if(checkOmliggende(vakje1, y, x) && checkOmliggende(vakje2, y2, x2)){
-			System.out.println("Moet naast zelfde landschap liggen of naast een kasteel");
 			return false;
 		}
-
+		if (!isMaxVijfLang(koninkrijk, y, true) ||
+				!isMaxVijfLang(koninkrijk, y2, true) ||
+				!isMaxVijfLang(koninkrijk, x, false) ||
+				!isMaxVijfLang(koninkrijk, x2, false)) {
+			return false;
+		}
 		return true;
 	}
 
@@ -325,6 +305,16 @@ public class Speler {
 		return true;
 	}
 
-
-
+	private static boolean isMaxVijfLang(Vakje[][] koninkrijk, int index, boolean isRij) {
+		int minI = Integer.MAX_VALUE;
+		int maxI = Integer.MIN_VALUE;
+		for (int i = 0; i < koninkrijk.length; i++) {
+			Vakje huidig = isRij ? koninkrijk[index][i] : koninkrijk[i][index];
+			if (huidig != null) {
+				minI = Math.min(minI, i);
+				maxI = Math.max(maxI, i);
+			}
+		}
+		return (maxI - minI < 5);
+	}
 }

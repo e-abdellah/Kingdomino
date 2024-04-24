@@ -220,32 +220,13 @@ public class Spel {
 		}
 	}
 
-	public void plaatsTegel(Dominotegel tegel, int y, int x, String richting, SpelerDTO spelerDTO){
+	public void plaatsTegel(Dominotegel tegel, int y, int x, int y2, int x2, SpelerDTO spelerDTO){
 		List<Vakje> vakjes = new ArrayList<>();
-		List<Integer> pos = new ArrayList<>(List.of(0, 0));
-
-		switch (richting) {
-			case "boven": // Up
-				pos.set(1, pos.get(1) - 1);
-				break;
-			case "onder": // Down
-				pos.set(1, pos.get(1) + 1);
-				break;
-			case "links": // Left
-				pos.set(0, pos.get(0) - 1);
-				break;
-			case "rechts": // Right
-				pos.set(0, pos.get(0) + 1);
-				break;
-			default:
-				System.out.println("Onbekende richting"); // Unknown direction
-				break;
-		}
 
 		tegel.getVakje1().setX(x);
 		tegel.getVakje1().setY(y);
-		tegel.getVakje2().setX(x + pos.get(0));
-		tegel.getVakje2().setY(y + pos.get(1));
+		tegel.getVakje2().setX(x2);
+		tegel.getVakje2().setY(y2);
 		vakjes.add(tegel.getVakje1());
 		vakjes.add(tegel.getVakje2());
 		for(Speler speler : spelers){
@@ -256,13 +237,15 @@ public class Spel {
 
 	}
 
-	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, String richting, SpelerDTO spelerDTO) {
+	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int y2, int x2, SpelerDTO spelerDTO) {
 		boolean kan = false;
 		for(Speler speler : spelers){
 			if(Objects.equals(speler.getGebruikersnaam(), spelerDTO.gebruikersnaam())){
-				kan = speler.kanPlaatsen(tegel, y, x, richting);
+				kan = speler.kanPlaatsen(tegel, y, x, y2, x2);
 			}
 		}
 		return  kan;
 	}
+
+
 }

@@ -333,6 +333,7 @@ public class KingdominoApp {
 			System.out.println(volgorde);
 			for (SpelerDTO speler : volgorde) {
 				int x = 0, y = 0;
+				int y2 = 0, x2 = 0;
 				String richting = "";
 				boolean kan;
 				System.out.printf("Speler %s met kleur %s leg je tegel%n", speler.gebruikersnaam(), spelerKleurMap.get(speler));
@@ -345,13 +346,38 @@ public class KingdominoApp {
 						do {
 							x = sc.nextInt();
 						} while (x < 0 || x > 4);
-					}catch (InputMismatchException ignored){}
+					}catch (InputMismatchException e){
+						System.out.println("Ongeldige locatie");
+					}
 					System.out.println("Richting:");
-					richting = sc.next();
-					kan = dc.kanPlaatsen(spelerTegel.get(speler), y, x, richting, speler);
+					List<Integer> pos = new ArrayList<>(List.of(y, x));
+					do {
+						richting = sc.next();
+						switch (richting) {
+							case "boven": // Up
+								pos.set(1, pos.get(1) - 1);
+								break;
+							case "onder": // Down
+								pos.set(1, pos.get(1) + 1);
+								break;
+							case "links": // Left
+								pos.set(0, pos.get(0) - 1);
+								break;
+							case "rechts": // Right
+								pos.set(0, pos.get(0) + 1);
+								break;
+							default:
+								System.out.println("Onbekende richting"); // Unknown direction
+								break;
+						}
+					//pos naar x2 en y2 en omzetten naar spel
+					}while(!pos.equals(new ArrayList<>(List.of(y, x))));
+					y2 = pos.get(1);
+					x2 = pos.get(0);
+					kan = dc.kanPlaatsen(spelerTegel.get(speler), y, x, y2, x2, speler);
 					if(!kan){System.out.println("Kies een vrije plaats binnen het speelveld");}
 				}while (!kan);
-				dc.plaatsTegel(spelerTegel.get(speler), y, x, richting, speler);
+				dc.plaatsTegel(spelerTegel.get(speler), y, x, y2, x2, speler);
 
 			}
 			startKolom = eindKolom;

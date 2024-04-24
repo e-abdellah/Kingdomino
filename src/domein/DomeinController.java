@@ -95,18 +95,18 @@ public class DomeinController {
 		return kolom;
 	}
 
-	public void plaatsTegel(DominotegelDTO tegelDTO, int y, int x, String richting, SpelerDTO spelerDTO){
+	public void plaatsTegel(DominotegelDTO tegelDTO, int y, int x, int y2, int x2, SpelerDTO spelerDTO){
 		for(Dominotegel tegel : dominotegels(spel.getSpelers().size())){
 			if(tegel.getVakje1() == tegelDTO.vakje1() && tegel.getVakje2() == tegelDTO.vakje2()){
-				spel.plaatsTegel(tegel, y, x, richting, spelerDTO);
+				spel.plaatsTegel(tegel, y, x, y2, x2, spelerDTO);
 			}
 		}
 	}
 
-	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, String richting, SpelerDTO spelerDTO) {
+	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, int y2, int x2, SpelerDTO spelerDTO) {
 		for(Dominotegel tegel : dominotegels(spel.getSpelers().size())){
 			if(tegel.getVakje1() == tegelDTO.vakje1() && tegel.getVakje2() == tegelDTO.vakje2()){
-				return spel.kanPlaatsen(tegel, y, x, richting, spelerDTO);
+				return spel.kanPlaatsen(tegel, y, x, y2, x2, spelerDTO);
 			}
 		}
         return false;
