@@ -93,6 +93,8 @@ public class SpelController {
 
 	private List<Node> spelers;
 
+	private List<SpelerDTO> gekozenSpelers;
+
 	private int huidigeSpelerIndex = 0; // Standaardwaarde die aangeeft dat nog geen speler is geselecteerd
 	private int tempSpelerIndex;
 
@@ -109,6 +111,7 @@ public class SpelController {
 		gridBlauw = new GridPane();
 		gridGeel = new GridPane();
 		gridRoos = new GridPane();
+		gekozenSpelers = dc.getSpelers();
 
 	}
 
@@ -257,7 +260,6 @@ public class SpelController {
 		//			vboxVoorkant.getChildren().add(voorkantImageView);
 		//			// vboxAchterkant.getChildren().add(achterkantImageView);
 		//		}
-
 		for (Dominotegel tegel : gesorteerdeTegels) {
 			Image voorkantImage = new Image(tegel.getVoorkantFotoPad());
 			ImageView voorkantImageView = new ImageView(voorkantImage);
@@ -462,7 +464,7 @@ public class SpelController {
 			resetSpelersLijst(); // Vul de spelerslijst opnieuw als alle spelers geweest zijn
 		}
 
-		// Haal de huidige spelerinfo op basis van huidigeSpelerIndex
+        // Haal de huidige spelerinfo op basis van huidigeSpelerIndex
 		Node gekozenSpeler = spelers.get(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpeler.getUserData();
 
@@ -684,11 +686,8 @@ public class SpelController {
 
 	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, String richting, SpelerDTO spelerDTO) {
 		//voorlopig
-<<<<<<< Updated upstream
 //		dc.kanPlaatsen(tegelDTO, y, x, richting, null);
-=======
-		//dc.kanPlaatsen(tegelDTO, y, x, richting, null);
->>>>>>> Stashed changes
+
 		return false;
 	}
 

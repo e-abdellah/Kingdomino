@@ -13,6 +13,8 @@ public class DomeinController {
 	private final Spel spel;
 	private boolean isEindeSpel;
 
+	private List<SpelerDTO> spelers;
+
 
 	public DomeinController() {
 		spelerRepository = new SpelerRepository();
@@ -26,6 +28,11 @@ public class DomeinController {
 			spel.voegSpelersToe(new Speler(speler.gebruikersnaam(), speler.geboortejaar(), speler.aantalGewonnen(),
 					speler.aantalGespeeld(), speler.koninkrijk(), speler.scores(), speler.isWinnaar()));
 		}
+		spelers = spelerDTOS;
+	}
+
+	public List<SpelerDTO> getSpelers(){
+		return spelers;
 	}
 
 	public void registreerSpeler(String gebruikersnaam, int geboortejaar) throws GebruikersnaamInGebruikException {

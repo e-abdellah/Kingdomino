@@ -1,12 +1,7 @@
 package gui;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import domein.DomeinController;
@@ -69,6 +64,7 @@ public class WelkomKDController {
 	private ResourceBundle resourceBundle;
 	protected int aantalSpelersGekozen;
 	List<String> beschikbareKleuren;
+	List<SpelerDTO> geselecteerdeSpelers = new ArrayList<>();
 
 	@FXML
 	private void chooseDutch(ActionEvent event) {
@@ -213,6 +209,8 @@ public class WelkomKDController {
 			aantalSpelersGekozen = Integer.parseInt(aantalSpelers);
 			List<String> spelersNamen = dc.geefOverzichtSpelers().stream().map(SpelerDTO::gebruikersnaam)
 					.collect(Collectors.toList());
+			Map<String, SpelerDTO> spelerMap = dc.geefOverzichtSpelers().stream()
+					.collect(Collectors.toMap(SpelerDTO::gebruikersnaam, speler -> speler));
 
 			for (int i = 1; i <= aantalSpelersGekozen; i++) {
 				ChoiceDialog<String> spelerKeuzeDialog = new ChoiceDialog<>(spelersNamen.get(0), spelersNamen);
@@ -224,6 +222,10 @@ public class WelkomKDController {
 				spelerKeuzeResultaat.ifPresent(spelerNaam -> {
 					ChoiceDialog<String> kleurDialog = new ChoiceDialog<>(beschikbareKleuren.get(0),
 							beschikbareKleuren);
+					//spelers.add(dto);
+					if (spelerMap.containsKey(spelerNaam)) {
+						geselecteerdeSpelers.add(spelerMap.get(spelerNaam));
+					}
 					kleurDialog.setTitle(resourceBundle.getString("kleurDialogTitel") + spelerNaam);
 					kleurDialog.setHeaderText(resourceBundle.getString("kleurDialogHeader") + spelerNaam + ":");
 					kleurDialog.setContentText(resourceBundle.getString("kleurDialogToonBeschikbareKleuren"));
@@ -236,9 +238,10 @@ public class WelkomKDController {
 					});
 				});
 			}
-			spelers.add(dto);
+
 			navigeerNaarSpel(spelerEnKleurInformatie);
 		});
+		dc.voegSpelersToe(geselecteerdeSpelers);
 	}
 
 	private void navigeerNaarSpel(List<String> spelerEnKleurInformatie) {
