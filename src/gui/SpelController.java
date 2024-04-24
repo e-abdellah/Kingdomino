@@ -219,8 +219,8 @@ public class SpelController {
 		for (Dominotegel tegel : dominotegels) {
 			// Maak en configureer de ImageView voor de tegel...
 			ImageView tegelImageView = new ImageView(new Image(tegel.getVoorkantFotoPad()));
-			tegelImageView.setFitWidth(150);
-			tegelImageView.setFitHeight(75);
+			tegelImageView.setFitWidth(90);
+			tegelImageView.setFitHeight(45);
 
 			// Maak een nieuwe HBox voor elke tegel...
 			HBox tegelBox = new HBox(tegelImageView);
@@ -261,8 +261,8 @@ public class SpelController {
 		for (Dominotegel tegel : gesorteerdeTegels) {
 			Image voorkantImage = new Image(tegel.getVoorkantFotoPad());
 			ImageView voorkantImageView = new ImageView(voorkantImage);
-			voorkantImageView.setFitWidth(150);
-			voorkantImageView.setFitHeight(75);
+			voorkantImageView.setFitWidth(90);
+			voorkantImageView.setFitHeight(45);
 
 			// Toevoegen van een event handler voor muisklikken
 			voorkantImageView.setOnMouseClicked(event -> {
@@ -280,7 +280,7 @@ public class SpelController {
 
 	private void toonSpelerKleurOpTegel(Dominotegel tegel, ImageView imageView) {
 		Color spelerKleur = getSpelerKleur(tempSpelerIndex); // Haal de kleur van de speler op
-
+ 
 		// Maak een cirkel met de kleur van de speler
 		Circle kleurIndicator = new Circle(10, spelerKleur);
 		kleurIndicator.setStroke(Color.BLACK);
@@ -316,8 +316,8 @@ public class SpelController {
 			ImageView voorkantImageView = new ImageView(voorkantImage);
 			// ImageView voorkantImageView = new ImageView(new
 			// Image(tegel.getVoorkantFotoPad()));
-			voorkantImageView.setFitWidth(150);
-			voorkantImageView.setFitHeight(75);
+			voorkantImageView.setFitWidth(90);
+			voorkantImageView.setFitHeight(45);
 			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel, false));
 
 			// Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
@@ -396,8 +396,8 @@ public class SpelController {
 
 		Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
 		ImageView tegelImageView = new ImageView(tegelAfbeelding);
-		tegelImageView.setFitWidth(150);
-		tegelImageView.setFitHeight(75);
+		tegelImageView.setFitWidth(90);
+		tegelImageView.setFitHeight(45);
 
 		HBox tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
 
@@ -684,15 +684,15 @@ public class SpelController {
 
 	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, String richting, SpelerDTO spelerDTO) {
 		//voorlopig
-		dc.kanPlaatsen(tegelDTO, y, x, richting, null);
+//		dc.kanPlaatsen(tegelDTO, y, x, richting, null);
 		return false;
 	}
 
 	private void plaatsTegelInGrid(Dominotegel tegel, GridPane doelGridPane, int rij, int kolom) {
 		Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
 		ImageView tegelImageView = new ImageView(tegelAfbeelding);
-		tegelImageView.setFitWidth(150); // Pas de grootte aan aan jouw grid
-		tegelImageView.setFitHeight(75);
+		tegelImageView.setFitWidth(90); // Pas de grootte aan aan jouw grid
+		tegelImageView.setFitHeight(45);
 
 		GridPane doelPane = bepaalDoelGridPane(getSpelerKleur(huidigeSpelerIndex));
 		doelGridPane.add(tegelImageView, kolom, rij);
