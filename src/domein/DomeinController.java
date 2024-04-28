@@ -1,7 +1,9 @@
 package domein;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import dto.DominotegelDTO;
 import dto.SpelerDTO;
@@ -13,16 +15,26 @@ public class DomeinController {
 	private final Spel spel;
 	private boolean isEindeSpel;
 
-	private List<SpelerDTO> spelers;
+	private List<SpelerDTO> spelers = new ArrayList<>();
 
+	private static DomeinController instance;
 
 	public DomeinController() {
 		spelerRepository = new SpelerRepository();
 		spel = new Spel();
 	}
-	public void berekenEindeSpel(){
+
+	public static DomeinController getInstance() {
+		if (instance == null) {
+			instance = new DomeinController();
+		}
+		return instance;
+	}
+
+	public void berekenEindeSpel() {
 		isEindeSpel = spel.isEindeSpel();
 	}
+
 	public void voegSpelersToe(List<SpelerDTO> spelerDTOS) {
 		for (SpelerDTO speler : spelerDTOS) {
 			spel.voegSpelersToe(new Speler(speler.gebruikersnaam(), speler.geboortejaar(), speler.aantalGewonnen(),
@@ -31,7 +43,7 @@ public class DomeinController {
 		spelers = spelerDTOS;
 	}
 
-	public List<SpelerDTO> getSpelers(){
+	public List<SpelerDTO> getSpelers() {
 		return spelers;
 	}
 
@@ -50,7 +62,8 @@ public class DomeinController {
 		}
 		return overzicht;
 	}
-	public boolean isEindeSpel(){
+
+	public boolean isEindeSpel() {
 		return isEindeSpel;
 	}
 
@@ -63,18 +76,20 @@ public class DomeinController {
 		spel.schudDominotegels(aantalSpelers);
 		List<DominotegelDTO> dominotegelDTOS = new ArrayList<>();
 		List<Dominotegel> tegels = spel.getDominotegels();
-		for(Dominotegel dominotegel : tegels){
-			dominotegelDTOS.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(), dominotegel.getGetal(), dominotegel.getKroon(), dominotegel.toString()));
+		for (Dominotegel dominotegel : tegels) {
+			dominotegelDTOS.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(),
+					dominotegel.getGetal(), dominotegel.getKroon(), dominotegel.toString()));
 		}
 		return dominotegelDTOS;
 	}
 
 	public List<DominotegelDTO> geefTegels(int aantal) {
 		List<DominotegelDTO> dominotegelDTOS = new ArrayList<>();
-		for(Dominotegel dominotegel : spel.geefTegels(aantal)){
-			dominotegelDTOS.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(), dominotegel.getGetal(), dominotegel.getKroon(), dominotegel.toString()));
+		for (Dominotegel dominotegel : spel.geefTegels(aantal)) {
+			dominotegelDTOS.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(),
+					dominotegel.getGetal(), dominotegel.getKroon(), dominotegel.toString()));
 		}
-        return dominotegelDTOS;
+		return dominotegelDTOS;
 	}
 
 	public void berekenWinnaars() {
@@ -94,28 +109,29 @@ public class DomeinController {
 		return spel.plaatsTegelsInStartkolom();
 	}
 
-	public List<DominotegelDTO> geefKolom(){
+	public List<DominotegelDTO> geefKolom() {
 		List<DominotegelDTO> kolom = new ArrayList<>();
-		for(Dominotegel dominotegel : spel.geefBeginOfEindKolom()){
-			kolom.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(), dominotegel.getGetal(), dominotegel.getKroon(), dominotegel.toString()));
+		for (Dominotegel dominotegel : spel.geefBeginOfEindKolom()) {
+			kolom.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(), dominotegel.getGetal(),
+					dominotegel.getKroon(), dominotegel.toString()));
 		}
 		return kolom;
 	}
 
-	public void plaatsTegel(DominotegelDTO tegelDTO, int y, int x, int y2, int x2, SpelerDTO spelerDTO){
-		for(Dominotegel tegel : dominotegels(spel.getSpelers().size())){
-			if(tegel.getVakje1() == tegelDTO.vakje1() && tegel.getVakje2() == tegelDTO.vakje2()){
+	public void plaatsTegel(DominotegelDTO tegelDTO, int y, int x, int y2, int x2, SpelerDTO spelerDTO) {
+		for (Dominotegel tegel : dominotegels(spel.getSpelers().size())) {
+			if (tegel.getVakje1() == tegelDTO.vakje1() && tegel.getVakje2() == tegelDTO.vakje2()) {
 				spel.plaatsTegel(tegel, y, x, y2, x2, spelerDTO);
 			}
 		}
 	}
 
 	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, int y2, int x2, SpelerDTO spelerDTO) {
-		for(Dominotegel tegel : dominotegels(spel.getSpelers().size())){
-			if(tegel.getVakje1() == tegelDTO.vakje1() && tegel.getVakje2() == tegelDTO.vakje2()){
+		for (Dominotegel tegel : dominotegels(spel.getSpelers().size())) {
+			if (tegel.getVakje1() == tegelDTO.vakje1() && tegel.getVakje2() == tegelDTO.vakje2()) {
 				return spel.kanPlaatsen(tegel, y, x, y2, x2, spelerDTO);
 			}
 		}
-        return false;
-    }
+		return false;
+	}
 }

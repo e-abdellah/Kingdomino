@@ -1,7 +1,13 @@
 package gui;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import domein.DomeinController;
@@ -27,7 +33,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class WelkomKDController {
-	private DomeinController dc = new DomeinController();
+	private DomeinController dc = DomeinController.getInstance();;
 	private SpelerDTO dto;
 	private List<SpelerDTO> spelers = new ArrayList<>();
 
@@ -239,9 +245,9 @@ public class WelkomKDController {
 				});
 			}
 
+			dc.voegSpelersToe(geselecteerdeSpelers);
 			navigeerNaarSpel(spelerEnKleurInformatie);
 		});
-		dc.voegSpelersToe(geselecteerdeSpelers);
 	}
 
 	private void navigeerNaarSpel(List<String> spelerEnKleurInformatie) {
@@ -264,10 +270,6 @@ public class WelkomKDController {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
 
 	@FXML
 	private void afsluiten(Event event) {

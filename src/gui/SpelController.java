@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -87,6 +88,7 @@ public class SpelController {
 	private List<String> spelerKleuren;
 	private Map<Integer, Dominotegel> spelerTegelMap = new HashMap<>();
 	private Map<String, Dominotegel> spelerTegel = new TreeMap<>();
+	private Map<SpelerDTO, Integer> indexSpelerDTO = new LinkedHashMap<>();
 	private boolean isEersteClick = true; // Flag to track if it's the first button click
 	private boolean isVolgendeRonde = false; // This flag will determine the button state
 	private List<String> strings;
@@ -95,16 +97,18 @@ public class SpelController {
 	private Set<Integer> eindkolomSpelers = new HashSet<>();
 
 	private List<Node> spelers;
+	private List<SpelerDTO> spelersDTO = new ArrayList<>();
 
 	private List<SpelerDTO> gekozenSpelers;
 
 	private int huidigeSpelerIndex = 0; // Standaardwaarde die aangeeft dat nog geen speler is geselecteerd
 	private int tempSpelerIndex;
 
+	private int index = 0;
+
 	public SpelController() {
-		dc = new DomeinController();
+		dc = DomeinController.getInstance();
 		kdController = new WelkomKDController();
-		aantalSpelers = kdController.getAantalSpelersGekozen();
 		spelerKleuren = new ArrayList<>();
 		eindkolomTegels = new ArrayDeque<>();
 		startKolomTegels = new ArrayDeque<>();
@@ -114,11 +118,13 @@ public class SpelController {
 		gridBlauw = new GridPane();
 		gridGeel = new GridPane();
 		gridRoos = new GridPane();
+		aantalSpelers = kdController.getAantalSpelersGekozen();
 		gekozenSpelers = dc.getSpelers();
-
 	}
 
 	public void initSpel() {
+		shuffleSpelers();
+		initialiseerMap();
 		setupAantalKingdoms();
 		setSpelerInfo(spelerKleuren);
 		stapel = dc.dominotegels(aantalSpelers);
@@ -138,8 +144,22 @@ public class SpelController {
 		gridGeel.setGridLinesVisible(true);
 		gridRoos.setGridLinesVisible(true);
 
-		shuffleSpelers();
+	}
 
+	private void initialiseerMap() {
+
+		for (int i = 0; i < spelers.size(); i++) {
+			Node gekozenSpelerNode = spelers.get(i);
+			String spelerInfo = (String) gekozenSpelerNode.getUserData();
+			String naam = spelerInfo.split("-")[0].trim().toLowerCase();
+
+			for (SpelerDTO dto : gekozenSpelers) {
+				if (naam.equals(dto.gebruikersnaam().toLowerCase())) {
+					indexSpelerDTO.put(dto, i);
+					spelersDTO.add(dto);
+				}
+			}
+		}
 	}
 
 	@FXML
@@ -164,7 +184,6 @@ public class SpelController {
 
 	//Methode om correct aantal kingdoms te tonen
 	public void setupAantalKingdoms() {
-		int playerCount = aantalSpelers;
 		//Zet de aangemaakte grids onzichtbaar
 		gridGroen.setVisible(false);
 		gridBlauw.setVisible(false);
@@ -322,7 +341,6 @@ public class SpelController {
 		//			vboxVoorkant.getChildren().add(voorkantImageView);
 		//			// vboxAchterkant.getChildren().add(achterkantImageView);
 		//		}
-		int index = 0;
 		for (Dominotegel tegel : gesorteerdeTegels) {
 			Image voorkantImage = new Image(tegel.getVoorkantFotoPad());
 			ImageView voorkantImageView = new ImageView(voorkantImage);
@@ -331,20 +349,21 @@ public class SpelController {
 
 			// Toevoegen van een event handler voor muisklikken
 			voorkantImageView.setOnMouseClicked(event -> {
-				clickOpTegel(tegel, true, index);
-				toonSpelerKleurOpTegel(tegel, voorkantImageView);
+				clickOpTegel(tegel, true, indexSpelerDTO.get(spelersDTO.get(index)));
+				//				toonSpelerKleurOpTegel(voorkantImageView);
 			});
 
 			vboxVoorkant.getChildren().add(voorkantImageView);
-			//			index++;
+			index++;
 		}
+		index = 0;
 
 		hbox.getChildren().addAll(vboxVoorkant /* , vboxAchterkant */);
 		startKolom.getChildren().clear();
 		startKolom.getChildren().add(hbox);
 	}
 
-	private void toonSpelerKleurOpTegel(Dominotegel tegel, ImageView imageView) {
+	private void toonSpelerKleurOpTegel(ImageView imageView) {
 		Color spelerKleur = getSpelerKleur(tempSpelerIndex); // Haal de kleur van de speler op
 
 		// Maak een cirkel met de kleur van de speler
@@ -376,7 +395,6 @@ public class SpelController {
 		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
 		List<Dominotegel> gesorteerdeTegels = dominotegels.stream()
 				.sorted(Comparator.comparingInt(Dominotegel::getGetal)).collect(Collectors.toList());
-		int index = 0;
 		for (Dominotegel tegel : gesorteerdeTegels) {
 			Image voorkantImage = new Image(tegel.getVoorkantFotoPad());
 			ImageView voorkantImageView = new ImageView(voorkantImage);
@@ -384,7 +402,8 @@ public class SpelController {
 			// Image(tegel.getVoorkantFotoPad()));
 			voorkantImageView.setFitWidth(90);
 			voorkantImageView.setFitHeight(45);
-			voorkantImageView.setOnMouseClicked(event -> clickOpTegel(tegel, false, index));
+			voorkantImageView
+					.setOnMouseClicked(event -> clickOpTegel(tegel, false, indexSpelerDTO.get(spelersDTO.get(index))));
 
 			// Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
 			// ImageView achterkantImageView = new ImageView(achterkantImage);
@@ -393,8 +412,9 @@ public class SpelController {
 
 			vboxVoorkant.getChildren().add(voorkantImageView);
 			// vboxAchterkant.getChildren().add(achterkantImageView);
-			//			index++;
+			index++;
 		}
+		index = 0;
 
 		hbox.getChildren().addAll(vboxVoorkant/* , vboxAchterkant */);
 		eindkolom.getChildren().clear();
@@ -402,6 +422,11 @@ public class SpelController {
 	}
 
 	private void clickOpTegel(Dominotegel tegel, boolean isStartKolom, int spelerIndex) {
+		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
+			System.out.println("in de if");
+			return; // Als de tegel null is of al gekozen, stop de methode hier
+		}
+
 		kiesTegel(tegel, isStartKolom);
 
 		// Haal de spelerNode op uit de geshuffelde lijst
@@ -410,16 +435,14 @@ public class SpelController {
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
 
-		if (startkolomSpelers.size() >= aantalSpelers) {
-			toonTegelEnKleur(tegel, spelerKleur, isStartKolom, spelerIndex);
-		}
+		toonTegelEnKleur(tegel, spelerKleur, isStartKolom, spelerIndex);
 
 	}
 
 	private void kiesTegel(Dominotegel tegel, boolean isStartKolom) {
-		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
-			return; // Als de tegel null is of al gekozen, stop de methode hier
-		}
+		//		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
+		//			return; // Als de tegel null is of al gekozen, stop de methode hier
+		//		}
 
 		voegGekozenTegelToe(tegel);
 
@@ -439,7 +462,6 @@ public class SpelController {
 		//rotate();
 		//		rotateImageView(tegel);
 		//rotateTegel(rotateBtn);
-		System.out.println(isStartKolom);
 		updateSpelStatus(isStartKolom);
 	}
 
@@ -483,7 +505,7 @@ public class SpelController {
 		} else {
 			eindkolomSpelers.add(huidigeSpelerIndex);
 			plaatsAlleGekozenTegels(startKolomTegels, spelerIndex);
-
+			System.out.println("toonTegelEnKleur" + spelerIndex);
 		}
 
 		// Creëer de HBox voor de tegel en de spelerkleur
@@ -494,8 +516,10 @@ public class SpelController {
 		container.getChildren().add(tegelEnKleurBox);
 	}
 
-	private Color getSpelerKleur(int huidigeSpelerIndex) {
-		String kleurCode = spelerKleuren.get(huidigeSpelerIndex).toLowerCase().trim();
+	private Color getSpelerKleur(int spelerIndex) {
+		String kleurCode = spelerKleuren.get(spelerIndex).toLowerCase().trim();
+
+		System.out.println("getSpelerKleur" + spelerIndex);
 		switch (kleurCode) {
 		case "groen":
 			return Color.GREEN;
@@ -511,18 +535,11 @@ public class SpelController {
 	}
 
 	private void updateSpelStatus(boolean isStartKolom) {
-		//		String spelerInfo = null;
-		//		for (int i = 0; i < spelers.size(); i++) {
-		//			Node gekozenSpeler = spelers.get(i);
-		//			spelerInfo = (String) gekozenSpeler.getUserData();
-		//
-		//		}
 
 		if (isStartKolom) {
-			System.out.println("in update 1ste if");
 			startkolomSpelers.add(huidigeSpelerIndex);
-			System.out.println("in update onder");
 			if (startkolomSpelers.size() >= aantalSpelers) {
+				startKolom.getChildren().clear();
 				toonEindkolom(new ArrayList<>(eindkolomTegels));
 				toonRugzijdeStapel();
 				isVolgendeRonde = true;
@@ -639,7 +656,7 @@ public class SpelController {
 		if (doelGridPane != null) {
 			int[] positie = vraagTegelPositie(index);
 			if (positie != null) {
-				plaatsTegelInGrid(tegel, doelGridPane, positie[0], positie[1], index);
+				plaatsTegelInGrid(tegel, doelGridPane, positie[0], positie[1]);
 			}
 		} else {
 			System.out.println("Geen geldige GridPane gevonden voor speler met kleur: " + spelerKleur);
@@ -746,13 +763,13 @@ public class SpelController {
 		return false;
 	}
 
-	private void plaatsTegelInGrid(Dominotegel tegel, GridPane doelGridPane, int rij, int kolom, int index) {
+	private void plaatsTegelInGrid(Dominotegel tegel, GridPane doelGridPane, int rij, int kolom) {
 		Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
 		ImageView tegelImageView = new ImageView(tegelAfbeelding);
 		tegelImageView.setFitWidth(90); // Pas de grootte aan aan jouw grid
 		tegelImageView.setFitHeight(45);
 
-		GridPane doelPane = bepaalDoelGridPane(getSpelerKleur(huidigeSpelerIndex));
+		bepaalDoelGridPane(getSpelerKleur(huidigeSpelerIndex));
 		doelGridPane.add(tegelImageView, kolom, rij);
 		rotateBtn.setDisable(false);
 	}
@@ -803,7 +820,7 @@ public class SpelController {
 	}
 
 	@FXML
-	private void handleVolgendeRondeBtn(ActionEvent event) {
+	private void handleVolgendeRondeBtn() {
 		ronde();
 	}
 
@@ -813,5 +830,9 @@ public class SpelController {
 
 	public String bepaalWinnaar() {
 		return null;
+	}
+
+	public void setSpelers(List<SpelerDTO> spelers) {
+		spelersDTO = spelers;
 	}
 }
