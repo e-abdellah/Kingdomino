@@ -430,7 +430,14 @@ public class SpelController {
 		kiesTegel(tegel, isStartKolom);
 
 		// Haal de spelerNode op uit de geshuffelde lijst
-		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
+//		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
+		int index;
+		if (index == spelerIndex) {
+			
+			index = indexSpelerDTO.values().iterator().next();	
+			
+		}
+		Node gekozenSpelerNode = index;
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
@@ -697,20 +704,14 @@ public class SpelController {
 		// If it's the first click and not yet the next round, begin the first selection
 		// phase
 		if (isEersteClick && !isVolgendeRonde) {
+			int firstIndex = indexSpelerDTO.values().iterator().next();
+			clickOpTegel(null, true, firstIndex);
+//			kiesTegel(null, true); // Initiate the first player's turn to choose a tegel
 			toonStartKolom(new ArrayList<>(startKolomTegels)); // Display the start column with tegels
 			isEersteClick = false;
-			kiesTegel(null, true); // Initiate the first player's turn to choose a tegel
 			startRondeButton.setDisable(true); // Deactiveer de knop
 		}
 
-		// If the button is clicked when it's already the next round
-		// if (!isEersteClick && isVolgendeRonde && eindkolomSpelers.size() >=
-		// aantalSpelers) {
-		else {
-			System.out.println("btn clicked");
-			startRondeButton.setText("Start Ronde");
-			startVolgendeRonde();
-		}
 	}
 
 	private int[] vraagTegelPositie(int index) {
