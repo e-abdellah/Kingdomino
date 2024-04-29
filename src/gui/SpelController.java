@@ -348,10 +348,10 @@ public class SpelController {
 			voorkantImageView.setFitHeight(45);
 
 			// Toevoegen van een event handler voor muisklikken
-			voorkantImageView.setOnMouseClicked(event -> {
-				clickOpTegel(tegel, true, indexSpelerDTO.get(spelersDTO.get(index)));
-				//				toonSpelerKleurOpTegel(voorkantImageView);
-			});
+			voorkantImageView
+					.setOnMouseClicked(event -> clickOpTegel(tegel, true, indexSpelerDTO.get(spelersDTO.get(index)))
+					//				toonSpelerKleurOpTegel(voorkantImageView);
+					);
 
 			vboxVoorkant.getChildren().add(voorkantImageView);
 			index++;
@@ -427,22 +427,14 @@ public class SpelController {
 			return; // Als de tegel null is of al gekozen, stop de methode hier
 		}
 
-		kiesTegel(tegel, isStartKolom);
-
 		// Haal de spelerNode op uit de geshuffelde lijst
-//		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
-		int index;
-		if (index == spelerIndex) {
-			
-			index = indexSpelerDTO.values().iterator().next();	
-			
-		}
-		Node gekozenSpelerNode = index;
+		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
 
 		toonTegelEnKleur(tegel, spelerKleur, isStartKolom, spelerIndex);
+		kiesTegel(tegel, isStartKolom);
 
 	}
 
@@ -547,10 +539,10 @@ public class SpelController {
 			startkolomSpelers.add(huidigeSpelerIndex);
 			if (startkolomSpelers.size() >= aantalSpelers) {
 				startKolom.getChildren().clear();
+				huidigeSpelerIndex = 0; // Reset voor de eindkolom
 				toonEindkolom(new ArrayList<>(eindkolomTegels));
 				toonRugzijdeStapel();
 				isVolgendeRonde = true;
-				huidigeSpelerIndex = 0; // Reset voor de eindkolom
 			}
 		} else {
 			//			plaatsAlleGekozenTegels(startKolomTegels);
@@ -706,7 +698,7 @@ public class SpelController {
 		if (isEersteClick && !isVolgendeRonde) {
 			int firstIndex = indexSpelerDTO.values().iterator().next();
 			clickOpTegel(null, true, firstIndex);
-//			kiesTegel(null, true); // Initiate the first player's turn to choose a tegel
+			//			kiesTegel(null, true); // Initiate the first player's turn to choose a tegel
 			toonStartKolom(new ArrayList<>(startKolomTegels)); // Display the start column with tegels
 			isEersteClick = false;
 			startRondeButton.setDisable(true); // Deactiveer de knop
