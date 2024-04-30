@@ -423,12 +423,12 @@ public class SpelController {
 
 	private void clickOpTegel(Dominotegel tegel, boolean isStartKolom, int spelerIndex) {
 		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
-			System.out.println("in de if");
 			return; // Als de tegel null is of al gekozen, stop de methode hier
 		}
 
 		// Haal de spelerNode op uit de geshuffelde lijst
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
+		System.out.println(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
@@ -504,7 +504,7 @@ public class SpelController {
 		} else {
 			eindkolomSpelers.add(huidigeSpelerIndex);
 			plaatsAlleGekozenTegels(startKolomTegels, spelerIndex);
-			System.out.println("toonTegelEnKleur" + spelerIndex);
+			//			System.out.println("toonTegelEnKleur" + spelerIndex);
 		}
 
 		// Creëer de HBox voor de tegel en de spelerkleur
@@ -518,7 +518,7 @@ public class SpelController {
 	private Color getSpelerKleur(int spelerIndex) {
 		String kleurCode = spelerKleuren.get(spelerIndex).toLowerCase().trim();
 
-		System.out.println("getSpelerKleur" + spelerIndex);
+		//		System.out.println("getSpelerKleur" + spelerIndex);
 		switch (kleurCode) {
 		case "groen":
 			return Color.GREEN;
@@ -539,13 +539,12 @@ public class SpelController {
 			startkolomSpelers.add(huidigeSpelerIndex);
 			if (startkolomSpelers.size() >= aantalSpelers) {
 				startKolom.getChildren().clear();
-				huidigeSpelerIndex = 0; // Reset voor de eindkolom
+				huidigeSpelerIndex = -1; // Reset voor de eindkolom
 				toonEindkolom(new ArrayList<>(eindkolomTegels));
 				toonRugzijdeStapel();
 				isVolgendeRonde = true;
 			}
 		} else {
-			//			plaatsAlleGekozenTegels(startKolomTegels);
 			eindkolomSpelers.add(huidigeSpelerIndex);
 			if (eindkolomSpelers.size() >= aantalSpelers) {
 				startVolgendeRonde();
@@ -715,7 +714,6 @@ public class SpelController {
 					+ " Geef de rij en kolom in waar je de tegel wilt plaatsen, gescheiden door een komma (bijv. 1,2)");
 			Optional<String> result = dialog.showAndWait();
 
-			System.out.println(strings);
 			if (result.isPresent()) {
 				try {
 					String[] parts = result.get().split(",");
