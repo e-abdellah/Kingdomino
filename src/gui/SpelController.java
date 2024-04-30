@@ -428,7 +428,6 @@ public class SpelController {
 
 		// Haal de spelerNode op uit de geshuffelde lijst
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
-		System.out.println(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
@@ -503,7 +502,7 @@ public class SpelController {
 			startkolomSpelers.add(huidigeSpelerIndex);
 		} else {
 			eindkolomSpelers.add(huidigeSpelerIndex);
-			plaatsAlleGekozenTegels(startKolomTegels, spelerIndex);
+			plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
 			//			System.out.println("toonTegelEnKleur" + spelerIndex);
 		}
 
@@ -710,7 +709,10 @@ public class SpelController {
 			TextInputDialog dialog = new TextInputDialog();
 			dialog.setTitle("Tegel Plaatsen");
 
-			dialog.setHeaderText("Speler " + strings.get(index)
+			Node gekozenSpeler = spelers.get(huidigeSpelerIndex);
+			String spelerInfo = (String) gekozenSpeler.getUserData();
+
+			dialog.setHeaderText("Speler " + spelerInfo
 					+ " Geef de rij en kolom in waar je de tegel wilt plaatsen, gescheiden door een komma (bijv. 1,2)");
 			Optional<String> result = dialog.showAndWait();
 
