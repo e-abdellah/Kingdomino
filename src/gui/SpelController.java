@@ -95,11 +95,13 @@ public class SpelController {
 	private boolean isEersteClick = true; // Flag to track if it's the first button click
 	private boolean isVolgendeRonde = false; // This flag will determine the button state
 	private List<String> strings;
+	
 
 	private Set<Integer> startkolomSpelers = new HashSet<>();
 	private Set<Integer> eindkolomSpelers = new HashSet<>();
 
 	private List<Node> spelers;
+	private List<Node> tijdelijkeKolomSpelers;
 	private List<SpelerDTO> spelersDTO = new ArrayList<>();
 
 	private List<SpelerDTO> gekozenSpelers;
@@ -141,7 +143,7 @@ public class SpelController {
 		startRondeBtn.setDisable(false); // Zet de knop op actief
 		volgendeRondeBtn.setDisable(true); // Zet de knop op actief
 		rotateBtn.setDisable(true);
-
+		tijdelijkeKolomSpelers = new ArrayList<>(gekozenDominotegels.getChildren());
 		gridBlauw.setGridLinesVisible(true);
 		gridGroen.setGridLinesVisible(true);
 		gridGeel.setGridLinesVisible(true);
@@ -404,6 +406,15 @@ public class SpelController {
 		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
 			return; // Als de tegel null is of al gekozen, stop de methode hier
 		}
+		
+//		if (isStartKolom == false) {
+//			
+//			Node gekozenSpelerNode = tijdelijkeKolomSpelers.get(huidigeSpelerIndex);
+//			String spelerInfo = (String) gekozenSpelerNode.getUserData();
+//			String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
+//			Color spelerKleur = getColorForName(kleurCode);
+//			
+//		}
 
 		// Haal de spelerNode op uit de geshuffelde lijst
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
