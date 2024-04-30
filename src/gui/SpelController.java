@@ -438,10 +438,10 @@ public class SpelController {
 			startkolomSpelers.add(huidigeSpelerIndex);
 		} else {
 			eindkolomSpelers.add(huidigeSpelerIndex);
-			if (isVolgendeRonde) {
-				plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
-				return;
-			}
+			//			if (isVolgendeRonde) {
+			//				plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
+			//				return;
+			//			}
 			plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
 			//			System.out.println("toonTegelEnKleur" + spelerIndex);
 		}
