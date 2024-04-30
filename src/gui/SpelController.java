@@ -104,7 +104,7 @@ public class SpelController {
 	private List<SpelerDTO> gekozenSpelers;
 
 	private int huidigeSpelerIndex = 0; // Standaardwaarde die aangeeft dat nog geen speler is geselecteerd
-	private int tempSpelerIndex;
+	//	private int tempSpelerIndex;
 
 	private int index = 0;
 
@@ -273,10 +273,8 @@ public class SpelController {
 		transferChildren(gekozenDominotegelsEindKolom, gekozenDominotegels);
 
 		// Nieuwe tegels voor de ronde
-		speelRonde(true, startKolomTegels); // Tegels voor de startkolom
 		speelRonde(true, eindkolomTegels); // Tegels voor de eindkolom
-		toonStartKolom(new ArrayList<>(startKolomTegels)); // Toon startkolom tegels
-		toonEindkolom(new ArrayList<>(eindkolomTegels));
+		//		toonEindkolom(new ArrayList<>(eindkolomTegels));
 	}
 
 	private void transferChildren(VBox source, VBox target) {
@@ -351,20 +349,12 @@ public class SpelController {
 		for (Dominotegel tegel : gesorteerdeTegels) {
 			Image voorkantImage = new Image(tegel.getVoorkantFotoPad());
 			ImageView voorkantImageView = new ImageView(voorkantImage);
-			// ImageView voorkantImageView = new ImageView(new
-			// Image(tegel.getVoorkantFotoPad()));
 			voorkantImageView.setFitWidth(90);
 			voorkantImageView.setFitHeight(45);
 			voorkantImageView
 					.setOnMouseClicked(event -> clickOpTegel(tegel, false, indexSpelerDTO.get(spelersDTO.get(index))));
 
-			// Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
-			// ImageView achterkantImageView = new ImageView(achterkantImage);
-			// achterkantImageView.setFitWidth(100);
-			// achterkantImageView.setFitHeight(50);
-
 			vboxVoorkant.getChildren().add(voorkantImageView);
-			// vboxAchterkant.getChildren().add(achterkantImageView);
 			index++;
 		}
 		index = 0;
@@ -391,10 +381,6 @@ public class SpelController {
 	}
 
 	private void kiesTegel(Dominotegel tegel, boolean isStartKolom) {
-		//		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
-		//			return; // Als de tegel null is of al gekozen, stop de methode hier
-		//		}
-
 		voegGekozenTegelToe(tegel);
 
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
@@ -448,10 +434,14 @@ public class SpelController {
 		tegelImageView.setFitWidth(90);
 		tegelImageView.setFitHeight(45);
 
-		if (isStartKolom) {
+		if (isStartKolom && isVolgendeRonde == false) {
 			startkolomSpelers.add(huidigeSpelerIndex);
 		} else {
 			eindkolomSpelers.add(huidigeSpelerIndex);
+			if (isVolgendeRonde) {
+				plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
+				return;
+			}
 			plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
 			//			System.out.println("toonTegelEnKleur" + spelerIndex);
 		}
@@ -483,7 +473,7 @@ public class SpelController {
 
 	private void updateSpelStatus(boolean isStartKolom) {
 
-		if (isStartKolom) {
+		if (isStartKolom && isVolgendeRonde == false) {
 			startkolomSpelers.add(huidigeSpelerIndex);
 			if (startkolomSpelers.size() >= aantalSpelers) {
 				startKolom.getChildren().clear();
@@ -522,7 +512,7 @@ public class SpelController {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Kies een Tegel");
 		alert.setGraphic(new Circle(10, spelerKleur)); // Set the graphic manually here
-		if (startkolomSpelers.size() == aantalSpelers) {
+		if (startkolomSpelers.size() == aantalSpelers || isVolgendeRonde) {
 			alert.setContentText("Het is aan uw beurt speler: " + spelerNaam
 					+ "\nKies één van de beschikbare tegels uit de eindkolom.");
 		} else {
@@ -539,21 +529,6 @@ public class SpelController {
 		eindkolomSpelers.clear();
 	}
 
-	//	private void startVolgendeRonde() {
-	//		// Reset the game state for the next round, including clearing tracking sets
-	//		startRondeBtn.setDisable(false);
-	//		isVolgendeRonde = false;
-	//		isEersteClick = true;
-	//		huidigeSpelerIndex = 0; // Optionally reset to the first player
-	//		startkolomSpelers.clear();
-	//		eindkolomSpelers.clear();
-	//		gekozenTegels.clear();
-	//		Alert volgendeRondeAlert = new Alert(Alert.AlertType.INFORMATION);
-	//		volgendeRondeAlert.setTitle("Volgende Ronde");
-	//		volgendeRondeAlert.setContentText("Deze ronde is klaar. Klik op de volgende ronde knop");
-	//		volgendeRondeAlert.showAndWait();
-	//	}
-
 	public void toonRugzijdeStapel() {
 		if (!stapel.isEmpty()) {
 			Dominotegel bovensteTegel = stapel.get(0); // Verkrijg de bovenste tegel zonder deze te verwijderen
@@ -566,15 +541,23 @@ public class SpelController {
 	}
 
 	public void speelRonde(boolean toonBeideZijden, Deque<Dominotegel> list) {
-		if (isVolgendeRonde == false) {
-			list.clear(); // Maak de Deque leeg
-			// Simuleer het selecteren van tegels voor de speelronde
-			for (int i = 0; i < aantalSpelers; i++) {
-				Dominotegel tegel = stapel.get(0); // Haal de bovenste tegel van de stapel
-				stapel.remove(0);
-				list.offer(tegel);
-			}
+		for (int i = 0; i < aantalSpelers; i++) {
+			Dominotegel tegel = stapel.get(0); // Haal de bovenste tegel van de stapel
+			stapel.remove(0);
+			list.offer(tegel);
 		}
+		if (stapel.isEmpty()) {
+			showAlert("Einde spel", "Alle dominotegels zijn geplaats. \nSpel is beeindigt", AlertType.INFORMATION);
+			return;
+		}
+
+		if (isVolgendeRonde && toonBeideZijden) {
+			System.out.println("in de if");
+			huidigeSpelerIndex = 0;
+			toonEindkolom(new ArrayList<>(list));
+			return;
+		}
+
 		// Toon de geselecteerde tegels in de GUI
 		if (toonBeideZijden) {
 			toonStartKolom(new ArrayList<>(list)); // Toon tegels met beide zijden
@@ -585,22 +568,24 @@ public class SpelController {
 	}
 
 	private void plaatsAlleGekozenTegels(Deque<Dominotegel> dominotegels, int spelerIndex) {
-		int index = 0;
+		int index = 0; // This seems to be unused in the current logic context
 
-		Dominotegel tegel = dominotegels.pop(); // Haal de volgende tegel uit de deque
+		if (!dominotegels.isEmpty()) {
+			Dominotegel tegel = dominotegels.pop(); // Haal de volgende tegel uit de deque
 
-		Color spelerKleur = getKleur(spelerIndex); // Methode om de kleur van de speler te krijgen
-		GridPane doelGridPane = bepaalDoelGridPane(spelerKleur);
+			Color spelerKleur = getKleur(spelerIndex); // Methode om de kleur van de speler te krijgen
+			GridPane doelGridPane = bepaalDoelGridPane(spelerKleur);
 
-		if (doelGridPane != null) {
-			int[] positie = vraagTegelPositie(index, false);
-			if (positie != null) {
-				plaatsTegelInGrid(tegel, doelGridPane, positie[0], positie[1]);
+			if (doelGridPane != null) {
+				int[] startPos = { 0, 0 }; // Example starting position, it won't be used because autoFill is false
+				int[] positie = vraagTegelPositie(index, false, startPos); // Adjusted call
+				if (positie != null) {
+					plaatsTegelInGrid(tegel, doelGridPane, positie[0], positie[1]);
+				}
+			} else {
+				System.out.println("Geen geldige GridPane gevonden voor speler met kleur: " + spelerKleur);
 			}
-		} else {
-			System.out.println("Geen geldige GridPane gevonden voor speler met kleur: " + spelerKleur);
 		}
-		index++;
 	}
 
 	private Color getKleur(int spelerIndex) {
@@ -663,20 +648,20 @@ public class SpelController {
 
 	}
 
-	private int[] vraagTegelPositie(int index, boolean autoFill) {
-		// If autoFill is true, return predefined coordinates
+	private int[] vraagTegelPositie(int index, boolean autoFill, int[] startPosition) {
 		if (autoFill) {
-			return new int[] { 0, 1 }; // Assuming GridPane indexes start at 0 and you want position 1,2
+			// Start at a given position and increment from there
+			int row = startPosition[0] + index; // Increment row for each subsequent call
+			int col = startPosition[1] + index; // Increment column similarly
+			return new int[] { row, col };
 		}
 
-		// Continue with user interaction if autoFill is false
+		// Existing user interaction code remains the same
 		while (true) {
 			TextInputDialog dialog = new TextInputDialog();
 			dialog.setTitle("Tegel Plaatsen");
-
 			Node gekozenSpeler = spelers.get(huidigeSpelerIndex);
 			String spelerInfo = (String) gekozenSpeler.getUserData();
-
 			dialog.setHeaderText("Speler " + spelerInfo
 					+ " Geef de rij en kolom in waar je de tegel wilt plaatsen, gescheiden door een komma (bijv. 1,2)");
 			Optional<String> result = dialog.showAndWait();
@@ -687,9 +672,9 @@ public class SpelController {
 					if (parts.length != 2) {
 						showAlert("Ongeldige Input", "Voer alstublieft twee getallen in gescheiden door een komma.",
 								AlertType.WARNING);
-						continue; // Continue the loop for new input
+						continue;
 					}
-					int rij = Integer.parseInt(parts[0].trim()) - 1; // Adjust for 0-based index
+					int rij = Integer.parseInt(parts[0].trim()) - 1;
 					int kolom = Integer.parseInt(parts[1].trim()) - 1;
 					return new int[] { rij, kolom };
 				} catch (NumberFormatException e) {
@@ -697,7 +682,6 @@ public class SpelController {
 							AlertType.WARNING);
 				}
 			} else {
-				// User canceled the dialog; handle this scenario, perhaps by returning null or a special value
 				return null;
 			}
 		}
@@ -776,6 +760,7 @@ public class SpelController {
 
 	@FXML
 	private void handleVolgendeRondeBtn() {
+		isVolgendeRonde = true;
 		ronde();
 	}
 
@@ -793,19 +778,21 @@ public class SpelController {
 
 	@FXML
 	private void handleSkipRondeBtnAction(ActionEvent event) {
+		int[] startPosition = { 1, 2 }; // Define the starting position (1,2 becomes 0,1 in 0-index based system)
+		int playerIndex = 0; // Start with playerIndex at 0
+
 		// Simulate actions such as tile selections and placements
 		for (Node speler : spelers) {
-			int spelerIndex = spelers.indexOf(speler);
 			if (!startKolomTegels.isEmpty()) {
-				// Assuming you're skipping to the placement directly with default coordinates
-				int[] positie = vraagTegelPositie(spelerIndex, true); // Pass true for autoFill
+				int[] positie = vraagTegelPositie(playerIndex, true, startPosition); // Pass true for autoFill
 				if (positie != null) {
-					plaatsTegelInGrid(startKolomTegels.getFirst(), bepaalDoelGridPane(getSpelerKleur(spelerIndex)),
+					plaatsTegelInGrid(startKolomTegels.pop(), bepaalDoelGridPane(getSpelerKleur(playerIndex)),
 							positie[0], positie[1]);
 				}
 			}
+			playerIndex++; // Increment index for each player
 		}
-		ronde();
+		ronde(); // Advance to the next round
 	}
 
 }
