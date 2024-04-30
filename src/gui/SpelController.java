@@ -26,6 +26,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
@@ -34,7 +35,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -77,6 +77,8 @@ public class SpelController {
 	private AnchorPane root;
 	@FXML
 	private ImageView imageView;
+	@FXML
+	private Button skipRondeBtn;
 
 	private DomeinController dc;
 	private int aantalSpelers;
@@ -250,21 +252,15 @@ public class SpelController {
 	}
 
 	public void toonWelkomPopup() {
-		Alert welkomAlert = new Alert(Alert.AlertType.INFORMATION);
-		welkomAlert.setTitle("Welkom bij Kingdomino!");
-		welkomAlert.setHeaderText(null);
-		welkomAlert.setContentText("Welkom bij het spel! Klik op 'Kies Tegel' om het spel te beginnen.");
-		welkomAlert.showAndWait();
+		showAlert("Welkom bij Kingdomino!", "Welkom bij het spel! Klik op 'Kies Tegel' om het spel te beginnen.",
+				AlertType.INFORMATION);
 	}
 
 	private void ronde() {
-		VBox tempEindkolom = gekozenDominotegelsEindKolom;
-
 		// Reset de ronde omgeving
 		startKolom.getChildren().clear();
 		eindkolom.getChildren().clear();
 		gekozenDominotegels.getChildren().clear();
-		//		gekozenDominotegelsEindKolom.getChildren().clear();
 		startKolomTegels.clear();
 		eindkolomTegels.clear();
 		gekozenTegels.clear();
@@ -273,28 +269,25 @@ public class SpelController {
 		startRondeBtn.setDisable(false);
 		volgendeRondeBtn.setDisable(true);
 
-		gekozenDominotegels = tempEindkolom;
-
-		// Verplaats alle elementen van eindkolom naar startkolom
-		gekozenDominotegels.getChildren().addAll(gekozenDominotegelsEindKolom.getChildren());
-
-		// Maak de broncontainer leeg nadat de elementen zijn verplaatst
-		gekozenDominotegelsEindKolom.getChildren().clear();
+		// Use the new method to transfer children
+		transferChildren(gekozenDominotegelsEindKolom, gekozenDominotegels);
 
 		// Nieuwe tegels voor de ronde
 		speelRonde(true, startKolomTegels); // Tegels voor de startkolom
 		speelRonde(true, eindkolomTegels); // Tegels voor de eindkolom
 		toonStartKolom(new ArrayList<>(startKolomTegels)); // Toon startkolom tegels
+		toonEindkolom(new ArrayList<>(eindkolomTegels));
+	}
 
-		// Plaats tegels voor de huidige ronde
-		//		kiesTegel(null, isEersteClick);
-		//		plaatsAlleGekozenTegels(startKolomTegels);
+	private void transferChildren(VBox source, VBox target) {
+		// Create a new list from the children of the source to avoid ConcurrentModificationException
+		List<Node> children = new ArrayList<>(source.getChildren());
 
-		// Controleer of alle spelers hun acties hebben voltooid
-		if (eindkolomSpelers.size() >= aantalSpelers) {
-			toonEindkolom(new ArrayList<>(eindkolomTegels));
-			startVolgendeRonde(); // Begin de volgende ronde
-		}
+		// Clear the source to detach all children
+		source.getChildren().clear();
+
+		// Add all detached children to the target
+		target.getChildren().addAll(children);
 	}
 
 	public void toonTegels(Deque<Dominotegel> dominotegels) {
@@ -324,23 +317,6 @@ public class SpelController {
 		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
 		List<Dominotegel> gesorteerdeTegels = dominotegels.stream()
 				.sorted(Comparator.comparingInt(Dominotegel::getGetal)).collect(Collectors.toList());
-
-		//		for (Dominotegel tegel : gesorteerdeTegels) {
-		//			Image voorkantImage = new Image(tegel.getVoorkantFotoPad());
-		//			ImageView voorkantImageView = new ImageView(voorkantImage);
-		//			// ImageView voorkantImageView = new ImageView(new
-		//			// Image(tegel.getVoorkantFotoPad()));
-		//			voorkantImageView.setFitWidth(150);
-		//			voorkantImageView.setFitHeight(75);
-		//			voorkantImageView.setOnMouseClicked(event -> kiesTegel(tegel, true));
-		//			// Image achterkantImage = new Image(tegel.getAchterkantFotoPad());
-		//			// ImageView achterkantImageView = new ImageView(achterkantImage);
-		//			// achterkantImageView.setFitWidth(100);
-		//			// achterkantImageView.setFitHeight(50);
-		//
-		//			vboxVoorkant.getChildren().add(voorkantImageView);
-		//			// vboxAchterkant.getChildren().add(achterkantImageView);
-		//		}
 		for (Dominotegel tegel : gesorteerdeTegels) {
 			Image voorkantImage = new Image(tegel.getVoorkantFotoPad());
 			ImageView voorkantImageView = new ImageView(voorkantImage);
@@ -361,29 +337,6 @@ public class SpelController {
 		hbox.getChildren().addAll(vboxVoorkant /* , vboxAchterkant */);
 		startKolom.getChildren().clear();
 		startKolom.getChildren().add(hbox);
-	}
-
-	private void toonSpelerKleurOpTegel(ImageView imageView) {
-		Color spelerKleur = getSpelerKleur(tempSpelerIndex); // Haal de kleur van de speler op
-
-		// Maak een cirkel met de kleur van de speler
-		Circle kleurIndicator = new Circle(10, spelerKleur);
-		kleurIndicator.setStroke(Color.BLACK);
-
-		// Gebruik een StackPane om de Circle bovenop de ImageView te plaatsen
-		StackPane stackPane = new StackPane();
-		stackPane.getChildren().add(imageView); // Voeg de ImageView toe aan StackPane
-		stackPane.getChildren().add(kleurIndicator); // Voeg de kleurIndicator toe
-
-		StackPane.setAlignment(kleurIndicator, Pos.TOP_RIGHT); // Positioneer de Circle
-
-		// Vervang de ImageView met StackPane alleen als het nog niet eerder gedaan is
-		if (!(imageView.getParent() instanceof StackPane)) {
-			VBox parent = (VBox) imageView.getParent();
-			int index = parent.getChildren().indexOf(imageView);
-			parent.getChildren().remove(imageView);
-			parent.getChildren().add(index, stackPane);
-		}
 	}
 
 	public void toonEindkolom(List<Dominotegel> dominotegels) {
@@ -473,10 +426,7 @@ public class SpelController {
 
 	private boolean tegelIsAlGekozen(Dominotegel tegel) {
 		if (gekozenTegels.contains(tegel)) {
-			Alert alert = new Alert(Alert.AlertType.WARNING);
-			alert.setTitle("Tegel Al Gekozen");
-			alert.setContentText("Deze tegel is al gekozen. Kies een andere tegel.");
-			alert.showAndWait();
+			showAlert("Tegel Al Gekozen", "Deze tegel is al gekozen. Kies een andere tegel.", AlertType.WARNING);
 			return true;
 		}
 		return false;
@@ -545,7 +495,10 @@ public class SpelController {
 		} else {
 			eindkolomSpelers.add(huidigeSpelerIndex);
 			if (eindkolomSpelers.size() >= aantalSpelers) {
-				startVolgendeRonde();
+				//				startVolgendeRonde();
+				toonResultaatVanRonde();
+				showAlert("Volgende ronde", "Deze ronde is klaar. Klik op de volgende ronde knop",
+						AlertType.INFORMATION);
 				volgendeRondeBtn.setDisable(false);
 				return; // Voorkomt het dubbel aanroepen van vraagVolgendeSpeler.
 			}
@@ -568,16 +521,13 @@ public class SpelController {
 
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Kies een Tegel");
+		alert.setGraphic(new Circle(10, spelerKleur)); // Set the graphic manually here
 		if (startkolomSpelers.size() == aantalSpelers) {
 			alert.setContentText("Het is aan uw beurt speler: " + spelerNaam
 					+ "\nKies één van de beschikbare tegels uit de eindkolom.");
-			alert.setGraphic(new Circle(10, spelerKleur));
-
 		} else {
 			alert.setContentText("Het is aan uw beurt speler: " + spelerNaam
 					+ "\nKies één van de beschikbare tegels uit de startkolom.");
-			alert.setGraphic(new Circle(10, spelerKleur));
-
 		}
 		alert.showAndWait();
 	}
@@ -589,20 +539,20 @@ public class SpelController {
 		eindkolomSpelers.clear();
 	}
 
-	private void startVolgendeRonde() {
-		// Reset the game state for the next round, including clearing tracking sets
-		startRondeBtn.setDisable(false);
-		isVolgendeRonde = false;
-		isEersteClick = true;
-		huidigeSpelerIndex = 0; // Optionally reset to the first player
-		startkolomSpelers.clear();
-		eindkolomSpelers.clear();
-		gekozenTegels.clear();
-		Alert volgendeRondeAlert = new Alert(Alert.AlertType.INFORMATION);
-		volgendeRondeAlert.setTitle("Volgende Ronde");
-		volgendeRondeAlert.setContentText("De volgende ronde is begonnen.");
-		volgendeRondeAlert.showAndWait();
-	}
+	//	private void startVolgendeRonde() {
+	//		// Reset the game state for the next round, including clearing tracking sets
+	//		startRondeBtn.setDisable(false);
+	//		isVolgendeRonde = false;
+	//		isEersteClick = true;
+	//		huidigeSpelerIndex = 0; // Optionally reset to the first player
+	//		startkolomSpelers.clear();
+	//		eindkolomSpelers.clear();
+	//		gekozenTegels.clear();
+	//		Alert volgendeRondeAlert = new Alert(Alert.AlertType.INFORMATION);
+	//		volgendeRondeAlert.setTitle("Volgende Ronde");
+	//		volgendeRondeAlert.setContentText("Deze ronde is klaar. Klik op de volgende ronde knop");
+	//		volgendeRondeAlert.showAndWait();
+	//	}
 
 	public void toonRugzijdeStapel() {
 		if (!stapel.isEmpty()) {
@@ -643,7 +593,7 @@ public class SpelController {
 		GridPane doelGridPane = bepaalDoelGridPane(spelerKleur);
 
 		if (doelGridPane != null) {
-			int[] positie = vraagTegelPositie(index);
+			int[] positie = vraagTegelPositie(index, false);
 			if (positie != null) {
 				plaatsTegelInGrid(tegel, doelGridPane, positie[0], positie[1]);
 			}
@@ -675,13 +625,12 @@ public class SpelController {
 
 	private void toonResultaatVanRonde() {
 		// Alert met: info van alle spelers + resterende tegels in stapel + startkolom
-		Alert resultaatAlert = new Alert(Alert.AlertType.INFORMATION);
-		resultaatAlert.setTitle("Resultaat van de ronde");
-		resultaatAlert.setHeaderText(null);
-		resultaatAlert.setContentText("De ronde is afgelopen. Hier is het resultaat van de ronde:\n\n" + "Spelers: "
-				+ spelerInformatieContainer.getChildren() + "\n\n" + "Resterende tegels in de stapel: " + stapel.size()
-				+ "\n\n" + "Startkolom: " + startKolomTegels);
-		resultaatAlert.showAndWait();
+
+		showAlert("Resultaat van de ronde",
+				"De ronde is afgelopen.\n\n" + "Spelers: "
+						+ spelersDTO.stream().map(SpelerDTO::gebruikersnaam).collect(Collectors.toList()) + "\n\n"
+						+ "Resterende tegels in de stapel: " + stapel.size(),
+				AlertType.INFORMATION);
 
 	}
 
@@ -714,8 +663,14 @@ public class SpelController {
 
 	}
 
-	private int[] vraagTegelPositie(int index) {
-		while (true) { // Begin een oneindige lus die breekt wanneer geldige invoer wordt ontvangen
+	private int[] vraagTegelPositie(int index, boolean autoFill) {
+		// If autoFill is true, return predefined coordinates
+		if (autoFill) {
+			return new int[] { 0, 1 }; // Assuming GridPane indexes start at 0 and you want position 1,2
+		}
+
+		// Continue with user interaction if autoFill is false
+		while (true) {
 			TextInputDialog dialog = new TextInputDialog();
 			dialog.setTitle("Tegel Plaatsen");
 
@@ -729,34 +684,31 @@ public class SpelController {
 			if (result.isPresent()) {
 				try {
 					String[] parts = result.get().split(",");
-					if (parts.length != 2) { // Controleer of er precies twee delen zijn na het splitsen
-						showAlert("Ongeldige Input", "Voer alstublieft twee getallen in gescheiden door een komma.");
-						continue; // Ga terug naar het begin van de lus voor nieuwe invoer
+					if (parts.length != 2) {
+						showAlert("Ongeldige Input", "Voer alstublieft twee getallen in gescheiden door een komma.",
+								AlertType.WARNING);
+						continue; // Continue the loop for new input
 					}
-					int rij = Integer.parseInt(parts[0].trim()) - 1; // -1 omdat GridPane indexen bij 0 beginnen
+					int rij = Integer.parseInt(parts[0].trim()) - 1; // Adjust for 0-based index
 					int kolom = Integer.parseInt(parts[1].trim()) - 1;
-					// Voeg hier eventueel extra validatie toe om te controleren of de coördinaten
-					// binnen de verwachte grenzen vallen
 					return new int[] { rij, kolom };
 				} catch (NumberFormatException e) {
-					// Toon foutmelding als de input niet correct is
-					showAlert("Foutieve Input", "Voer alstublieft geldige getallen in gescheiden door een komma.");
+					showAlert("Foutieve Input", "Voer alstublieft geldige getallen in gescheiden door een komma.",
+							AlertType.WARNING);
 				}
 			} else {
-				// Gebruiker heeft het dialoogvenster geannuleerd; retourneer null of handel dit
-				// scenario op een andere manier af
+				// User canceled the dialog; handle this scenario, perhaps by returning null or a special value
 				return null;
 			}
 		}
 	}
 
-	private void showAlert(String title, String message) {
-		Alert alert = new Alert(Alert.AlertType.ERROR);
+	private void showAlert(String title, String message, AlertType alertType) {
+		Alert alert = new Alert(alertType);
 		alert.setTitle(title);
 		alert.setHeaderText(null);
 		alert.setContentText(message);
 		alert.showAndWait();
-
 	}
 
 	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, String richting, SpelerDTO spelerDTO) {
@@ -838,4 +790,22 @@ public class SpelController {
 	public void setSpelers(List<SpelerDTO> spelers) {
 		spelersDTO = spelers;
 	}
+
+	@FXML
+	private void handleSkipRondeBtnAction(ActionEvent event) {
+		// Simulate actions such as tile selections and placements
+		for (Node speler : spelers) {
+			int spelerIndex = spelers.indexOf(speler);
+			if (!startKolomTegels.isEmpty()) {
+				// Assuming you're skipping to the placement directly with default coordinates
+				int[] positie = vraagTegelPositie(spelerIndex, true); // Pass true for autoFill
+				if (positie != null) {
+					plaatsTegelInGrid(startKolomTegels.getFirst(), bepaalDoelGridPane(getSpelerKleur(spelerIndex)),
+							positie[0], positie[1]);
+				}
+			}
+		}
+		ronde();
+	}
+
 }
