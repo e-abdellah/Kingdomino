@@ -517,7 +517,6 @@ public class SpelController {
 	private Color getSpelerKleur(int spelerIndex) {
 		String kleurCode = spelerKleuren.get(spelerIndex).toLowerCase().trim();
 
-		//		System.out.println("getSpelerKleur" + spelerIndex);
 		switch (kleurCode) {
 		case "groen":
 			return Color.GREEN;
@@ -637,17 +636,10 @@ public class SpelController {
 
 	private void plaatsAlleGekozenTegels(Deque<Dominotegel> dominotegels, int spelerIndex) {
 		int index = 0;
-		//		for (Map.Entry<String, Dominotegel> entry : spelerTegel.entrySet()) {
-		//		for (Map.Entry<Integer, Dominotegel> entry : spelerTegelMap.entrySet()) {
-
-		//			if (dominotegels.isEmpty())
-		//				break; // Stop als er geen tegels meer zijn
-
-		//			String speler = entry.getKey();
 
 		Dominotegel tegel = dominotegels.pop(); // Haal de volgende tegel uit de deque
 
-		Color spelerKleur = getSpelerKleur(spelerIndex); // Methode om de kleur van de speler te krijgen
+		Color spelerKleur = getKleur(spelerIndex); // Methode om de kleur van de speler te krijgen
 		GridPane doelGridPane = bepaalDoelGridPane(spelerKleur);
 
 		if (doelGridPane != null) {
@@ -659,7 +651,26 @@ public class SpelController {
 			System.out.println("Geen geldige GridPane gevonden voor speler met kleur: " + spelerKleur);
 		}
 		index++;
-		//		}
+	}
+
+	private Color getKleur(int spelerIndex) {
+
+		Node gekozenSpelerNode = spelers.get(spelerIndex);
+		String spelerInfo = (String) gekozenSpelerNode.getUserData();
+		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
+
+		switch (kleurCode) {
+		case "groen":
+			return Color.GREEN;
+		case "geel":
+			return Color.YELLOW;
+		case "roos":
+			return Color.PINK;
+		case "blauw":
+			return Color.BLUE;
+		default:
+			return Color.WHITE;
+		}
 	}
 
 	private void toonResultaatVanRonde() {
@@ -696,7 +707,6 @@ public class SpelController {
 		if (isEersteClick && !isVolgendeRonde) {
 			int firstIndex = indexSpelerDTO.values().iterator().next();
 			clickOpTegel(null, true, firstIndex);
-			//			kiesTegel(null, true); // Initiate the first player's turn to choose a tegel
 			toonStartKolom(new ArrayList<>(startKolomTegels)); // Display the start column with tegels
 			isEersteClick = false;
 			startRondeButton.setDisable(true); // Deactiveer de knop

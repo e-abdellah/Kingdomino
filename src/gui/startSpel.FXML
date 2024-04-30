@@ -29,9 +29,14 @@
             <children>
                 <!-- Vertical Box for chosen tiles (start column) -->
                 <VBox fx:id="gekozenDominotegels" prefHeight="283.0" prefWidth="122.0" />
-
+                  <VBox fx:id="startKolom" prefHeight="283.0" prefWidth="130.0">
+                      <effect>
+                          <DropShadow />
+                      </effect>
+                  </VBox>
+      
                 <!-- HBox for end column which includes start column inside it -->
-                <VBox fx:id="eindkolom" layoutX="943.0" layoutY="317.0" prefHeight="283.0" prefWidth="260.0" />
+                <VBox fx:id="eindkolom" prefHeight="283.0" prefWidth="260.0" />
                 
                 <!-- Vertical Box for chosen tiles (end column) -->
                 <VBox fx:id="gekozenDominotegelsEindKolom" prefHeight="283.0" prefWidth="130.0">
@@ -39,11 +44,6 @@
                         <DropShadow />
                     </effect>
                 </VBox>
-                  <VBox fx:id="startKolom" prefHeight="283.0" prefWidth="130.0">
-                      <effect>
-                          <DropShadow />
-                      </effect>
-                  </VBox>
             </children>
         </HBox>
 		<GridPane fx:id="gridBlauw" maxHeight="405.0" maxWidth="405.0" minHeight="45.0" minWidth="45.0" prefHeight="405.0" prefWidth="405.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
