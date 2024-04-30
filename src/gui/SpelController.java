@@ -86,6 +86,7 @@ public class SpelController {
 	private List<Dominotegel> stapel;
 	private Deque<Dominotegel> startKolomTegels;
 	private Deque<Dominotegel> eindkolomTegels;
+	private Deque<Dominotegel> gekozenTegelsStartkolom = new ArrayDeque<>();
 	private List<Dominotegel> gekozenTegels = new ArrayList<>();
 	private List<String> spelerKleuren;
 	private Map<Integer, Dominotegel> spelerTegelMap = new HashMap<>();
@@ -270,22 +271,57 @@ public class SpelController {
 		volgendeRondeBtn.setDisable(true);
 
 		// Use the new method to transfer children
-		transferChildren(gekozenDominotegelsEindKolom, gekozenDominotegels);
+		transferChildren(gekozenDominotegelsEindKolom, gekozenDominotegels, gekozenTegelsStartkolom);
 
 		// Nieuwe tegels voor de ronde
 		speelRonde(true, eindkolomTegels); // Tegels voor de eindkolom
 		//		toonEindkolom(new ArrayList<>(eindkolomTegels));
 	}
 
-	private void transferChildren(VBox source, VBox target) {
-		// Create a new list from the children of the source to avoid ConcurrentModificationException
+	private void transferChildren(VBox source, VBox target, Deque<Dominotegel> targetTegels) {
 		List<Node> children = new ArrayList<>(source.getChildren());
 
 		// Clear the source to detach all children
 		source.getChildren().clear();
 
+		// Prepare to populate the Deque with Dominotegel objects
+		for (Node child : children) {
+			// Assuming each child Node has its associated Dominotegel stored as user data
+			Dominotegel tegel = (Dominotegel) child.getUserData();
+			if (tegel != null) {
+				targetTegels.offer(tegel);
+			}
+		}
+
 		// Add all detached children to the target
 		target.getChildren().addAll(children);
+	}
+
+	public void speelRonde(boolean toonBeideZijden, Deque<Dominotegel> list) {
+		for (int i = 0; i < aantalSpelers; i++) {
+			Dominotegel tegel = stapel.get(0); // Haal de bovenste tegel van de stapel
+			stapel.remove(0);
+			list.offer(tegel);
+		}
+		if (stapel.isEmpty()) {
+			showAlert("Einde spel", "Alle dominotegels zijn geplaats. \nKingdomino is beeindigt",
+					AlertType.INFORMATION);
+			return;
+		}
+
+		if (isVolgendeRonde && toonBeideZijden) {
+			huidigeSpelerIndex = 0;
+			toonEindkolom(new ArrayList<>(list));
+			return;
+		}
+
+		// Toon de geselecteerde tegels in de GUI
+		if (toonBeideZijden) {
+			toonStartKolom(new ArrayList<>(list)); // Toon tegels met beide zijden
+		} else {
+			toonStartKolom(new ArrayList<>()); // Toon tegels met beide zijden
+		}
+
 	}
 
 	public void toonTegels(Deque<Dominotegel> dominotegels) {
@@ -436,14 +472,24 @@ public class SpelController {
 
 		if (isStartKolom && isVolgendeRonde == false) {
 			startkolomSpelers.add(huidigeSpelerIndex);
-		} else {
+		} else if (isStartKolom == false && isVolgendeRonde == false) {
 			eindkolomSpelers.add(huidigeSpelerIndex);
-			//			if (isVolgendeRonde) {
-			//				plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
-			//				return;
-			//			}
 			plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
-			//			System.out.println("toonTegelEnKleur" + spelerIndex);
+		} else {
+			if (isVolgendeRonde && gekozenTegelsStartkolom.isEmpty()) {
+				// Extract Dominotegels from gekozenDominotegels and add to gekozenTegelsStartkolom
+				for (Node child : gekozenDominotegels.getChildren()) {
+					if (child instanceof HBox) {
+						Dominotegel newTegel = (Dominotegel) ((HBox) child).getUserData();
+						if (newTegel != null) {
+							gekozenTegelsStartkolom.offer(newTegel);
+						}
+					}
+				}
+				System.out.println("Filled gekozenTegelsStartkolom from gekozenDominotegels");
+				// Continue with placing all chosen tiles logic
+			}
+			plaatsAlleGekozenTegels(gekozenTegelsStartkolom, huidigeSpelerIndex);
 		}
 
 		// Creëer de HBox voor de tegel en de spelerkleur
@@ -451,6 +497,7 @@ public class SpelController {
 
 		// Voeg de HBox toe aan de juiste container
 		VBox container = isStartKolom ? gekozenDominotegels : gekozenDominotegelsEindKolom;
+		tegelEnKleurBox.setUserData(tegel);
 		container.getChildren().add(tegelEnKleurBox);
 	}
 
@@ -538,33 +585,6 @@ public class SpelController {
 		} else {
 			stapelRugzijdeImageView.setImage(null);
 		}
-	}
-
-	public void speelRonde(boolean toonBeideZijden, Deque<Dominotegel> list) {
-		for (int i = 0; i < aantalSpelers; i++) {
-			Dominotegel tegel = stapel.get(0); // Haal de bovenste tegel van de stapel
-			stapel.remove(0);
-			list.offer(tegel);
-		}
-		if (stapel.isEmpty()) {
-			showAlert("Einde spel", "Alle dominotegels zijn geplaats. \nSpel is beeindigt", AlertType.INFORMATION);
-			return;
-		}
-
-		if (isVolgendeRonde && toonBeideZijden) {
-			System.out.println("in de if");
-			huidigeSpelerIndex = 0;
-			toonEindkolom(new ArrayList<>(list));
-			return;
-		}
-
-		// Toon de geselecteerde tegels in de GUI
-		if (toonBeideZijden) {
-			toonStartKolom(new ArrayList<>(list)); // Toon tegels met beide zijden
-		} else {
-			toonStartKolom(new ArrayList<>()); // Toon tegels met beide zijden
-		}
-
 	}
 
 	private void plaatsAlleGekozenTegels(Deque<Dominotegel> dominotegels, int spelerIndex) {
