@@ -19,6 +19,9 @@ public class DomeinController {
 
 	private static DomeinController instance;
 
+	private List<SpelerDTO> spelers = new ArrayList<>();
+
+
 	public DomeinController() {
 		spelerRepository = new SpelerRepository();
 		spel = new Spel();
@@ -41,6 +44,7 @@ public class DomeinController {
 					speler.aantalGespeeld(), speler.koninkrijk(), speler.scores(), speler.isWinnaar()));
 		}
 		spelers = spelerDTOS;
+		System.out.println("in dc voeg" + spelers);
 	}
 
 	public List<SpelerDTO> getSpelers() {

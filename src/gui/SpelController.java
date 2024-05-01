@@ -361,7 +361,6 @@ public class SpelController {
 			ImageView voorkantImageView = new ImageView(voorkantImage);
 			voorkantImageView.setFitWidth(90);
 			voorkantImageView.setFitHeight(45);
-
 			// Toevoegen van een event handler voor muisklikken
 			voorkantImageView
 					.setOnMouseClicked(event -> clickOpTegel(tegel, true, indexSpelerDTO.get(spelersDTO.get(index)))
