@@ -475,12 +475,12 @@ public class SpelController {
 
 	private void toonTegelEnKleur(Dominotegel tegel, Color spelerKleur, boolean isStartKolom, int spelerIndex) {
 		//Maakt de image aan die de koningen toont op de gekozen tegels
-	    String afbeeldingPad = getKoningBestandsnaam(spelerKleur);
-	    Image kleurAfbeelding = new Image(getClass().getResourceAsStream(afbeeldingPad));
-	    ImageView kleurIndicator = new ImageView(kleurAfbeelding);
-	    kleurIndicator.setFitWidth(20);
-	    kleurIndicator.setFitHeight(20);
-
+	    String imagePath = getKoningBestandsnaam(spelerKleur);
+	    Image colorImage = new Image(getClass().getResourceAsStream(imagePath));
+	    ImageView kleurIndicator = new ImageView(colorImage);
+	    kleurIndicator.setFitWidth(30);  // Adjust size as needed
+	    kleurIndicator.setFitHeight(30);
+	    
 	    // Creëer de ImageView voor de tegel
 	    Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
 	    ImageView tegelImageView = new ImageView(tegelAfbeelding);
