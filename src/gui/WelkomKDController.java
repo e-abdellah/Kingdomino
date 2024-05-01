@@ -213,8 +213,20 @@ public class WelkomKDController {
 
 	@FXML
 	private void startSpel() {
-		// Voorbereiden van een dialoog om het aantal spelers te kiezen met vooraf
-		// ingestelde keuzes.
+		
+
+	    // Pakt alle spelers uit de database
+	    List<SpelerDTO> beschikbareSpelers = dc.geefOverzichtSpelers();
+	    
+	    // Gaat na of er minstens 3 spelers in de database zitten
+	    if (beschikbareSpelers.size() < 3) {
+	        showAlert("Insufficient Players", "There are less than three registered players. Please register more players before starting a game.");
+	        return; // Exit als er geen 3 of meer spelers in de database zitten
+	    }
+	    
+	    
+		
+		
 		List<String> keuzes = Arrays.asList("3", "4");
 		ChoiceDialog<String> aantalSpelersDialog = new ChoiceDialog<>("4", keuzes);
 		aantalSpelersDialog.setTitle(resourceBundle.getString("aantalSpelersDialogTitel"));
