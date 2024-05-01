@@ -474,47 +474,64 @@ public class SpelController {
 	}
 
 	private void toonTegelEnKleur(Dominotegel tegel, Color spelerKleur, boolean isStartKolom, int spelerIndex) {
-		// Creëer een nieuwe cirkel met de kleur van de huidige speler
-		Circle kleurIndicator = new Circle(10, spelerKleur);
-		kleurIndicator.setStroke(Color.BLACK);
+		//Maakt de image aan die de koningen toont op de gekozen tegels
+	    String afbeeldingPad = getKoningBestandsnaam(spelerKleur);
+	    Image kleurAfbeelding = new Image(getClass().getResourceAsStream(afbeeldingPad));
+	    ImageView kleurIndicator = new ImageView(kleurAfbeelding);
+	    kleurIndicator.setFitWidth(20);
+	    kleurIndicator.setFitHeight(20);
 
-		// Creëer de ImageView voor de tegel
-		Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
-		ImageView tegelImageView = new ImageView(tegelAfbeelding);
-		tegelImageView.setFitWidth(90);
-		tegelImageView.setFitHeight(45);
+	    // Creëer de ImageView voor de tegel
+	    Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
+	    ImageView tegelImageView = new ImageView(tegelAfbeelding);
+	    tegelImageView.setFitWidth(90);
+	    tegelImageView.setFitHeight(45);
 
-		if (isStartKolom && isVolgendeRonde == false) {
-			startkolomSpelers.add(huidigeSpelerIndex);
-		} else if (isStartKolom == false && isVolgendeRonde == false) {
-			eindkolomSpelers.add(huidigeSpelerIndex);
-			plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
-		} else {
-			if (isVolgendeRonde && gekozenTegelsStartkolom.isEmpty()) {
-				// Extract Dominotegels from gekozenDominotegels and add to
-				// gekozenTegelsStartkolom
-				for (Node child : gekozenDominotegels.getChildren()) {
-					if (child instanceof HBox) {
-						Dominotegel newTegel = (Dominotegel) ((HBox) child).getUserData();
-						if (newTegel != null) {
-							gekozenTegelsStartkolom.offer(newTegel);
-						}
-					}
-				}
-				System.out.println("Filled gekozenTegelsStartkolom from gekozenDominotegels");
-				// Continue with placing all chosen tiles logic
-			}
-			plaatsAlleGekozenTegels(gekozenTegelsStartkolom, huidigeSpelerIndex);
-		}
+	    if (isStartKolom && !isVolgendeRonde) {
+	        startkolomSpelers.add(huidigeSpelerIndex);
+	    } else if (!isStartKolom && !isVolgendeRonde) {
+	        eindkolomSpelers.add(huidigeSpelerIndex);
+	        plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
+	    } else {
+	        if (isVolgendeRonde && gekozenTegelsStartkolom.isEmpty()) {
+	            for (Node child : gekozenDominotegels.getChildren()) {
+	                if (child instanceof HBox) {
+	                    Dominotegel newTegel = (Dominotegel) ((HBox) child).getUserData();
+	                    if (newTegel != null) {
+	                        gekozenTegelsStartkolom.offer(newTegel);
+	                    }
+	                }
+	            }
+	            System.out.println("Filled gekozenTegelsStartkolom from gekozenDominotegels");
+	        }
+	        plaatsAlleGekozenTegels(gekozenTegelsStartkolom, huidigeSpelerIndex);
+	    }
 
-		// Creëer de HBox voor de tegel en de spelerkleur
-		HBox tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
+	    // Creëer de HBox voor de tegel en de spelerkleur
+	    HBox tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
 
-		// Voeg de HBox toe aan de juiste container
-		VBox container = isStartKolom ? gekozenDominotegels : gekozenDominotegelsEindKolom;
-		tegelEnKleurBox.setUserData(tegel);
-		container.getChildren().add(tegelEnKleurBox);
+	    // Voeg de HBox toe aan de juiste container
+	    VBox container = isStartKolom ? gekozenDominotegels : gekozenDominotegelsEindKolom;
+	    tegelEnKleurBox.setUserData(tegel);
+	    container.getChildren().add(tegelEnKleurBox);
 	}
+	
+	private String getKoningBestandsnaam(Color color) {
+	    if (color.equals(Color.GREEN)) {
+	        return "/imgs/kings_green.png";
+	    } else if (color.equals(Color.BLUE)) {
+	        return "/imgs/kings_blue.png";
+	    } else if (color.equals(Color.YELLOW)) {
+	        return "/imgs/kings_yellow.png";
+	    } else if (color.equals(Color.PINK)) {
+	        return "/imgs/kings_pink.png";
+	    } else {
+	        return "default_image.png"; 
+	        
+	    }
+	}
+	
+	
 
 	private Color getSpelerKleur(int spelerIndex) {
 		String kleurCode = spelerKleuren.get(spelerIndex).toLowerCase().trim();
@@ -532,6 +549,8 @@ public class SpelController {
 			return Color.WHITE;
 		}
 	}
+	
+	
 
 	private void updateSpelStatus(boolean isStartKolom) {
 

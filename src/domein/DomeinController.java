@@ -19,7 +19,6 @@ public class DomeinController {
 
 	private static DomeinController instance;
 
-	private List<SpelerDTO> spelers = new ArrayList<>();
 
 
 	public DomeinController() {
