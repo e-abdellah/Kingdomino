@@ -175,62 +175,75 @@ public class KingdominoApp {
 	}
 
 	private void toonOverzicht() {
+		// Haalt een lijst van SpelerDTO's op die de beschikbare spelers
+		// vertegenwoordigen.
 		List<SpelerDTO> beschikbaar = dc.geefOverzichtSpelers();
+
+		// Gebruikt resource bundle
 		System.out.printf("%n%s%n", messages.getString("toonOverzichtBeschikbareSpelers"));
+
+		// Loopt door de lijst van beschikbare spelers en drukt informatie over elke
+		// speler af.
 		for (int i = 0; i < beschikbaar.size(); i++) {
+			// Toont de gebruikersnaam en het geboortejaar van elke speler.
 			System.out.printf("%d. %s (%d)%n", i + 1, beschikbaar.get(i).gebruikersnaam(),
 					beschikbaar.get(i).geboortejaar());
 		}
 	}
 
-	//	// Methode om de resterende spelers af te drukken
-	//	public void drukResterendeSpelersAf(List<SpelerDTO> beschikbareSpelers, int gekozenSpelerIndex) {
-	//		System.out.println("Resterende spelers:");
-	//		for (int i = 0; i < beschikbareSpelers.size(); i++) {
-	//			if (i != gekozenSpelerIndex) {
-	//				System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
-	//						beschikbareSpelers.get(i).geboortejaar());
-	//			}
-	//		}
-	//	}
+	// // Methode om de resterende spelers af te drukken
+	// public void drukResterendeSpelersAf(List<SpelerDTO> beschikbareSpelers, int
+	// gekozenSpelerIndex) {
+	// System.out.println("Resterende spelers:");
+	// for (int i = 0; i < beschikbareSpelers.size(); i++) {
+	// if (i != gekozenSpelerIndex) {
+	// System.out.printf("%d. %s (%d)%n", i + 1,
+	// beschikbareSpelers.get(i).gebruikersnaam(),
+	// beschikbareSpelers.get(i).geboortejaar());
+	// }
+	// }
+	// }
 
 	private void kiesSpeler() {
-		// Controleer of het maximaal aantal spelers al is bereikt
+		// Controleert of het maximum aantal spelers al is bereikt
 		if (gekozenSpelers.size() >= 4) {
 			System.out.printf("%s", messages.getString("maximaalAantalSpelersBereikt"));
 			return;
 		}
 
+		// Toont een overzicht van beschikbare spelers
 		System.out.printf("%n%s%n", messages.getString("toonOverzichtBeschikbareSpelers"));
 		for (int i = 0; i < beschikbareSpelers.size(); i++) {
 			System.out.printf("%d. %s (%d)%n", i + 1, beschikbareSpelers.get(i).gebruikersnaam(),
 					beschikbareSpelers.get(i).geboortejaar());
 		}
 
-		int gekozenSpelerIndex;
+		// Laat de gebruiker een speler kiezen
+		int gekozenSpelerIndex = -1;
 		do {
 			try {
 				System.out.printf("%s", messages.getString("kiesSpelerViaNummer"));
-				gekozenSpelerIndex = sc.nextInt() - 1;
+				gekozenSpelerIndex = sc.nextInt() - 1; // Leest een index van de console
 			} catch (InputMismatchException e) {
 				System.out.printf("%s%n", messages.getString("ongeldigeMenuKeuzeGeenInteger"));
-				sc.nextLine(); // Consumeer de ongeldige invoer
-				gekozenSpelerIndex = -1; // Zet de index op een ongeldige waarde om de lus opnieuw te laten lopen
+				sc.nextLine(); // Verwerkt incorrecte invoer
+				gekozenSpelerIndex = -1;
 			}
 		} while (gekozenSpelerIndex < 0 || gekozenSpelerIndex >= beschikbareSpelers.size());
 
+		// Verkrijgt de gekozen speler en controleert of deze al geselecteerd is
 		SpelerDTO gekozenSpeler = beschikbareSpelers.get(gekozenSpelerIndex);
-
-		// Controleer of de speler al is gekozen
 		if (gekozenSpelers.contains(gekozenSpeler)) {
 			System.out.printf("%s%n", messages.getString("spelerAlGekozen"));
-			kiesSpeler(); // Vraag de gebruiker om een andere speler te kiezen
+			kiesSpeler();
 			return;
 		}
 
-		// Voeg de gekozen speler toe aan de lijst en verwijder deze uit de lijst van
-		// beschikbare spelers
+		// Voegt de gekozen speler toe aan de lijst van geselecteerde spelers
 		gekozenSpelers.add(gekozenSpeler);
+		beschikbareSpelers.remove(gekozenSpeler);
+
+		// Laat de gebruiker een kleur kiezen voor de gekozen speler
 		String gekozenKleur;
 		do {
 			System.out.printf("%s ", messages.getString("kiesKleurSpeler"));
@@ -238,28 +251,24 @@ public class KingdominoApp {
 				System.out.print(kleur + " ");
 			}
 			System.out.println();
-
 			gekozenKleur = sc.next().toUpperCase();
-
 			if (!kleuren.contains(gekozenKleur)) {
 				System.out.printf("%s%n", messages.getString("kiesKleurSpelerOngeldig"));
 			}
-
 		} while (!kleuren.contains(gekozenKleur));
 
+		// Bewaart de gekozen kleur voor de speler
 		spelerKleurMap.put(gekozenSpeler, gekozenKleur);
-		beschikbareSpelers.remove(gekozenSpeler);
-		kleuren.remove(gekozenKleur.toUpperCase());
+		kleuren.remove(gekozenKleur);
+
+		// Vraagt of de gebruiker nog een speler wil toevoegen
 		System.out.printf((messages.getString("spelerToegevoegd")) + "%n", gekozenSpeler.gebruikersnaam(),
 				gekozenKleur);
-
 		do {
 			System.out.printf("%s%n", messages.getString("nogEenSpelerToevoegenVraag"));
 			String keuze = sc.next();
-			// Checkt of het antwoord positief ("ja" of "yes" of negatief "nee" of "no" is,
-			// dit hangt af van de gekozen taal
 			if (isPositiefAntwoord(keuze)) {
-				kiesSpeler(); // Blijf spelers toevoegen indien gewenst
+				kiesSpeler();
 			} else if (isNegatiefAntwoord(keuze)) {
 				if (gekozenSpelers.size() < 3) {
 					System.out.printf("%n%s%n", messages.getString("nogNietGenoegSpelersOmSpelTeStarten"));
@@ -268,11 +277,9 @@ public class KingdominoApp {
 					break;
 				}
 			} else {
-				System.out.printf("%s%n", messages.getString("ongeldigeInvoer")); // Zorg dat je een bericht hebt voor
-				// ongeldige invoer
+				System.out.printf("%s%n", messages.getString("ongeldigeInvoer"));
 			}
 		} while (gekozenSpelers.size() < 3);
-
 	}
 
 	// Methodes om ervoor te zorgen dat je ja of nee kan antwoorden in de gekozen
@@ -308,35 +315,36 @@ public class KingdominoApp {
 		System.out.println();
 		do {
 			System.out.printf("Begin van ronde %d%n%n", beurtTeller++);
-			if(startKolom.isEmpty()) {
+			if (startKolom.isEmpty()) {
 				startKolom = dc.geefKolom();
 				toonKolom(startKolom);
 			}
-			if(spelerTegel.isEmpty())
+			if (spelerTegel.isEmpty())
 				spelerTegel = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
 
 			System.out.println("Startkolom:");
 			toonKolomMetSpeler(startKolom, spelerTegel);
 
-			//UC4
+			// UC4
 			System.out.println("Eindkolom:");
 			List<DominotegelDTO> eindKolom = dc.geefKolom();
 			toonKolom(eindKolom);
 
-			//volgorde bepalen voor keuze tegel eindkolom
+			// volgorde bepalen voor keuze tegel eindkolom
 			List<SpelerDTO> volgorde = getSpelerDTOS(spelerTegel);
 
 			Map<SpelerDTO, DominotegelDTO> eindSpelerTegel = keuzeKolom(startKolom, aantalSpelers, volgorde);
-			//toonKolomMetSpeler(eindKolom, eindTegelSpeler);
+			// toonKolomMetSpeler(eindKolom, eindTegelSpeler);
 
-			//UC5
+			// UC5
 			System.out.println(volgorde);
 			for (SpelerDTO speler : volgorde) {
 				int x = 0, y = 0;
 				int y2 = 0, x2 = 0;
 				String richting = "";
 				boolean kan;
-				System.out.printf("Speler %s met kleur %s leg je tegel%n", speler.gebruikersnaam(), spelerKleurMap.get(speler));
+				System.out.printf("Speler %s met kleur %s leg je tegel%n", speler.gebruikersnaam(),
+						spelerKleurMap.get(speler));
 				System.out.println("Geef de y en x coördinaat van het linkse vakje:");
 				do {
 					try {
@@ -346,7 +354,7 @@ public class KingdominoApp {
 						do {
 							x = sc.nextInt();
 						} while (x < 0 || x > 4);
-					}catch (InputMismatchException e){
+					} catch (InputMismatchException e) {
 						System.out.println("Ongeldige locatie");
 					}
 					System.out.println("Richting:");
@@ -354,29 +362,31 @@ public class KingdominoApp {
 					do {
 						richting = sc.next();
 						switch (richting) {
-							case "boven": // Up
-								pos.set(1, pos.get(1) - 1);
-								break;
-							case "onder": // Down
-								pos.set(1, pos.get(1) + 1);
-								break;
-							case "links": // Left
-								pos.set(0, pos.get(0) - 1);
-								break;
-							case "rechts": // Right
-								pos.set(0, pos.get(0) + 1);
-								break;
-							default:
-								System.out.println("Onbekende richting"); // Unknown direction
-								break;
+						case "boven": // Up
+							pos.set(1, pos.get(1) - 1);
+							break;
+						case "onder": // Down
+							pos.set(1, pos.get(1) + 1);
+							break;
+						case "links": // Left
+							pos.set(0, pos.get(0) - 1);
+							break;
+						case "rechts": // Right
+							pos.set(0, pos.get(0) + 1);
+							break;
+						default:
+							System.out.println("Onbekende richting"); // Unknown direction
+							break;
 						}
-					//pos naar x2 en y2 en omzetten naar spel
-					}while(!pos.equals(new ArrayList<>(List.of(y, x))));
+						// pos naar x2 en y2 en omzetten naar spel
+					} while (!pos.equals(new ArrayList<>(List.of(y, x))));
 					y2 = pos.get(1);
 					x2 = pos.get(0);
 					kan = dc.kanPlaatsen(spelerTegel.get(speler), y, x, y2, x2, speler);
-					if(!kan){System.out.println("Kies een vrije plaats binnen het speelveld");}
-				}while (!kan);
+					if (!kan) {
+						System.out.println("Kies een vrije plaats binnen het speelveld");
+					}
+				} while (!kan);
 				dc.plaatsTegel(spelerTegel.get(speler), y, x, y2, x2, speler);
 
 			}
@@ -385,94 +395,113 @@ public class KingdominoApp {
 			toonKoninkrijk();
 			dc.berekenEindeSpel();
 
-		}while (!dc.isEindeSpel());
+		} while (!dc.isEindeSpel());
 		dc.berekenWinnaars();
 		for (SpelerDTO speler : gekozenSpelers) {
 			if (speler.isWinnaar()) {
-				System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld",
-						speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld());
+				System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld", speler.gebruikersnaam(),
+						speler.aantalGewonnen(), speler.aantalGespeeld());
 			}
 		}
 
 	}
 
 	private List<SpelerDTO> getSpelerDTOS(Map<SpelerDTO, DominotegelDTO> spelerTegel) {
+		// Maakt een nieuwe lijst aan vanuit de reeds gekozen spelers.
 		List<SpelerDTO> volgorde = new ArrayList<>(gekozenSpelers);
-		volgorde.sort(new Comparator<SpelerDTO>() {
-            @Override
-            public int compare(SpelerDTO speler1, SpelerDTO speler2) {
-                DominotegelDTO tegel1 = spelerTegel.get(speler1);
-                DominotegelDTO tegel2 = spelerTegel.get(speler2);
 
-                // Assuming getGetal returns an int. Use Integer.compare for safety.
-                return Integer.compare(tegel1.getal(), tegel2.getal());
-            }
-        });
-		return volgorde;
+		// Sorteert de lijst van spelers gebaseerd op de waarde van hun bijbehorende
+		// dominotegel
+		volgorde.sort(new Comparator<SpelerDTO>() {
+			@Override
+			public int compare(SpelerDTO speler1, SpelerDTO speler2) {
+				DominotegelDTO tegel1 = spelerTegel.get(speler1); // Haalt de dominotegel op voor speler1.
+				DominotegelDTO tegel2 = spelerTegel.get(speler2); // Haalt de dominotegel op voor speler2.
+
+				// Vergelijkt de dominotegels op basis van hun getallen
+				return Integer.compare(tegel1.getal(), tegel2.getal());
+			}
+		});
+
+		return volgorde; // Retourneert de gesorteerde lijst van speler-DTO's.
 	}
 
-	private Map<SpelerDTO, DominotegelDTO> keuzeKolom(List<DominotegelDTO> startKolom,int aantalSpelers, List<SpelerDTO> volgordeSpelers){
+	private Map<SpelerDTO, DominotegelDTO> keuzeKolom(List<DominotegelDTO> startKolom, int aantalSpelers,
+			List<SpelerDTO> volgordeSpelers) {
+		// Lijst om bij te houden welke tegels nog beschikbaar zijn om gekozen te worden
 		List<Integer> tegels = new ArrayList<>();
 		for (int i = 1; i <= aantalSpelers; i++) {
 			tegels.add(i);
 		}
-		int i = 0;
+
+		int i = 0; // index voor de huidige speler in de volgorde
 		Map<SpelerDTO, DominotegelDTO> tegelSpeler = new HashMap<>();
+
 		do {
-			// Toont de huidige speler met zijn corresponderende kleur nadat ze geshuffled
-			// werden
+			// Haalt de huidige speler op en toont deze met de corresponderende kleur
 			SpelerDTO currentSpeler = volgordeSpelers.get(i);
 			String spelerNaam = currentSpeler.gebruikersnaam();
 			String spelerKleur = spelerKleurMap.get(currentSpeler);
 			System.out.printf("%nSpeler %s met kleur %s, welke tegel kies je? ", spelerNaam, spelerKleur);
 
-			int keuze;
+			int keuze; // De keuze van de speler voor de tegel
 			while (true) {
+				// Validatie dat de input een integer is
 				while (!sc.hasNextInt()) {
-					sc.next();
+					sc.next(); // Verwerpt ongeldige input
 					System.out.printf("Fout antwoord, kies een getal tussen 1 en %d dat vrij is:%n", aantalSpelers);
 				}
-				keuze = sc.nextInt();
+				keuze = sc.nextInt(); // Leest de keuze van de speler
+				// Controleert of de gekozen tegel geldig en beschikbaar is
 				if (keuze >= 1 && keuze <= aantalSpelers && tegels.contains(keuze)) {
 					break;
 				} else {
-					System.out.printf("Fout antwoord, kies een getal tussen 1 en %d dat vrij is:%n",
-							volgordeSpelers.size());
+					System.out.printf("Fout antwoord, kies een getal tussen 1 en %d dat vrij is:%n", aantalSpelers);
 				}
 			}
+			// Koppelt de gekozen tegel aan de speler in de map
 			tegelSpeler.put(volgordeSpelers.get(i), startKolom.get(keuze - 1));
 			i++;
-			Integer keuzeVerwijderen = keuze;
-			tegels.remove(keuzeVerwijderen);
-		} while (i < aantalSpelers);
-		return tegelSpeler;
+			Integer keuzeVerwijderen = keuze; // Bereidt voor om de gekozen tegel te verwijderen
+			tegels.remove(keuzeVerwijderen); // Verwijdert de gekozen tegel uit de lijst van beschikbare tegels
+		} while (i < aantalSpelers); // Herhaalt tot alle spelers hebben gekozen
 
+		return tegelSpeler; // Retourneert de map met spelers gekoppeld aan hun gekozen tegels
 	}
 
-	private void toonKoninkrijk(){
+	private void toonKoninkrijk() {
+		// Ga door elke speler in de lijst van gekozen spelers
 		for (SpelerDTO spelerDTO : gekozenSpelers) {
+			// Haal de gekozen kleur van de speler op
 			String gekozenKleur = spelerKleurMap.get(spelerDTO);
+			// Toon de gebruikersnaam van de speler en de gekozen kleur
 			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
+			// Haal het koninkrijk van de speler op
 			Vakje[][] koninkrijk = spelerDTO.koninkrijk();
+			// Loop door elk vakje in het koninkrijk
 			for (int x = 0; x < koninkrijk.length; x++) {
 				for (int y = 0; y < koninkrijk[x].length; y++) {
+					// Controleer of het huidige vakje de starttegel is
 					if (x == koninkrijk.length / 2 && y == koninkrijk.length / 2) {
+						// Toon "starttegel" op de positie van de starttegel
 						System.out.printf("%10s", "starttegel");
 					} else {
+						// Toon het landschap op het huidige vakje, als het vakje niet leeg is
 						System.out.printf("%10s", koninkrijk[x][y] != null ? koninkrijk[x][y].getLandschap() : "");
 					}
 				}
-				System.out.println();
+				System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
 			}
 		}
 	}
-	private void toonKolom(List<DominotegelDTO> kolom){
+
+	private void toonKolom(List<DominotegelDTO> kolom) {
 		for (DominotegelDTO tegel : kolom) {
 			System.out.println(tegel);
 		}
 	}
 
-	private void toonKolomMetSpeler(List<DominotegelDTO> kolom, Map<SpelerDTO, DominotegelDTO> spelerTegel){
+	private void toonKolomMetSpeler(List<DominotegelDTO> kolom, Map<SpelerDTO, DominotegelDTO> spelerTegel) {
 		for (SpelerDTO speler : gekozenSpelers) {
 			System.out.printf("%s %s%n", spelerTegel.get(speler).tegel(), spelerKleurMap.get(speler));
 		}

@@ -89,21 +89,32 @@ public class WelkomKDController {
 
 	@FXML
 	public void initialize() {
-		setLanguage("nl"); //Stelt de standaard taal in op Nederlands
-		//Past de achtergrond image aan op basis van de grootte vh scherm vd gebruiker
+		// Stelt de standaardtaal in op Nederlands.
+		setLanguage("nl");
+		// Dit zorgt ervoor dat de imageView automatisch van grootte verandert wanneer
+		// het root element van grootte verandert.
 		imageView.fitWidthProperty().bind(root.widthProperty());
-		imageView.fitHeightProperty().bind(root.heightProperty());
-		imageView.setPreserveRatio(false);
 
+		// Net als bij de breedte, zorgt dit ervoor dat de imageView van grootte
+		// verandert samen met het root element.
+		imageView.fitHeightProperty().bind(root.heightProperty());
+
+		// Om te zorgen dat het beeld de beschikbare ruimte volledig vult
+		imageView.setPreserveRatio(false);
 	}
 
 	public void setLanguage(String language) {
+		// Creëert een nieuwe Locale met de opgegeven taal.
 		Locale locale = new Locale(language);
-		beschikbareKleuren = dc.geefKleurenInTaal(locale);
-		resourceBundle = ResourceBundle.getBundle("utils.resource_bundle", locale);
-		// Laad de juiste ResourceBundle op basis van de geselecteerde taal
 
-		// Set de tekst van de knoppen vanuit de ResourceBundle
+		// Verkrijgt de vertaalde kleuren gebaseerd op de ingestelde locale.
+		beschikbareKleuren = dc.geefKleurenInTaal(locale);
+
+		// Laadt de ResourceBundle die taalspecifieke strings bevat voor UI-componenten.
+		resourceBundle = ResourceBundle.getBundle("utils.resource_bundle", locale);
+
+		// Update de tekst van de UI knoppen met de vertaalde waarden uit de
+		// ResourceBundle.
 		registreerBtn.setText(resourceBundle.getString("registreerButton"));
 		startBtn.setText(resourceBundle.getString("startButton"));
 		afsluitenBtn.setText(resourceBundle.getString("exitButton"));
@@ -202,15 +213,21 @@ public class WelkomKDController {
 
 	@FXML
 	private void startSpel() {
+		// Voorbereiden van een dialoog om het aantal spelers te kiezen met vooraf
+		// ingestelde keuzes.
 		List<String> keuzes = Arrays.asList("3", "4");
 		ChoiceDialog<String> aantalSpelersDialog = new ChoiceDialog<>("4", keuzes);
 		aantalSpelersDialog.setTitle(resourceBundle.getString("aantalSpelersDialogTitel"));
 		aantalSpelersDialog.setHeaderText(resourceBundle.getString("aantalSpelersDialogHeader"));
 		aantalSpelersDialog.setContentText(resourceBundle.getString("aantalSpelersDialogKiesAantalSpelers"));
 
+		// Toont de dialoog en wacht op gebruikersinput.
 		Optional<String> aantalSpelersResultaat = aantalSpelersDialog.showAndWait();
-		List<String> spelerEnKleurInformatie = new ArrayList<>(); // Verplaatst om zichtbaar te zijn buiten de lambda
 
+		// Een lijst om spelerinformatie te verzamelen.
+		List<String> spelerEnKleurInformatie = new ArrayList<>();
+
+		// Als de gebruiker een keuze maakt, verwerk dan de keuze.
 		aantalSpelersResultaat.ifPresent(aantalSpelers -> {
 			aantalSpelersGekozen = Integer.parseInt(aantalSpelers);
 			List<String> spelersNamen = dc.geefOverzichtSpelers().stream().map(SpelerDTO::gebruikersnaam)
@@ -218,17 +235,18 @@ public class WelkomKDController {
 			Map<String, SpelerDTO> spelerMap = dc.geefOverzichtSpelers().stream()
 					.collect(Collectors.toMap(SpelerDTO::gebruikersnaam, speler -> speler));
 
+			// Herhaalt voor elk van de gekozen aantal spelers.
 			for (int i = 1; i <= aantalSpelersGekozen; i++) {
 				ChoiceDialog<String> spelerKeuzeDialog = new ChoiceDialog<>(spelersNamen.get(0), spelersNamen);
 				spelerKeuzeDialog.setTitle(resourceBundle.getString("aantalSpelersDialogTitel"));
 				spelerKeuzeDialog.setHeaderText(resourceBundle.getString("spelersKeuzeDialogHeader") + i);
 				spelerKeuzeDialog.setContentText(resourceBundle.getString("spelersKeuzeDialogBeschikbareSpelers"));
 
+				// Toont de dialoog en wacht op gebruikersinput voor spelerkeuze.
 				Optional<String> spelerKeuzeResultaat = spelerKeuzeDialog.showAndWait();
 				spelerKeuzeResultaat.ifPresent(spelerNaam -> {
 					ChoiceDialog<String> kleurDialog = new ChoiceDialog<>(beschikbareKleuren.get(0),
 							beschikbareKleuren);
-					//spelers.add(dto);
 					if (spelerMap.containsKey(spelerNaam)) {
 						geselecteerdeSpelers.add(spelerMap.get(spelerNaam));
 					}
@@ -236,6 +254,7 @@ public class WelkomKDController {
 					kleurDialog.setHeaderText(resourceBundle.getString("kleurDialogHeader") + spelerNaam + ":");
 					kleurDialog.setContentText(resourceBundle.getString("kleurDialogToonBeschikbareKleuren"));
 
+					// Toont de dialoog en wacht op gebruikersinput voor kleurkeuze.
 					Optional<String> kleurResultaat = kleurDialog.showAndWait();
 					kleurResultaat.ifPresent(kleur -> {
 						spelerEnKleurInformatie.add(spelerNaam + " - " + kleur);
@@ -245,27 +264,38 @@ public class WelkomKDController {
 				});
 			}
 
+			// Voegt de geselecteerde spelers toe aan het spel.
 			dc.voegSpelersToe(geselecteerdeSpelers);
+
+			// Navigeert naar de spelinterface met de verzamelde speler- en kleurinformatie.
 			navigeerNaarSpel(spelerEnKleurInformatie);
 		});
 	}
 
 	private void navigeerNaarSpel(List<String> spelerEnKleurInformatie) {
 		try {
+			// Laadt de FXML voor de spelinterface.
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/startSpel.FXML"));
-			Parent root = loader.load();
+			Parent root = loader.load(); // Laadt de view componenten uit het FXML-bestand.
 
+			// Verkrijgt de controller gekoppeld aan het geladen FXML-bestand.
 			SpelController spelController = loader.getController();
+
+			// Stelt de nodige data in op de controller gebaseerd op de voorgaande
+			// gebruikersinteracties.
 			spelController.setAantalSpelers(aantalSpelersGekozen);
 			spelController.setSpelerInfo(spelerEnKleurInformatie);
-			spelController.initSpel(); // Dan initialiseer je het spel
 
+			// Roept een initialisatiemethode aan op de controller om het spel op te zetten.
+			spelController.initSpel();
+
+			// Creëert een nieuwe scene met de geladen root en zet deze op een nieuw Stage
 			Scene scene = new Scene(root);
 			Stage stage = new Stage();
 			stage.setScene(scene);
-			stage.setTitle("KingDomino");
-			stage.setMaximized(true);
-			stage.show();
+			stage.setTitle("KingDomino"); // Zet de titel van het venster.
+			stage.setMaximized(true); // Maximiseert het venster.
+			stage.show(); // Toont het venster op het scherm.
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -273,15 +303,23 @@ public class WelkomKDController {
 
 	@FXML
 	private void afsluiten(Event event) {
+		// Creëert een bevestigingsdialoog om de gebruiker te vragen of ze echt willen
+		// afsluiten.
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle(resourceBundle.getString("alertSetTitle"));
-		alert.setContentText(resourceBundle.getString("alertSetContextText"));
+		alert.setTitle(resourceBundle.getString("alertSetTitle")); // Stelt de titel van de dialoog in.
+		alert.setContentText(resourceBundle.getString("alertSetContextText")); // Stelt de inhoud van de boodschap in.
+
+		// Toont de dialoog en wacht op de reactie van de gebruiker.
 		Optional<ButtonType> result = alert.showAndWait();
+
+		// Controleert of de gebruiker op OK heeft geklikt.
 		if (result.get() == ButtonType.OK) {
+			// Print een logboodschap (optioneel) voordat de applicatie sluit.
 			System.out.println(resourceBundle.getString("kleurDialogToonBeschikbareKleuren"));
+
+			// Sluit het platform/application af.
 			Platform.exit();
-		} else // Cancel
-		{
+		} else { // Als de gebruiker kiest om te annuleren, wordt het event geconsumeerd.
 			event.consume();
 		}
 	}
