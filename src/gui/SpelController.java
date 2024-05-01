@@ -270,6 +270,8 @@ public class SpelController {
 		eindkolomSpelers.clear();
 		startRondeBtn.setDisable(false);
 		volgendeRondeBtn.setDisable(true);
+		
+		
 
 		// Use the new method to transfer children
 		transferChildren(gekozenDominotegelsEindKolom, gekozenDominotegels, gekozenTegelsStartkolom);
@@ -277,6 +279,8 @@ public class SpelController {
 		// Nieuwe tegels voor de ronde
 		speelRonde(true, eindkolomTegels); // Tegels voor de eindkolom
 		// toonEindkolom(new ArrayList<>(eindkolomTegels));
+		
+		toonRugzijdeStapel();
 	}
 
 	private void transferChildren(VBox source, VBox target, Deque<Dominotegel> targetTegels) {
@@ -795,6 +799,7 @@ public class SpelController {
 	@FXML
 	private void handleVolgendeRondeBtn() {
 		isVolgendeRonde = true;
+		
 		ronde();
 
 		// Maak een nieuw Alert-venster
