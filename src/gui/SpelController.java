@@ -351,7 +351,7 @@ public class SpelController {
 	public void toonStartKolom(List<Dominotegel> dominotegels) {
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
-		VBox vboxVoorkant = new VBox(5); // Een beetje spacing voor esthetiek
+		VBox vboxVoorkant = new VBox(20); // Een beetje spacing voor esthetiek
 		// VBox vboxAchterkant = new VBox(5);
 
 		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
@@ -382,7 +382,7 @@ public class SpelController {
 
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
-		VBox vboxVoorkant = new VBox(5); // Een beetje spacing voor esthetiek
+		VBox vboxVoorkant = new VBox(20); // Een beetje spacing voor esthetiek
 		// VBox vboxAchterkant = new VBox(5);
 
 		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
