@@ -171,6 +171,7 @@ public class SpelController {
 	private void initialize() {
 		imageView.fitWidthProperty().bind(root.widthProperty());
 		imageView.fitHeightProperty().bind(root.heightProperty());
+		
 
 	}
 
@@ -378,6 +379,7 @@ public class SpelController {
 	}
 
 	public void toonEindkolom(List<Dominotegel> dominotegels) {
+
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
 		VBox vboxVoorkant = new VBox(5); // Een beetje spacing voor esthetiek

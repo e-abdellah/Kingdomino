@@ -1,0 +1,5 @@
+.vbox-style {
+    -fx-padding: 50 0 50 0; /* top right bottom left */
+    -fx-spacing: 10;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.8) , 10, 0.0 , 0 , 2 );
+}
