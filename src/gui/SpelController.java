@@ -379,7 +379,12 @@ public class SpelController {
 	}
 
 	public void toonEindkolom(List<Dominotegel> dominotegels) {
+<<<<<<< Updated upstream
 
+=======
+        Collections.sort(spelers, Comparator.comparing(speler -> spelerTegel.get(speler.getUserData().toString()).getGetal()));
+        
+>>>>>>> Stashed changes
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
 		VBox vboxVoorkant = new VBox(20); // Een beetje spacing voor esthetiek
@@ -423,6 +428,7 @@ public class SpelController {
 		// Haal de spelerNode op uit de geshuffelde lijst
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
+		gekozenSpelerNode.getUserData().toString().split("-");
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
 
@@ -473,6 +479,7 @@ public class SpelController {
 	private void voegGekozenTegelToe(Dominotegel tegel) {
 		gekozenTegels.add(tegel);
 		spelerTegelMap.put(huidigeSpelerIndex, tegel);
+		System.out.println(spelerTegelMap);
 	}
 
 	private void toonTegelEnKleur(Dominotegel tegel, Color spelerKleur, boolean isStartKolom, int spelerIndex) {
