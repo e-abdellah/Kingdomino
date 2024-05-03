@@ -182,8 +182,6 @@
       		<Button fx:id="skipRondeBtn" onAction="#handleSkipRondeBtnAction" text="Skip" />
 				<Button fx:id="startRondeBtn" onAction="#handleStartRondeBtnAction" text="Kies Tegel" />
 				<Button fx:id="volgendeRondeBtn" onAction="#handleVolgendeRondeBtn" text="Volgende Ronde" />
-				<Button fx:id="rotateBtn" text="Rotate" />
-<!-- 				<Button fx:id="acceptBtn" onAction="#rotateImageView" text="accept" /> -->
 			</children>
 		</HBox>
 		<Rectangle arcHeight="20.0" arcWidth="20.0" height="1066.0" layoutX="1713.0" layoutY="10.0" opacity="0.17" stroke="BLACK" strokeType="INSIDE" width="200.0" AnchorPane.bottomAnchor="59.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
