@@ -890,6 +890,7 @@ public class SpelController {
 			eentegel = spelerTegel.get(spelerInfo); // spelerTegel -> tegels van startkolom
 		}
 
+		// Plaats de tegel
 		Image tegelAfbeelding = new Image(eentegel.getVoorkantFotoPad());
 		ImageView tegelImageView = new ImageView(tegelAfbeelding);
 		tegelImageView.setFitWidth(90); // Aangepast voor jouw grid grootte
@@ -949,20 +950,18 @@ public class SpelController {
 
 	@FXML
 	private void handleSkipRondeBtnAction(ActionEvent event) {
-		int[] startPosition = { 1, 2 }; // Define the starting position (1,2 becomes 0,1 in 0-index based system)
-		int playerIndex = 0; // Start with playerIndex at 0
-
-		// Simulate actions such as tile selections and placements
-		for (Node speler : spelers) {
-			//			if (!startKolomTegels.isEmpty()) {
-			//				//int[] positie = vraagTegelPositie(playerIndex, true, startPosition); // Pass true for autoFill
-			//				if (positie != null) {
-			//					plaatsTegelInGrid(startKolomTegels.pop(), bepaalDoelGridPane(getSpelerKleur(playerIndex)),
-			//							positie[0], positie[1]);
-			//				}
-			//			}
-			playerIndex++; // Increment index for each player
-		}
+		//		int[] startPositie = { 0, 0 }; // Startpositie in 0-index formaat
+		//
+		//		for (Node speler : spelers) {
+		//			if (!startKolomTegels.isEmpty()) {
+		//				// Verkrijg de juiste GridPane gebaseerd op de kleur van de speler
+		//				Color spelerKleur = getSpelerKleur(spelers.indexOf(speler)); // Verondersteld dat spelers een geordende lijst is
+		//				GridPane doelGridPane = bepaalDoelGridPane(spelerKleur);
+		//
+		//				// Plaats de tegel in de grid op de startpositie
+		//				plaatsTegelInGrid(startKolomTegels.pop(), doelGridPane, startPositie[0], startPositie[1]);
+		//			}
+		//		}
 		ronde(); // Advance to the next round
 	}
 

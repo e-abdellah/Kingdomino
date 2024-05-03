@@ -179,7 +179,7 @@
 		<HBox alignment="CENTER" layoutX="-190.0" layoutY="1023.0" spacing="40.0" AnchorPane.bottomAnchor="81.40000000000009" AnchorPane.leftAnchor="-190.0" AnchorPane.rightAnchor="190.0">
 			<children>
       
-      		<Button fx:id="skipRondeBtn" onAction="#handleSkipRondeBtnAction" text="Skip to End of Round" />
+      		<Button fx:id="skipRondeBtn" onAction="#handleSkipRondeBtnAction" text="Skip" />
 				<Button fx:id="startRondeBtn" onAction="#handleStartRondeBtnAction" text="Kies Tegel" />
 				<Button fx:id="volgendeRondeBtn" onAction="#handleVolgendeRondeBtn" text="Volgende Ronde" />
 				<Button fx:id="rotateBtn" text="Rotate" />
