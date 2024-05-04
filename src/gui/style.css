@@ -1,5 +1,33 @@
 .vbox-style {
     -fx-padding: 50 0 50 0; /* top right bottom left */
-    -fx-spacing: 10;
-    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.8) , 10, 0.0 , 0 , 2 );
+    -fx-spacing: 20;
+    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.8), 10, 0.0, 0, 2);
+}
+
+.grid-blue {
+    -fx-border-color: blue;
+    -fx-border-width: 3px;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px; 
+}
+
+.grid-green {
+    -fx-border-color: green;
+    -fx-border-width: 3px;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px; 
+}
+
+.grid-yellow {
+    -fx-border-color: yellow;
+    -fx-border-width: 3px;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px; 
+}
+
+.grid-pink {
+    -fx-border-color: pink;
+    -fx-border-width: 3px;
+    -fx-border-style: solid;
+    -fx-border-radius: 5px; 
 }
