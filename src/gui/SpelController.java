@@ -180,6 +180,38 @@ public class SpelController {
 		root.getStylesheets().add(getClass().getResource("/gui/style.css").toExternalForm());
 
 	}
+	
+	private void updateGridBorderKleur(String gridBorderSpelerKleur) {
+	    
+	    gridGroen.getStyleClass().clear();
+	    gridBlauw.getStyleClass().clear();
+	    gridGeel.getStyleClass().clear();
+	    gridRoos.getStyleClass().clear();
+
+	   
+	    gridGroen.getStyleClass().add("grid-inactive");
+	    gridBlauw.getStyleClass().add("grid-inactive");
+	    gridGeel.getStyleClass().add("grid-inactive");
+	    gridRoos.getStyleClass().add("grid-inactive");
+
+
+	    switch (gridBorderSpelerKleur) {
+	        case "groen":
+	            gridGroen.getStyleClass().add("grid-green");
+	            break;
+	        case "blauw":
+	            gridBlauw.getStyleClass().add("grid-blue");
+	            break;
+	        case "geel":
+	            gridGeel.getStyleClass().add("grid-yellow");
+	            break;
+	        case "roos":
+	            gridRoos.getStyleClass().add("grid-pink");
+	            break;
+	        default:
+	            break; 
+	    }
+	}
 
 	private void shuffleSpelers() {
 		// Sla de huidige volgorde op in de 'spelers' lijst
@@ -435,6 +467,8 @@ public class SpelController {
 		gekozenSpelerNode.getUserData().toString().split("-");
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
+		
+		updateGridBorderKleur(kleurCode);
 
 		if (!isStartKolom) {
 			showAlert("Dominotegel plaatsten",
@@ -674,6 +708,9 @@ public class SpelController {
 		String spelerNaam = spelerInfo.split("-")[0].trim();
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
+	    updateGridBorderKleur(kleurCode);
+		
+
 
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Kies een Tegel");
@@ -686,6 +723,7 @@ public class SpelController {
 					+ "\nKies één van de beschikbare tegels uit de startkolom.");
 		}
 		alert.showAndWait();
+		
 	}
 
 	private void resetSpelersLijst() {
@@ -809,6 +847,13 @@ public class SpelController {
 			System.out.println("Er zijn geen spelers.");
 			return;
 		}
+		
+	    if (!spelers.isEmpty()) {
+	        Node eersteSpelerKleur = spelers.get(0); // Assuming the first player starts
+	        String eersteSpelerInfo = (String) eersteSpelerKleur.getUserData();
+	        String firstPlayerColor = eersteSpelerInfo.split("-")[1].trim().toLowerCase();
+	        updateGridBorderKleur(firstPlayerColor);
+	    }
 
 		// If it's the first click and not yet the next round, begin the first selection
 		// phase
@@ -818,6 +863,7 @@ public class SpelController {
 			toonStartKolom(new ArrayList<>(startKolomTegels)); // Display the start column with tegels
 			isEersteClick = false;
 			startRondeButton.setDisable(true); // Deactiveer de knop
+			
 		}
 
 	}
@@ -918,6 +964,8 @@ public class SpelController {
 		isVolgendeRonde = true;
 
 		ronde();
+		
+		updateGridBorderKleur("");
 
 		// Maak een nieuw Alert-venster
 		Alert alert = new Alert(AlertType.INFORMATION);

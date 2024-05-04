@@ -4,6 +4,15 @@
     -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.8), 10, 0.0, 0, 2);
 }
 
+.grid-inactive {
+    -fx-border-color: gray;
+     -fx-border-width: 3px;
+    -fx-border-style: solid;
+    -fx-padding: 5;
+    -fx-border-radius: 5px; 
+    -fx-border-insets: -1 5 0 -5 /* top right bottom left */
+}
+
 .grid-blue {
     -fx-border-color: blue;
     -fx-border-width: 3px;
