@@ -501,20 +501,28 @@ public class SpelController {
 		tegelImageView.setFitWidth(90);
 		tegelImageView.setFitHeight(45);
 
-		System.out.println("in toonTegelEnKleur:" + eindkolomTegelNietGeklikkd);
-		// Stel klik-handler in voor de tegel
-		if (!eindkolomTegelNietGeklikkd) {
-			tegelImageView.setOnMouseClicked(event -> {
-				rotate(tegel);
-			});
-		}
-
 		//Maakt de image aan die de koningen toont op de gekozen tegels
 		String imagePath = getKoningBestandsnaam(spelerKleur);
 		Image colorImage = new Image(getClass().getResourceAsStream(imagePath));
 		ImageView kleurIndicator = new ImageView(colorImage);
 		kleurIndicator.setFitWidth(30); // Adjust size as needed
 		kleurIndicator.setFitHeight(30);
+
+		VBox container;
+
+		if (isStartKolom) {
+			container = gekozenDominotegels;
+		} else
+			container = gekozenDominotegelsEindKolom;
+
+		// Stel klik-handler in voor de tegel
+		if (!isStartKolom && !eindkolomTegelNietGeklikkd) {
+			container.getChildren().remove(tegelEnKleurBox);
+			tegelImageView.setOnMouseClicked(event -> {
+				rotate(tegel);
+			});
+
+		}
 
 		// Creëer de ImageView voor de tegel
 
@@ -524,6 +532,7 @@ public class SpelController {
 			eindkolomSpelers.add(huidigeSpelerIndex);
 			//			rotate(tegel);
 			plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex);
+
 		} else {
 			if (isVolgendeRonde && gekozenTegelsStartkolom.isEmpty()) {
 				for (Node child : gekozenDominotegels.getChildren()) {
@@ -539,16 +548,11 @@ public class SpelController {
 		}
 
 		// Creëer de HBox voor de tegel en de spelerkleur
-		HBox tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
+		tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
+		System.out.println(tegelEnKleurBox);
 
 		// Voeg de HBox toe aan de juiste container
 		//		VBox container = isStartKolom ? gekozenDominotegels : gekozenDominotegelsEindKolom;
-		VBox container;
-
-		if (isStartKolom) {
-			container = gekozenDominotegels;
-		} else
-			container = gekozenDominotegelsEindKolom;
 
 		tegelEnKleurBox.setUserData(tegel);
 		container.getChildren().add(tegelEnKleurBox);
@@ -615,22 +619,22 @@ public class SpelController {
 		}
 	}
 
-	private Color getSpelerKleur(int spelerIndex) {
-		String kleurCode = spelerKleuren.get(spelerIndex).toLowerCase().trim();
-
-		switch (kleurCode) {
-		case "groen":
-			return Color.GREEN;
-		case "geel":
-			return Color.YELLOW;
-		case "roos":
-			return Color.PINK;
-		case "blauw":
-			return Color.BLUE;
-		default:
-			return Color.WHITE;
-		}
-	}
+	//	private Color getSpelerKleur(int spelerIndex) {
+	//		String kleurCode = spelerKleuren.get(spelerIndex).toLowerCase().trim();
+	//
+	//		switch (kleurCode) {
+	//		case "groen":
+	//			return Color.GREEN;
+	//		case "geel":
+	//			return Color.YELLOW;
+	//		case "roos":
+	//			return Color.PINK;
+	//		case "blauw":
+	//			return Color.BLUE;
+	//		default:
+	//			return Color.WHITE;
+	//		}
+	//	}
 
 	private void updateSpelStatus(boolean isStartKolom) {
 
@@ -817,43 +821,6 @@ public class SpelController {
 
 	}
 
-	//	private int[] vraagTegelPositie() {
-	//		while (true) {
-	//			TextInputDialog dialog = new TextInputDialog();
-	//			dialog.setTitle("Tegel Plaatsen");
-	//			Node gekozenSpeler = spelers.get(huidigeSpelerIndex);
-	//			String spelerInfo = (String) gekozenSpeler.getUserData();
-	//			dialog.setHeaderText("Speler " + spelerInfo
-	//					+ " Geef de rij en kolom in waar je de tegel wilt plaatsen, gescheiden door een komma (bijv. 1,2)");
-	//
-	//			Optional<String> result = dialog.showAndWait();
-	//
-	//			if (result.isPresent()) {
-	//				String[] parts = result.get().split(",");
-	//				if (parts.length != 2) {
-	//					showAlert("Ongeldige Input", "Voer alstublieft twee getallen in gescheiden door een komma.",
-	//							AlertType.WARNING);
-	//					continue; // Blijf de dialoog tonen als de input ongeldig is
-	//				}
-	//				try {
-	//					int rij = Integer.parseInt(parts[0].trim()) - 1; // Aanpassen naar 0-index
-	//					int kolom = Integer.parseInt(parts[1].trim()) - 1; // Aanpassen naar 0-index
-	//					if (rij >= 0 && kolom >= 0) { // Eenvoudige validatie om negatieve indices te voorkomen
-	//						return new int[] { rij, kolom };
-	//					} else {
-	//						showAlert("Onmogelijke Positie", "Voer positieve getallen in.", AlertType.WARNING);
-	//					}
-	//				} catch (NumberFormatException e) {
-	//					showAlert("Foutieve Input", "Voer alstublieft geldige getallen in gescheiden door een komma.",
-	//							AlertType.WARNING);
-	//				}
-	//			} else {
-	//				// Gebruiker heeft de interactie afgebroken, bijv. door op 'Cancel' te klikken
-	//				return null; // Geen positie verkregen, mogelijk terugkeer nodig naar een veilige staat in het spel
-	//			}
-	//		}
-	//	}
-
 	private void showAlert(String title, String message, AlertType alertType) {
 		Alert alert = new Alert(alertType);
 		alert.setTitle(title);
@@ -877,6 +844,7 @@ public class SpelController {
 		// Ophalen van de juiste Dominotegel en bijbehorende ImageView
 		Dominotegel eentegel = tegel;
 		ImageView tegelImageView = null;
+		Color koning = null;
 
 		if (!hoeken.isEmpty() && spelerTegel.containsKey(spelerInfo)
 				&& kleurCode.equals(spelerInfo.split("-")[1].trim().toLowerCase())) {
@@ -919,6 +887,9 @@ public class SpelController {
 			System.out.println("Geen geldige tegel of ImageView gevonden voor speler: " + spelerInfo);
 		}
 
+		System.out.println(tegelEnKleurBox);
+		tegelEnKleurBox.getChildren().clear();
+		gekozenDominotegels.getChildren().remove(tegelEnKleurBox);
 		// Aanroepen van een methode die aangeeft dat de tegel is gekozen
 		kiesTegel(tegel, false);
 	}
