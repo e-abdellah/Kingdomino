@@ -729,46 +729,37 @@ public class SpelController {
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 
-		// Ophalen van de juiste Dominotegel en bijbehorende ImageView
-		Dominotegel eentegel = tegel;
-		ImageView tegelImageView = tegelViews.get(eentegel);
-		ImageView newTegelImageView = null;
+		ImageView tegelImageView = null;
 
 		if (!hoeken.isEmpty() && spelerTegel.containsKey(spelerInfo)
 				&& kleurCode.equals(spelerInfo.split("-")[1].trim().toLowerCase())) {
-			eentegel = tegelEnHoek.get(hoeken.get(0)); // Aanname: tegelEnHoek mapt index naar tegel
-			//			tegelImageView = tegelViews.get(eentegel); // Aanname: tegelViews mapt Dominotegel naar ImageView
-			newTegelImageView = new ImageView(tegelImageView.getImage());
+			tegel = tegelEnHoek.get(hoeken.get(0));
+			tegelImageView = tegelViews.get(tegel);
 			hoeken.clear();
-		}
-
-		else if (hoeken.isEmpty()) {
+		} else if (hoeken.isEmpty()) {
 			for (Map.Entry<String, Dominotegel> entry : spelerTegel.entrySet()) {
-
-				String kleur = entry.getKey();
-				kleur = kleur.split("-")[1].trim().toLowerCase();
+				String kleur = entry.getKey().split("-")[1].trim().toLowerCase();
 				Dominotegel t = entry.getValue();
 				if (kleur.equals(kleurCode)) {
-					eentegel = t;
-					newTegelImageView = tegelViews.get(eentegel);
+					tegel = t;
+					tegelImageView = tegelViews.get(tegel);
 				}
 			}
 		}
 
-		if (newTegelImageView != null) {
-			// Stel de afbeelding en grootte in van de ImageView
-			newTegelImageView = new ImageView(tegelImageView.getImage());
-			newTegelImageView.setFitWidth(90);
-			newTegelImageView.setFitHeight(45);
+		if (tegel != null && tegelImageView != null) {
+			// Maak een kopie van de ImageView
+			ImageView newTegelImg = new ImageView();
+			newTegelImg.setImage(tegelImageView.getImage());
+			newTegelImg.setFitWidth(tegelImageView.getFitWidth());
+			newTegelImg.setFitHeight(tegelImageView.getFitHeight());
 
-			// Pas de opgeslagen rotatie toe
+			// Pas de opgeslagen rotatie toe op de kopie
 			Integer hoek = tegelRotaties.get(tegelImageView);
 			if (hoek != null) {
-				newTegelImageView.setRotate(hoek);
+				newTegelImg.setRotate(hoek);
 			}
-
-			// Voeg de ImageView toe aan de GridPane
-			doelGridPane.add(newTegelImageView, kolom, rij);
+			doelGridPane.add(newTegelImg, kolom, rij);
 			System.out.println("Tegel geplaatst op rij: " + rij + ", kolom: " + kolom);
 		} else {
 			System.out.println("Geen geldige tegel of ImageView gevonden voor speler: " + spelerInfo);
