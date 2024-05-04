@@ -177,6 +177,7 @@ public class SpelController {
 	private void initialize() {
 		imageView.fitWidthProperty().bind(root.widthProperty());
 		imageView.fitHeightProperty().bind(root.heightProperty());
+		root.getStylesheets().add(getClass().getResource("/gui/style.css").toExternalForm());
 
 	}
 
