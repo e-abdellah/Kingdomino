@@ -322,7 +322,27 @@ public class Speler {
 		return copy;
 	}
 
-	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int y2, int x2) {
+	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int hoek) {
+
+		int dx = 0, dy = 0;
+		switch (hoek) {
+		case 90:
+			dy = -1;
+			break;
+		case 270:
+			dy = 1;
+			break;
+		case 180:
+			dx = -1;
+			break;
+		default:
+			dx = 1;
+			break;
+		}
+
+		// bereken voor 2e vakje
+		int x2 = x + dx;
+		int y2 = y + dy;
 
 		// Controleert of de voorgestelde x- en y-coördinaten binnen de grenzen van het
 		// 'koninkrijk' vallen.

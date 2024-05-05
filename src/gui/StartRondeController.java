@@ -21,7 +21,7 @@ public class StartRondeController {
 	public StartRondeController() {
 		dc = new DomeinController();
 		spelController = new SpelController();
-		stapel = spelController.getStapel();
+		//		stapel = spelController.getStapel();
 	}
 
 	public void initSpel() {
@@ -29,7 +29,7 @@ public class StartRondeController {
 	}
 
 	public void toonDominotegels(List<Dominotegel> dominotegels) {
-		spelController.toonStartKolom(dominotegels);
+		//		spelController.toonStartKolom(dominotegels);
 	}
 
 }

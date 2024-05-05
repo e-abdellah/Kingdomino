@@ -7,10 +7,17 @@ import static domein.Landschap.MIJN;
 import static domein.Landschap.WATER;
 import static domein.Landschap.ZAND;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import dto.DominotegelDTO;
 import dto.SpelerDTO;
 
 public class Spel {
@@ -262,13 +269,33 @@ public class Spel {
 		}
 	}
 
-	public void plaatsTegel(Dominotegel tegel, int y, int x, int y2, int x2, SpelerDTO spelerDTO) {
+	public void plaatsTegel(Dominotegel tegel, int y, int x, int hoek, SpelerDTO spelerDTO) {
 		// Creëert een nieuwe lijst om de vakjes van de dominotegel in op te slaan.
 		List<Vakje> vakjes = new ArrayList<>();
 
 		// Stelt de x- en y-coördinaten in voor het eerste vakje van de dominotegel.
 		tegel.getVakje1().setX(x);
 		tegel.getVakje1().setY(y);
+
+		int dx = 0, dy = 0;
+		switch (hoek) {
+		case 90:
+			dy = -1;
+			break;
+		case 270:
+			dy = 1;
+			break;
+		case 180:
+			dx = -1;
+			break;
+		default:
+			dx = 1;
+			break;
+		}
+
+		// bereken voor 2e vakje
+		int x2 = x + dx;
+		int y2 = y + dy;
 
 		// Stelt de x- en y-coördinaten in voor het tweede vakje van de dominotegel.
 		tegel.getVakje2().setX(x2);
@@ -290,7 +317,7 @@ public class Spel {
 		}
 	}
 
-	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int y2, int x2, SpelerDTO spelerDTO) {
+	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int hoek, SpelerDTO spelerDTO) {
 		// Initieel wordt 'kan' ingesteld op false, wat betekent dat de tegel niet
 		// geplaatst kan worden
 		boolean kan = false;
@@ -302,7 +329,7 @@ public class Spel {
 			if (Objects.equals(speler.getGebruikersnaam(), spelerDTO.gebruikersnaam())) {
 				// Roept de methode 'kanPlaatsen' aan op de gevonden speler, die bepaalt of de
 				// tegel geplaatst kan worden op de aangegeven posities.
-				kan = speler.kanPlaatsen(tegel, y, x, y2, x2);
+				kan = speler.kanPlaatsen(tegel, y, x, hoek);
 			}
 		}
 

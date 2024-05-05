@@ -76,9 +76,17 @@ public class DomeinController {
 		return isEindeSpel;
 	}
 
-	public List<Dominotegel> dominotegels(int aantalSpelers) {
+	public List<DominotegelDTO> dominotegels(int aantalSpelers) {
 		spel.schudDominotegels(aantalSpelers);
-		return spel.getDominotegels();
+
+		List<Dominotegel> list = spel.getDominotegels();
+		List<DominotegelDTO> dtos = new ArrayList<>();
+
+		for (Dominotegel d : list) {
+			dtos.add(new DominotegelDTO(d.getVakje1(), d.getVakje2(), d.getGetal(), d.getKroon(), d.toString(),
+					d.getVoorkantFotoPad(), d.getAchterkantFotoPad()));
+		}
+		return dtos;
 	}
 
 	public List<DominotegelDTO> geefDominotegels(int aantalSpelers) {
@@ -93,12 +101,12 @@ public class DomeinController {
 		List<Dominotegel> tegels = spel.getDominotegels();
 
 		// Loopt door elke dominotegel in de lijst 'tegels'.
-		for (Dominotegel dominotegel : tegels) {
+		for (Dominotegel d : tegels) {
 			// Creëert een nieuwe DominotegelDTO object voor elke dominotegel, inclusief
 			// diverse attributen van de tegel,
 			// en voegt deze toe aan de lijst 'dominotegelDTOS'.
-			dominotegelDTOS.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(),
-					dominotegel.getGetal(), dominotegel.getKroon(), dominotegel.toString()));
+			dominotegelDTOS.add(new DominotegelDTO(d.getVakje1(), d.getVakje2(), d.getGetal(), d.getKroon(),
+					d.toString(), d.getVoorkantFotoPad(), d.getAchterkantFotoPad()));
 		}
 
 		// Retourneert de lijst met DominotegelDTO objecten.
@@ -111,13 +119,13 @@ public class DomeinController {
 
 		// Roept de methode geefTegels van het object 'spel' aan om een lijst van
 		// Dominotegels te krijgen, gebaseerd op het opgegeven aantal.
-		for (Dominotegel dominotegel : spel.geefTegels(aantal)) {
+		for (Dominotegel d : spel.geefTegels(aantal)) {
 			// Voegt een nieuwe DominotegelDTO toe aan de lijst. Deze DTO bevat details over
 			// de dominotegel,
 			// zoals de vakjes, het getal op de tegel, het aantal kronen en de string
 			// representatie van de tegel.
-			dominotegelDTOS.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(),
-					dominotegel.getGetal(), dominotegel.getKroon(), dominotegel.toString()));
+			dominotegelDTOS.add(new DominotegelDTO(d.getVakje1(), d.getVakje2(), d.getGetal(), d.getKroon(),
+					d.toString(), d.getVoorkantFotoPad(), d.getAchterkantFotoPad()));
 		}
 
 		// Retourneert de voltooide lijst met DominotegelDTO's.
@@ -155,36 +163,36 @@ public class DomeinController {
 
 		// Roept een methode op het 'spel'-object aan om een lijst van dominotegels te
 		// krijgen die aan het begin of eind van een kolom liggen.
-		for (Dominotegel dominotegel : spel.geefBeginOfEindKolom()) {
+		for (Dominotegel d : spel.geefBeginOfEindKolom()) {
 			// Voor elke dominotegel, creëert een nieuwe DominotegelDTO die verschillende
 			// eigenschappen van de dominotegel bevat,
 			// zoals de vakjes, het getal, het aantal kronen en de string representatie van
 			// de tegel.
-			kolom.add(new DominotegelDTO(dominotegel.getVakje1(), dominotegel.getVakje2(), dominotegel.getGetal(),
-					dominotegel.getKroon(), dominotegel.toString()));
+			kolom.add(new DominotegelDTO(d.getVakje1(), d.getVakje2(), d.getGetal(), d.getKroon(), d.toString(),
+					d.getVoorkantFotoPad(), d.getAchterkantFotoPad()));
 		}
 		// Retourneert de voltooide lijst met DominotegelDTO's.
 		return kolom;
 	}
 
-	public void plaatsTegel(DominotegelDTO tegelDTO, int y, int x, int y2, int x2, SpelerDTO spelerDTO) {
+	public void plaatsTegel(DominotegelDTO tegelDTO, int y, int x, int hoek, SpelerDTO spelerDTO) {
 		// Doorloopt de lijst van dominotegels die wordt opgehaald gebaseerd op het
 		// aantal spelers in het spel.
-		for (Dominotegel tegel : dominotegels(spel.getSpelers().size())) {
+		for (Dominotegel tegel : spel.getDominotegels()) {
 			// Controleert of de vakjes van de dominotegel overeenkomen met die in de
 			// gegeven DominotegelDTO.
 			if (tegel.getVakje1() == tegelDTO.vakje1() && tegel.getVakje2() == tegelDTO.vakje2()) {
 				// Roept de methode plaatsTegel aan op het 'spel'-object met de gevonden
 				// dominotegel, coördinaten en spelerDTO.
-				spel.plaatsTegel(tegel, y, x, y2, x2, spelerDTO);
+				spel.plaatsTegel(tegel, y, x, hoek, spelerDTO);
 			}
 		}
 	}
 
-	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, int y2, int x2, SpelerDTO spelerDTO) {
+	public boolean kanPlaatsen(DominotegelDTO tegelDTO, int y, int x, int hoek, SpelerDTO spelerDTO) {
 		// Doorloopt alle dominotegels die relevant zijn voor het huidige aantal spelers
 		// in het spel.
-		for (Dominotegel tegel : dominotegels(spel.getSpelers().size())) {
+		for (Dominotegel tegel : spel.getDominotegels()) {
 			// Controleert of de vakjes van de dominotegel overeenkomen met die in de
 			// gegeven DominotegelDTO.
 			// Als dat niet zo is, zou hier een gepaste 'equals'-methode moeten worden
@@ -192,7 +200,7 @@ public class DomeinController {
 			if (tegel.getVakje1() == tegelDTO.vakje1() && tegel.getVakje2() == tegelDTO.vakje2()) {
 				// Roept de plaatsingscontrole van het spel aan met de gevonden dominotegel,
 				// coördinaten, en spelerDTO.
-				return spel.kanPlaatsen(tegel, y, x, y2, x2, spelerDTO);
+				return spel.kanPlaatsen(tegel, y, x, hoek, spelerDTO);
 			}
 		}
 		// Retourneert false als er geen overeenkomende dominotegel gevonden is.
