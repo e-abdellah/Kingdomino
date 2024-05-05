@@ -429,6 +429,7 @@ public class SpelController {
 			voorkantImageView.setFitHeight(45);
 			voorkantImageView.setOnMouseClicked(event -> {
 				clickOpTegel(tegel, false, indexSpelerDTO.get(spelersDTO.get(index)), true);
+
 			});
 
 			vboxVoorkant.getChildren().add(voorkantImageView);
@@ -455,7 +456,7 @@ public class SpelController {
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
 
-		System.out.println("clickOpTegel" + tegel.toString());
+		//		System.out.println("clickOpTegel" + tegel.toString());
 
 		updateGridBorderKleur(kleurCode);
 		if (!isStartKolom) {
@@ -615,6 +616,7 @@ public class SpelController {
 		if (!isStartKolom && !isVolgendeRonde) {
 			eindkolomSpelers.add(huidigeSpelerIndex);
 			plaatsAlleGekozenTegels(startKolomTegels, huidigeSpelerIndex, tegel);
+
 		}
 	}
 
@@ -730,6 +732,7 @@ public class SpelController {
 		Color spelerKleur = getKleur(spelerIndex); // Methode om de kleur van de speler te krijgen
 		GridPane doelGridPane = bepaalDoelGridPane(spelerKleur);
 		initialiseGridPane(doelGridPane, spelerIndex, tegel);
+
 	}
 
 	private void initialiseGridPane(GridPane gridPane, int spelerIndex, DominotegelDTO tegel) {
@@ -753,10 +756,8 @@ public class SpelController {
 				final int finalColumn = kolom; // and column for use in lambda
 
 				Pane pane = new Pane();
-				//				System.out.println(
-				//						kanPlaatsen(spelerTegel.get(spelerInfo), kolom, rij, hoeken.get(spelerIndex), gevondenSpeler)
-				//								+ ":" + kolom + ":" + rij);
-				System.out.println(gevondenSpeler.koninkrijk().toString());
+				System.out.println(kanPlaatsen(spelerTegel.get(spelerInfo), kolom, rij,
+						!hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler) + ":" + kolom + ":" + rij);
 				pane.setOnMouseClicked(
 						event -> handleTegelPlaatsing(event, gridPane, finalRow, finalColumn, spelerIndex, tegel));
 
@@ -774,12 +775,10 @@ public class SpelController {
 		Color spelerKleur = getColorForName(spelerInfo.split("-")[1].trim().toLowerCase());
 
 		GridPane spelerGridPane = bepaalDoelGridPane(spelerKleur);
-		System.out.println("1");
 
 		if (spelerGridPane != gekliktGridPane) {
 			showAlert("Verkeerde Grid", "Je kunt je tegel alleen in je eigen grid plaatsen.", AlertType.WARNING);
 		} else {
-			System.out.println("2");
 
 			SpelerDTO gevondenSpeler = null;
 			for (Map.Entry<SpelerDTO, Integer> entry : indexSpelerDTO.entrySet()) {
@@ -793,7 +792,6 @@ public class SpelController {
 			//							+ kolom + ":" + rij);
 			if (kanPlaatsen(spelerTegel.get(spelerInfo), kolom, rij, !hoeken.isEmpty() ? hoeken.get(spelerIndex) : 0,
 					gevondenSpeler)) {
-				System.out.println("in de if");
 				plaatsTegelInGrid(tegel, gekliktGridPane, rij, kolom);
 				geselecteerdeTegel = null; // Reset na plaatsing
 			}
@@ -831,7 +829,6 @@ public class SpelController {
 		}
 
 		ImageView newTegelImg = new ImageView();
-		System.out.println();
 		if (tegelImageView != null) {
 			// Maak een kopie van de ImageView
 			newTegelImg.setImage(tegelImageView.getImage());
@@ -851,10 +848,7 @@ public class SpelController {
 		}
 		kiesTegel(tegel, false);
 
-		//		if (isVolgendeRonde) {
 		spelerTegel.put(spelerInfo, tegelsEindkolomSpelers.get(spelerInfo));
-		spelerTegel.forEach((k, v) -> System.out.println(k + ":" + v));
-		//		}
 
 	}
 
