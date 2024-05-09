@@ -331,27 +331,30 @@ public class Speler {
 			dx = +1;
 			break;
 		case 270:
-			dx = -1;
+			dx = +1;
 			break;
 		case 180:
-			dy = -1;
+			dy = +1;
 			break;
 		default:
 			dy = 1;
 			break;
 		}
 
-		//		for (int xx = 0; xx < koninkrijk.length; xx++) {
-		//			for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
-		//				System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
-		//			}
-		//			System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
-		//		}
-
 		// bereken voor 2e vakje
 		int x2 = x + dx;
 		int y2 = y + dy;
 		System.out.println("y2: " + y2 + "x2: " + x2);
+
+		if (hoek == 180 || hoek == 270) {
+			int tempx2 = x2;
+			x2 = x;
+			x = tempx2;
+			int tempy2 = y2;
+			y2 = y;
+			y = tempy2;
+
+		}
 
 		// Controleert of de voorgestelde x- en y-coördinaten binnen de grenzen van het
 		// 'koninkrijk' vallen.

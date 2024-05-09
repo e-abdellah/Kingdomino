@@ -274,8 +274,6 @@ public class Spel {
 		List<Vakje> vakjes = new ArrayList<>();
 
 		// Stelt de x- en y-coördinaten in voor het eerste vakje van de dominotegel.
-		tegel.getVakje1().setX(x);
-		tegel.getVakje1().setY(y);
 		System.out.println(hoek + "y:" + y + " x: " + x);
 
 		int dx = 0, dy = 0;
@@ -284,10 +282,10 @@ public class Spel {
 			dx = +1;
 			break;
 		case 270:
-			dx = -1;
+			dx = +1;
 			break;
 		case 180:
-			dy = -1;
+			dy = +1;
 			break;
 		default:
 			dy = 1;
@@ -300,10 +298,19 @@ public class Spel {
 
 		System.out.println("y2: " + y2 + "x2: " + x2);
 
-		// Stelt de x- en y-coördinaten in voor het tweede vakje van de dominotegel.
-		tegel.getVakje2().setX(x2);
-		tegel.getVakje2().setY(y2);
+		if (hoek == 180 || hoek == 270) {
+			tegel.getVakje1().setX(x2);
+			tegel.getVakje1().setY(y2);
+			tegel.getVakje2().setX(x);
+			tegel.getVakje2().setY(y);
+		} else {
+			// Stelt de x- en y-coördinaten in voor het tweede vakje van de dominotegel.
+			tegel.getVakje1().setX(x);
+			tegel.getVakje1().setY(y);
 
+			tegel.getVakje2().setX(x2);
+			tegel.getVakje2().setY(y2);
+		}
 		// Voegt de twee vakjes van de dominotegel toe aan de lijst 'vakjes'.
 		vakjes.add(tegel.getVakje1());
 		vakjes.add(tegel.getVakje2());

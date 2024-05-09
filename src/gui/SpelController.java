@@ -343,6 +343,7 @@ public class SpelController {
 			list.offer(tegel);
 		}
 		if (stapel.isEmpty()) {
+			boolean isEindeSpel = dc.isEindeSpel();
 			showAlert("Einde spel", "Alle dominotegels zijn geplaats. \nKingdomino is beeindigt",
 					AlertType.INFORMATION);
 			return;
@@ -807,7 +808,7 @@ public class SpelController {
 			Integer hoek = tegelRotaties.get(tegelImageView);
 			if (hoek != null) {
 				newTegelImg.setRotate(hoek);
-				if (hoek == 90) {
+				if (hoek == 90 || hoek == 270) {
 					// Aanpassing voor rotatie, verschuif de afbeelding -0.25 naar links en 0.5 naar beneden
 					newTegelImg.setTranslateX(-0.25 * newTegelImg.getFitWidth());
 					newTegelImg.setTranslateY(0.5 * newTegelImg.getFitHeight());
