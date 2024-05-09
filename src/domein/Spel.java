@@ -210,10 +210,6 @@ public class Spel {
 		spelers.sort(new utils.ScoreComparator());
 
 	}
-	
-	public int getAantalResterendeDominotegels() {
-		return dominotegels.size();
-	}
 
 	public List<Dominotegel> geefBeginOfEindKolom() {
 		// Bepaalt het aantal spelers, dat gebruikt wordt om het aantal tegels te
