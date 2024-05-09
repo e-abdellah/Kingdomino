@@ -28,7 +28,7 @@ public class Spel {
 	private List<Speler> spelers = new ArrayList<>();
 	private boolean isGeschud = false;
 
-	protected static final int MAX_LENGTE = 6;
+	protected static final int MAX_LENGTE = 4;
 
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen,
 			List<Dominotegel> startKolom, boolean isEindeSpel) {
@@ -276,26 +276,29 @@ public class Spel {
 		// Stelt de x- en y-coördinaten in voor het eerste vakje van de dominotegel.
 		tegel.getVakje1().setX(x);
 		tegel.getVakje1().setY(y);
+		System.out.println(hoek + "y:" + y + " x: " + x);
 
 		int dx = 0, dy = 0;
 		switch (hoek) {
 		case 90:
-			dy = -1;
+			dx = +1;
 			break;
 		case 270:
-			dy = 1;
-			break;
-		case 180:
 			dx = -1;
 			break;
+		case 180:
+			dy = -1;
+			break;
 		default:
-			dx = 1;
+			dy = 1;
 			break;
 		}
 
 		// bereken voor 2e vakje
 		int x2 = x + dx;
 		int y2 = y + dy;
+
+		System.out.println("y2: " + y2 + "x2: " + x2);
 
 		// Stelt de x- en y-coördinaten in voor het tweede vakje van de dominotegel.
 		tegel.getVakje2().setX(x2);

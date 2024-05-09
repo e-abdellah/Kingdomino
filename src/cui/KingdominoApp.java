@@ -1,6 +1,15 @@
 package cui;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 import domein.DomeinController;
 import domein.Vakje;
@@ -148,7 +157,7 @@ public class KingdominoApp {
 			// toonOverzicht();
 			kiesSpeler();
 
-			startKingdomino();
+			//			startKingdomino();
 		}
 	}
 
@@ -294,117 +303,117 @@ public class KingdominoApp {
 		return input.trim().toLowerCase().equals(negatief);
 	}
 
-	private void startKingdomino() {
-		int aantalSpelers = gekozenSpelers.size();
-		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
-		dc.voegSpelersToe(gekozenSpelers);
-		dominotegels = dc.geefDominotegels(aantalSpelers);
-
-		System.out.println("Het spel heeft " + aantalDominotegels + " dominotegels.");
-
-		// Toon overzicht per speler inclusief hun gekozen kleur
-		for (SpelerDTO spelerDTO : gekozenSpelers) {
-			String gekozenKleur = spelerKleurMap.get(spelerDTO);
-			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
-		}
-
-		Collections.shuffle(gekozenSpelers);// random volgorde van spelers genereren
-		List<DominotegelDTO> startKolom = new ArrayList<>();
-		int beurtTeller = 1;
-		Map<SpelerDTO, DominotegelDTO> spelerTegel = new HashMap<>();
-		System.out.println();
-		do {
-			System.out.printf("Begin van ronde %d%n%n", beurtTeller++);
-			if (startKolom.isEmpty()) {
-				startKolom = dc.geefKolom();
-				toonKolom(startKolom);
-			}
-			if (spelerTegel.isEmpty())
-				spelerTegel = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
-
-			System.out.println("Startkolom:");
-			toonKolomMetSpeler(startKolom, spelerTegel);
-
-			// UC4
-			System.out.println("Eindkolom:");
-			List<DominotegelDTO> eindKolom = dc.geefKolom();
-			toonKolom(eindKolom);
-
-			// volgorde bepalen voor keuze tegel eindkolom
-			List<SpelerDTO> volgorde = getSpelerDTOS(spelerTegel);
-
-			Map<SpelerDTO, DominotegelDTO> eindSpelerTegel = keuzeKolom(startKolom, aantalSpelers, volgorde);
-			// toonKolomMetSpeler(eindKolom, eindTegelSpeler);
-
-			// UC5
-			System.out.println(volgorde);
-			for (SpelerDTO speler : volgorde) {
-				int x = 0, y = 0;
-				int y2 = 0, x2 = 0;
-				String richting = "";
-				boolean kan;
-				System.out.printf("Speler %s met kleur %s leg je tegel%n", speler.gebruikersnaam(),
-						spelerKleurMap.get(speler));
-				System.out.println("Geef de y en x coördinaat van het linkse vakje:");
-				do {
-					try {
-						do {
-							y = sc.nextInt();
-						} while (y < 0 || y > 4);
-						do {
-							x = sc.nextInt();
-						} while (x < 0 || x > 4);
-					} catch (InputMismatchException e) {
-						System.out.println("Ongeldige locatie");
-					}
-					System.out.println("Richting:");
-					List<Integer> pos = new ArrayList<>(List.of(y, x));
-					do {
-						richting = sc.next();
-						switch (richting) {
-						case "boven": // Up
-							pos.set(1, pos.get(1) - 1);
-							break;
-						case "onder": // Down
-							pos.set(1, pos.get(1) + 1);
-							break;
-						case "links": // Left
-							pos.set(0, pos.get(0) - 1);
-							break;
-						case "rechts": // Right
-							pos.set(0, pos.get(0) + 1);
-							break;
-						default:
-							System.out.println("Onbekende richting"); // Unknown direction
-							break;
-						}
-						// pos naar x2 en y2 en omzetten naar spel
-					} while (!pos.equals(new ArrayList<>(List.of(y, x))));
-					y2 = pos.get(1);
-					x2 = pos.get(0);
-					kan = dc.kanPlaatsen(spelerTegel.get(speler), y, x, y2, x2, speler);
-					if (!kan) {
-						System.out.println("Kies een vrije plaats binnen het speelveld");
-					}
-				} while (!kan);
-				dc.plaatsTegel(spelerTegel.get(speler), y, x, y2, x2, speler);
-
-			}
-			startKolom = eindKolom;
-			spelerTegel = eindSpelerTegel;
-			toonKoninkrijk();
-			dc.berekenEindeSpel();
-
-		} while (!dc.isEindeSpel());
-		dc.berekenWinnaars();
-		for (SpelerDTO speler : gekozenSpelers) {
-			if (speler.isWinnaar()) {
-				System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld", speler.gebruikersnaam(),
-						speler.aantalGewonnen(), speler.aantalGespeeld());
-			}
-		}
-
-	}
+	//	private void startKingdomino() {
+	//		int aantalSpelers = gekozenSpelers.size();
+	//		int aantalDominotegels = (aantalSpelers == 3) ? 36 : 48;
+	//		dc.voegSpelersToe(gekozenSpelers);
+	//		dominotegels = dc.geefDominotegels(aantalSpelers);
+	//
+	//		System.out.println("Het spel heeft " + aantalDominotegels + " dominotegels.");
+	//
+	//		// Toon overzicht per speler inclusief hun gekozen kleur
+	//		for (SpelerDTO spelerDTO : gekozenSpelers) {
+	//			String gekozenKleur = spelerKleurMap.get(spelerDTO);
+	//			System.out.println("Speler: " + spelerDTO.gebruikersnaam() + ", gekozen kleur: " + gekozenKleur);
+	//		}
+	//
+	//		Collections.shuffle(gekozenSpelers);// random volgorde van spelers genereren
+	//		List<DominotegelDTO> startKolom = new ArrayList<>();
+	//		int beurtTeller = 1;
+	//		Map<SpelerDTO, DominotegelDTO> spelerTegel = new HashMap<>();
+	//		System.out.println();
+	//		do {
+	//			System.out.printf("Begin van ronde %d%n%n", beurtTeller++);
+	//			if (startKolom.isEmpty()) {
+	//				startKolom = dc.geefKolom();
+	//				toonKolom(startKolom);
+	//			}
+	//			if (spelerTegel.isEmpty())
+	//				spelerTegel = keuzeKolom(startKolom, aantalSpelers, gekozenSpelers);
+	//
+	//			System.out.println("Startkolom:");
+	//			toonKolomMetSpeler(startKolom, spelerTegel);
+	//
+	//			// UC4
+	//			System.out.println("Eindkolom:");
+	//			List<DominotegelDTO> eindKolom = dc.geefKolom();
+	//			toonKolom(eindKolom);
+	//
+	//			// volgorde bepalen voor keuze tegel eindkolom
+	//			List<SpelerDTO> volgorde = getSpelerDTOS(spelerTegel);
+	//
+	//			Map<SpelerDTO, DominotegelDTO> eindSpelerTegel = keuzeKolom(startKolom, aantalSpelers, volgorde);
+	//			// toonKolomMetSpeler(eindKolom, eindTegelSpeler);
+	//
+	//			// UC5
+	//			System.out.println(volgorde);
+	//			for (SpelerDTO speler : volgorde) {
+	//				int x = 0, y = 0;
+	//				int y2 = 0, x2 = 0;
+	//				String richting = "";
+	//				boolean kan;
+	//				System.out.printf("Speler %s met kleur %s leg je tegel%n", speler.gebruikersnaam(),
+	//						spelerKleurMap.get(speler));
+	//				System.out.println("Geef de y en x coördinaat van het linkse vakje:");
+	//				do {
+	//					try {
+	//						do {
+	//							y = sc.nextInt();
+	//						} while (y < 0 || y > 4);
+	//						do {
+	//							x = sc.nextInt();
+	//						} while (x < 0 || x > 4);
+	//					} catch (InputMismatchException e) {
+	//						System.out.println("Ongeldige locatie");
+	//					}
+	//					System.out.println("Richting:");
+	//					List<Integer> pos = new ArrayList<>(List.of(y, x));
+	//					do {
+	//						richting = sc.next();
+	//						switch (richting) {
+	//						case "boven": // Up
+	//							pos.set(1, pos.get(1) - 1);
+	//							break;
+	//						case "onder": // Down
+	//							pos.set(1, pos.get(1) + 1);
+	//							break;
+	//						case "links": // Left
+	//							pos.set(0, pos.get(0) - 1);
+	//							break;
+	//						case "rechts": // Right
+	//							pos.set(0, pos.get(0) + 1);
+	//							break;
+	//						default:
+	//							System.out.println("Onbekende richting"); // Unknown direction
+	//							break;
+	//						}
+	//						// pos naar x2 en y2 en omzetten naar spel
+	//					} while (!pos.equals(new ArrayList<>(List.of(y, x))));
+	//					y2 = pos.get(1);
+	//					x2 = pos.get(0);
+	////					kan = dc.kanPlaatsen(spelerTegel.get(speler), y, x, y2, x2, speler);
+	////					if (!kan) {
+	//						System.out.println("Kies een vrije plaats binnen het speelveld");
+	////					}
+	////				} while (!kan);
+	////				dc.plaatsTegel(spelerTegel.get(speler), y, x, y2, x2, speler);
+	//
+	//			}
+	//			startKolom = eindKolom;
+	//			spelerTegel = eindSpelerTegel;
+	//			toonKoninkrijk();
+	//			dc.berekenEindeSpel();
+	//
+	//		} while (!dc.isEindeSpel());
+	//		dc.berekenWinnaars();
+	//		for (SpelerDTO speler : gekozenSpelers) {
+	//			if (speler.isWinnaar()) {
+	//				System.out.printf("%s met %d spelletjes gewonnen en %d spelletjes gespeeld", speler.gebruikersnaam(),
+	//						speler.aantalGewonnen(), speler.aantalGespeeld());
+	//			}
+	//		}
+	//
+	//	}
 
 	private List<SpelerDTO> getSpelerDTOS(Map<SpelerDTO, DominotegelDTO> spelerTegel) {
 		// Maakt een nieuwe lijst aan vanuit de reeds gekozen spelers.

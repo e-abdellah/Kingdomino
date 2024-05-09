@@ -7,7 +7,7 @@ public class Speler {
 	private String gebruikersnaam;
 	private int geboortejaar;
 	private int aantalGewonnen, aantalGespeeld;
-	private static final int MAX_LENGTE = 2;
+	private static final int MAX_LENGTE = 4;
 
 	private Vakje[][] koninkrijk = new Vakje[2 * MAX_LENGTE + 1][2 * MAX_LENGTE + 1];
 	private List<Integer> scores = new ArrayList<>();
@@ -285,7 +285,7 @@ public class Speler {
 		for (Vakje vakje : vakjes) {
 			// Plaatst elk vakje in de 2D-array 'koninkrijk' op de coördinaten die bepaald
 			// worden door de Y en X waarden van het vakje.
-			koninkrijk[vakje.getY()][vakje.getX()] = vakje;
+			koninkrijk[vakje.getX()][vakje.getY()] = vakje;
 		}
 	}
 
@@ -325,24 +325,33 @@ public class Speler {
 	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int hoek) {
 
 		int dx = 0, dy = 0;
+		System.out.println("spelers" + hoek + "y:" + y + " x: " + x);
 		switch (hoek) {
 		case 90:
-			dy = -1;
+			dx = +1;
 			break;
 		case 270:
-			dy = 1;
-			break;
-		case 180:
 			dx = -1;
 			break;
+		case 180:
+			dy = -1;
+			break;
 		default:
-			dx = 1;
+			dy = 1;
 			break;
 		}
+
+		//		for (int xx = 0; xx < koninkrijk.length; xx++) {
+		//			for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
+		//				System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
+		//			}
+		//			System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
+		//		}
 
 		// bereken voor 2e vakje
 		int x2 = x + dx;
 		int y2 = y + dy;
+		System.out.println("y2: " + y2 + "x2: " + x2);
 
 		// Controleert of de voorgestelde x- en y-coördinaten binnen de grenzen van het
 		// 'koninkrijk' vallen.

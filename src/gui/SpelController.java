@@ -15,6 +15,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import domein.DomeinController;
+import domein.Vakje;
 import dto.DominotegelDTO;
 import dto.SpelerDTO;
 import javafx.application.Platform;
@@ -639,6 +640,8 @@ public class SpelController {
 			System.out.println("Rotated " + tegel + " to " + huidigeHoek + " degrees.");
 			tegelEnHoek.put(huidigeHoek, tegel);
 			hoeken.add(huidigeHoek);
+			if (!hoeken.isEmpty())
+				hoeken.set(0, huidigeHoek);
 		} else {
 			System.out.println("No ImageView found for " + tegel);
 		}
@@ -756,10 +759,10 @@ public class SpelController {
 				final int finalColumn = kolom; // and column for use in lambda
 
 				Pane pane = new Pane();
-				System.out.println(kanPlaatsen(spelerTegel.get(spelerInfo), kolom, rij,
-						!hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler) + ":" + kolom + ":" + rij);
-				pane.setOnMouseClicked(
-						event -> handleTegelPlaatsing(event, gridPane, finalRow, finalColumn, spelerIndex, tegel));
+				//				System.out.println(kanPlaatsen(spelerTegel.get(spelerInfo), rij, kolom,
+				//						!hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler) + ":" + kolom + ":" + rij);
+				pane.setOnMouseClicked(event -> handleTegelPlaatsing(event, gridPane, finalRow, finalColumn,
+						spelerIndex, tegel, imageView));
 
 				gridPane.add(pane, finalColumn, finalRow);
 				pane.prefWidthProperty().bind(gridPane.widthProperty().divide(numColumns));
@@ -769,12 +772,49 @@ public class SpelController {
 	}
 
 	private void handleTegelPlaatsing(MouseEvent event, GridPane gekliktGridPane, int rij, int kolom, int spelerIndex,
-			DominotegelDTO tegel) {
+			DominotegelDTO tegel, ImageView tegelImageView) {
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
 		Color spelerKleur = getColorForName(spelerInfo.split("-")[1].trim().toLowerCase());
+		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 
 		GridPane spelerGridPane = bepaalDoelGridPane(spelerKleur);
+
+		if (!hoeken.isEmpty() && spelerTegel.containsKey(spelerInfo)
+				&& kleurCode.equals(spelerInfo.split("-")[1].trim().toLowerCase())) {
+			tegel = tegelEnHoek.get(hoeken.get(0));
+			tegelImageView = tegelViews.get(tegel);
+		} else if (hoeken.isEmpty()) {
+			for (Map.Entry<String, DominotegelDTO> entry : spelerTegel.entrySet()) {
+				String kleur = entry.getKey().split("-")[1].trim().toLowerCase();
+				DominotegelDTO t = entry.getValue();
+				if (kleur.equals(kleurCode)) {
+					tegel = t;
+					tegelImageView = tegelViews.get(tegel);
+				}
+			}
+		}
+
+		ImageView newTegelImg = new ImageView();
+
+		if (tegelImageView != null) {
+			// Maak een kopie van de ImageView
+			newTegelImg.setImage(tegelImageView.getImage());
+			newTegelImg.setFitWidth(tegelImageView.getFitWidth());
+			newTegelImg.setFitHeight(tegelImageView.getFitHeight());
+
+			// Pas de opgeslagen rotatie toe op de kopie
+			Integer hoek = tegelRotaties.get(tegelImageView);
+			if (hoek != null) {
+				newTegelImg.setRotate(hoek);
+				if (hoek == 90) {
+					// Aanpassing voor rotatie, verschuif de afbeelding -0.25 naar links en 0.5 naar beneden
+					newTegelImg.setTranslateX(-0.25 * newTegelImg.getFitWidth());
+					newTegelImg.setTranslateY(0.5 * newTegelImg.getFitHeight());
+				}
+
+			}
+		}
 
 		if (spelerGridPane != gekliktGridPane) {
 			showAlert("Verkeerde Grid", "Je kunt je tegel alleen in je eigen grid plaatsen.", AlertType.WARNING);
@@ -790,10 +830,19 @@ public class SpelController {
 			//			System.out.println(
 			//					kanPlaatsen(spelerTegel.get(spelerInfo), kolom, rij, hoeken.get(spelerIndex), gevondenSpeler) + ":"
 			//							+ kolom + ":" + rij);
-			if (kanPlaatsen(spelerTegel.get(spelerInfo), kolom, rij, !hoeken.isEmpty() ? hoeken.get(spelerIndex) : 0,
-					gevondenSpeler)) {
-				plaatsTegelInGrid(tegel, gekliktGridPane, rij, kolom);
+			if (kanPlaatsen(tegel, kolom, rij, !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler)) {
+				plaatsTegelInGrid(tegel, gekliktGridPane, rij, kolom, newTegelImg);
 				geselecteerdeTegel = null; // Reset na plaatsing
+				dc.plaatsTegel(tegel, kolom, rij, !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler);
+				Vakje[][] koninkrijk = gevondenSpeler.koninkrijk();
+
+				for (int xx = 0; xx < koninkrijk.length; xx++) {
+					for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
+						System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
+					}
+					System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
+				}
+				hoeken.clear();
 			}
 
 		}
@@ -804,47 +853,20 @@ public class SpelController {
 		return dc.kanPlaatsen(tegel, y, x, hoek, spelerDTO);
 	}
 
-	private void plaatsTegelInGrid(DominotegelDTO tegel, GridPane doelGridPane, int rij, int kolom) {
+	private void plaatsTegelInGrid(DominotegelDTO tegel, GridPane doelGridPane, int rij, int kolom,
+			ImageView newTegelImg) {
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
-		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
+		//		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 
-		ImageView tegelImageView = null;
+		//		ImageView newTegelImg = new ImageView();
 
-		if (!hoeken.isEmpty() && spelerTegel.containsKey(spelerInfo)
-				&& kleurCode.equals(spelerInfo.split("-")[1].trim().toLowerCase())) {
-			tegel = tegelEnHoek.get(hoeken.get(0));
-			tegelImageView = tegelViews.get(tegel);
-			hoeken.clear();
-		} else if (hoeken.isEmpty()) {
-
-			for (Map.Entry<String, DominotegelDTO> entry : spelerTegel.entrySet()) {
-				String kleur = entry.getKey().split("-")[1].trim().toLowerCase();
-				DominotegelDTO t = entry.getValue();
-				if (kleur.equals(kleurCode)) {
-					tegel = t;
-					tegelImageView = tegelViews.get(tegel);
-				}
-			}
-		}
-
-		ImageView newTegelImg = new ImageView();
-		if (tegelImageView != null) {
-			// Maak een kopie van de ImageView
-			newTegelImg.setImage(tegelImageView.getImage());
-			newTegelImg.setFitWidth(tegelImageView.getFitWidth());
-			newTegelImg.setFitHeight(tegelImageView.getFitHeight());
-
-			// Pas de opgeslagen rotatie toe op de kopie
-			Integer hoek = tegelRotaties.get(tegelImageView);
-			if (hoek != null) {
-				newTegelImg.setRotate(hoek);
-			}
-			doelGridPane.add(newTegelImg, kolom, rij);
+		if (newTegelImg != null) {
+			doelGridPane.add(newTegelImg, kolom, rij); // rji en kolom = ints
 			System.out.println("Tegel geplaatst op rij: " + rij + ", kolom: " + kolom);
 		} else {
 			System.out.println("Geen geldige tegel of ImageView gevonden voor speler: " + spelerInfo + "tegel: " + tegel
-					+ "Nimg: " + tegelImageView);
+					+ "Nimg: " + newTegelImg);
 		}
 		kiesTegel(tegel, false);
 
