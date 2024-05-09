@@ -5,14 +5,17 @@ public class Vakje {
 	private int aantalKronen;
 
 	private int x;
-
 	private int y;
 
 	public Vakje() {
 	}
-	public Vakje(Landschap landschap, int aantalKronen, int y, int x){
+
+	// Correcte constructor x and y
+	public Vakje(Landschap landschap, int aantalKronen, int x, int y) {
 		this.landschap = landschap;
 		setAantalKronen(aantalKronen);
+		this.x = x;
+		this.y = y;
 	}
 
 	public Vakje(Landschap landschap) {
@@ -24,19 +27,19 @@ public class Vakje {
 		setAantalKronen(aantalKronen);
 	}
 
-	public int getX(){
+	public int getX() {
 		return x;
 	}
 
-	public int getY(){
+	public int getY() {
 		return y;
 	}
 
-	public final void setX(int x){
+	public final void setX(int x) {
 		this.x = x;
 	}
 
-	public final void setY(int y){
+	public final void setY(int y) {
 		this.y = y;
 	}
 
@@ -46,7 +49,7 @@ public class Vakje {
 
 	@Override
 	public String toString() {
-		return "[Landschap=" + landschap + "]";
+		return "[Landschap=" + landschap + ", Kronen=" + aantalKronen + ", X=" + x + ", Y=" + y + "]";
 	}
 
 	public int getAantalKronen() {
@@ -54,7 +57,10 @@ public class Vakje {
 	}
 
 	public void setAantalKronen(int aantalKronen) {
+		// Basic validation for aantalKronen
+		if (aantalKronen < 0) {
+			throw new IllegalArgumentException("Aantal kronen kan niet negatief zijn.");
+		}
 		this.aantalKronen = aantalKronen;
 	}
-
 }
