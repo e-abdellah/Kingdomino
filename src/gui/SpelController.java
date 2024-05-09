@@ -294,22 +294,22 @@ public class SpelController {
 	private void toonEindSpelResultaten() {
 		dc.berekenWinnaars();
 
-		String resultaat = "";
-		// Voeg de winnaar toe aan de resultaat string indien er een winnaar is
+		StringBuilder resultaat = new StringBuilder("Scores van alle spelers:\n");
 		for (SpelerDTO speler : spelersDTO) {
 			if (speler.isWinnaar()) {
-				//				resultaat += String.format("Scores van alle spelers: \n%s met %d spelletjes gewonnen en %d spelletjes gespeeld met een score van %d",
-				//						speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld(),
-				//						speler.scores().get(0));
-				resultaat = String.format(
-						"Scores van alle spelers: \n%s met %d spelletjes gewonnen en %d spelletjes gespeeld met een score van %d",
+				resultaat.append(String.format("%s met %d spelletjes gewonnen en %d spelletjes gespeeld met een score van %d\n",
 						speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld(),
-						speler.scores().get(0));
+						speler.scores().get(0)));
 			}
 		}
-		//		System.out.println(resultaat);
-		showAlert("Het spel is gedaan!", resultaat, AlertType.INFORMATION);
+
+		if (resultaat.length() == "Scores van alle spelers:\n".length()) {
+			resultaat.append("Geen winnaars dit spel.");
+		}
+
+		System.out.println(resultaat.toString());  // Of toon het resultaat in een GUI-element
 	}
+
 
 	private void ronde() {
 		// Reset de ronde omgeving
