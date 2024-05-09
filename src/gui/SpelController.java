@@ -99,7 +99,7 @@ public class SpelController {
 	private Set<Integer> eindkolomSpelers = new HashSet<>();
 
 	private List<Node> spelers;
-	//	private List<Node> tijdelijkeKolomSpelers;
+	// private List<Node> tijdelijkeKolomSpelers;
 	private List<SpelerDTO> spelersDTO = new ArrayList<>();
 
 	private List<SpelerDTO> gekozenSpelers;
@@ -142,7 +142,7 @@ public class SpelController {
 		speelRonde(false, eindkolomTegels);
 		startRondeBtn.setDisable(false); // Zet de knop op actief
 		volgendeRondeBtn.setDisable(true); // Zet de knop op actief
-		//		tijdelijkeKolomSpelers = new ArrayList<>(gekozenDominotegels.getChildren());
+		// tijdelijkeKolomSpelers = new ArrayList<>(gekozenDominotegels.getChildren());
 		gridBlauw.setGridLinesVisible(true);
 		gridGroen.setGridLinesVisible(true);
 		gridGeel.setGridLinesVisible(true);
@@ -290,6 +290,11 @@ public class SpelController {
 				AlertType.INFORMATION);
 	}
 
+	private void toonEindSpelResultaten() {
+		String resultaten = dc.geefSpelResultaten(); 
+		showAlert("Het spel is gedaan!", resultaten, AlertType.INFORMATION);
+	}
+
 	private void ronde() {
 		// Reset de ronde omgeving
 		startKolom.getChildren().clear();
@@ -315,6 +320,11 @@ public class SpelController {
 		// toonEindkolom(new ArrayList<>(eindkolomTegels));
 
 		toonRugzijdeStapel();
+
+		if (dc.isEindeSpel()) {
+			toonEindSpelResultaten();
+		}
+
 	}
 
 	private void transferChildren(VBox source, VBox target, Deque<DominotegelDTO> targetTegels) {
@@ -325,7 +335,8 @@ public class SpelController {
 
 		// Prepare to populate the Deque with DominotegelDTO objects
 		for (Node child : children) {
-			// Assuming each child Node has its associated DominotegelDTO stored as user data
+			// Assuming each child Node has its associated DominotegelDTO stored as user
+			// data
 			DominotegelDTO tegel = (DominotegelDTO) child.getUserData();
 			if (tegel != null) {
 				targetTegels.offer(tegel);
@@ -449,7 +460,8 @@ public class SpelController {
 		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
 			return; // Als de tegel null is of al gekozen, stop de methode hier
 		}
-		//		this.geselecteerdeTegel = tegel; // Sla de geklikte tegel op als de huidig geselecteerde tegel
+		// this.geselecteerdeTegel = tegel; // Sla de geklikte tegel op als de huidig
+		// geselecteerde tegel
 
 		// Haal de spelerNode op uit de geshuffelde lijst
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
@@ -458,7 +470,7 @@ public class SpelController {
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
 
-		//		System.out.println("clickOpTegel" + tegel.toString());
+		// System.out.println("clickOpTegel" + tegel.toString());
 
 		updateGridBorderKleur(kleurCode);
 		if (!isStartKolom) {
@@ -514,39 +526,39 @@ public class SpelController {
 		spelerTegelMap.put(huidigeSpelerIndex, tegel);
 	}
 
-	//	private void populateGekozenDominotegels() {
+	// private void populateGekozenDominotegels() {
 	//
-	//		Node node = gekozenDominotegels.getChildren().get(0);
+	// Node node = gekozenDominotegels.getChildren().get(0);
 	//
-	//		ImageView tegelImageView = null;
-	//		// Aanmaken of hergebruiken van de ImageView voor de dominotegel
-	//		if (tegelImageView == null) {
-	//			tegelImageView = new ImageView(new Image(tegel.getVoorkantFotoPad()));
-	//			tegelImageView.setFitWidth(90);
-	//			tegelImageView.setFitHeight(45);
-	//			// Voeg de ImageView toe aan de map
-	//			tegelViews.put(tegel, tegelImageView);
-	//		}
+	// ImageView tegelImageView = null;
+	// // Aanmaken of hergebruiken van de ImageView voor de dominotegel
+	// if (tegelImageView == null) {
+	// tegelImageView = new ImageView(new Image(tegel.getVoorkantFotoPad()));
+	// tegelImageView.setFitWidth(90);
+	// tegelImageView.setFitHeight(45);
+	// // Voeg de ImageView toe aan de map
+	// tegelViews.put(tegel, tegelImageView);
+	// }
 	//
-	//		// Zet de afbeelding van de tegel
-	//		Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
-	//		tegelImageView.setImage(tegelAfbeelding);
-	//		tegelImageView.setFitWidth(90);
-	//		tegelImageView.setFitHeight(45);
+	// // Zet de afbeelding van de tegel
+	// Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
+	// tegelImageView.setImage(tegelAfbeelding);
+	// tegelImageView.setFitWidth(90);
+	// tegelImageView.setFitHeight(45);
 	//
-	//		tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
-	//		tegelEnKleurBox.setUserData(tegel);
+	// tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
+	// tegelEnKleurBox.setUserData(tegel);
 	//
-	//		gekozenDominotegels.getChildren().add(tegelEnKleurBox);
+	// gekozenDominotegels.getChildren().add(tegelEnKleurBox);
 	//
-	//		// Stel klik-handler in voor de tegel
-	//		if (isVolgendeRonde) {
-	//			tegelImageView.setOnMouseClicked(event -> {
-	//				rotate(tegel);
-	//			});
+	// // Stel klik-handler in voor de tegel
+	// if (isVolgendeRonde) {
+	// tegelImageView.setOnMouseClicked(event -> {
+	// rotate(tegel);
+	// });
 	//
-	//		}
-	//	}
+	// }
+	// }
 
 	private void toonTegelEnKleur(DominotegelDTO tegel, Color spelerKleur, boolean isStartKolom, int spelerIndex,
 			boolean eindkolomTegelNietGeklikkd) {
@@ -571,7 +583,7 @@ public class SpelController {
 		tegelImageView.setFitWidth(90);
 		tegelImageView.setFitHeight(45);
 
-		//Maakt de image aan die de koningen toont op de gekozen tegels
+		// Maakt de image aan die de koningen toont op de gekozen tegels
 		String imagePath = getKoningBestandsnaam(spelerKleur);
 		Image colorImage = new Image(getClass().getResourceAsStream(imagePath));
 		ImageView kleurIndicator = new ImageView(colorImage);
@@ -589,12 +601,12 @@ public class SpelController {
 		}
 
 		// Stel klik-handler in voor de tegel
-		//		if (!eindkolomTegelNietGeklikkd || isVolgendeRonde) {
+		// if (!eindkolomTegelNietGeklikkd || isVolgendeRonde) {
 		tegelImageView.setOnMouseClicked(event -> {
 			rotate(tegel);
 		});
 
-		//		}
+		// }
 
 		if (isVolgendeRonde) {
 			if (isVolgendeRonde && startKolomTegels.isEmpty()) {
@@ -634,7 +646,7 @@ public class SpelController {
 			Rotate rotation = new Rotate();
 			rotation.setPivotX(tegelView.getFitWidth() / 2);
 			rotation.setPivotY(tegelView.getFitHeight() / 2);
-			//			tegelView.setRotationAxis();
+			// tegelView.setRotationAxis();
 
 			// Forceer een layout update
 			tegelView.getParent().requestLayout();
@@ -724,7 +736,8 @@ public class SpelController {
 	public void toonRugzijdeStapel() {
 		if (!stapel.isEmpty()) {
 			DominotegelDTO bovensteTegel = stapel.get(0); // Verkrijg de bovenste tegel zonder deze te verwijderen
-			//			bovensteTegel.genereerFotoPaden(); // Zorg ervoor dat de paden gegenereerd zijn
+			// bovensteTegel.genereerFotoPaden(); // Zorg ervoor dat de paden gegenereerd
+			// zijn
 			Image rugzijdeImage = new Image(bovensteTegel.achterkantFotoPad());
 			stapelRugzijdeImageView.setImage(rugzijdeImage);
 		} else {
@@ -760,8 +773,9 @@ public class SpelController {
 				final int finalColumn = kolom; // and column for use in lambda
 
 				Pane pane = new Pane();
-				//				System.out.println(kanPlaatsen(spelerTegel.get(spelerInfo), rij, kolom,
-				//						!hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler) + ":" + kolom + ":" + rij);
+				// System.out.println(kanPlaatsen(spelerTegel.get(spelerInfo), rij, kolom,
+				// !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler) + ":" + kolom + ":" +
+				// rij);
 				pane.setOnMouseClicked(event -> handleTegelPlaatsing(event, gridPane, finalRow, finalColumn,
 						spelerIndex, tegel, imageView));
 
@@ -809,7 +823,8 @@ public class SpelController {
 			if (hoek != null) {
 				newTegelImg.setRotate(hoek);
 				if (hoek == 90 || hoek == 270) {
-					// Aanpassing voor rotatie, verschuif de afbeelding -0.25 naar links en 0.5 naar beneden
+					// Aanpassing voor rotatie, verschuif de afbeelding -0.25 naar links en 0.5 naar
+					// beneden
 					newTegelImg.setTranslateX(-0.25 * newTegelImg.getFitWidth());
 					newTegelImg.setTranslateY(0.5 * newTegelImg.getFitHeight());
 				}
@@ -828,9 +843,10 @@ public class SpelController {
 					gevondenSpeler = entry.getKey();
 				}
 			}
-			//			System.out.println(
-			//					kanPlaatsen(spelerTegel.get(spelerInfo), kolom, rij, hoeken.get(spelerIndex), gevondenSpeler) + ":"
-			//							+ kolom + ":" + rij);
+			// System.out.println(
+			// kanPlaatsen(spelerTegel.get(spelerInfo), kolom, rij, hoeken.get(spelerIndex),
+			// gevondenSpeler) + ":"
+			// + kolom + ":" + rij);
 			if (kanPlaatsen(tegel, kolom, rij, !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler)) {
 				plaatsTegelInGrid(tegel, gekliktGridPane, rij, kolom, newTegelImg);
 				geselecteerdeTegel = null; // Reset na plaatsing
@@ -858,9 +874,9 @@ public class SpelController {
 			ImageView newTegelImg) {
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
-		//		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
+		// String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 
-		//		ImageView newTegelImg = new ImageView();
+		// ImageView newTegelImg = new ImageView();
 
 		if (newTegelImg != null) {
 			doelGridPane.add(newTegelImg, kolom, rij); // rji en kolom = ints
@@ -955,7 +971,7 @@ public class SpelController {
 		}
 	}
 
-	private void showAlert(String title, String message, AlertType alertType) { //helper meth
+	private void showAlert(String title, String message, AlertType alertType) { // helper meth
 		Alert alert = new Alert(alertType);
 		alert.setTitle(title);
 		alert.setHeaderText(null);

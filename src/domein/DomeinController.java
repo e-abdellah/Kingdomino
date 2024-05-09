@@ -51,7 +51,58 @@ public class DomeinController {
 		Speler nieuweSpeler = new Speler(gebruikersnaam, geboortejaar);
 		spelerRepository.voegToe(nieuweSpeler);
 	}
-
+	
+	
+	// Methode om de winnaar & scores uit de spelerDTO's te halen en te returnen als strings
+	public String geefSpelResultaten() {
+	    
+	    SpelerDTO winnaar = null;
+	    int hoogsteScore = Integer.MIN_VALUE;
+	    
+	    // StringBuilder gebruikt om de scores van alle spelers te bouwen
+	    StringBuilder stringScore = new StringBuilder("Scores van alle spelers: \n");
+	    
+	    // For loop dat alle spelers uit de SpelerDTO overloopt om hun scores te berekenen en te bepalen wie de winnaar is 
+	    for (SpelerDTO speler : spelers) {
+	        
+	        // Bereken de totale score voor de huidige speler
+	        int score = berekenTotaleScore(speler.scores());
+	        
+	        // Voeg de gebruikersnaam en score van de speler toe aan de resultaat string
+	        stringScore.append(speler.getGebruikersnaam()).append(" - Score: ").append(score).append("\n");
+	        
+	        // Controleer of de huidige score hoger is dan de tot nu toe hoogste score
+	        if (score > hoogsteScore) {
+	            
+	            hoogsteScore = score;
+	            winnaar = speler;
+	        }
+	    }
+	    
+	    // Zet de StringBuilder om naar een String
+	    String stringResultaat = stringScore.toString();
+	    
+	    // Voeg de winnaar toe aan de resultaat string indien er een winnaar is
+	    if (winnaar != null) {
+	        stringResultaat += "De winnaar is " + winnaar.getGebruikersnaam() + " met een score van " + hoogsteScore + ".";
+	    } else {
+	        stringResultaat += "Geen winnaar bepaald.";
+	    }
+	    
+	
+	    return stringResultaat;
+	}
+	
+	private int berekenTotaleScore(List<Integer> scores) {
+		
+	    int totaleScore = 0;
+	    for (int score : scores) {
+	    	totaleScore += score;
+	    }
+	    return totaleScore;
+	}
+	
+	
 	public List<SpelerDTO> geefOverzichtSpelers() {
 		// Haalt een lijst van alle spelers op uit de spelerRepository.
 		List<Speler> spelers = spelerRepository.geefAlleSpelers();
@@ -75,6 +126,8 @@ public class DomeinController {
 	public boolean isEindeSpel() {
 		return isEindeSpel;
 	}
+	
+	
 
 	public List<DominotegelDTO> dominotegels(int aantalSpelers) {
 		spel.schudDominotegels(aantalSpelers);
