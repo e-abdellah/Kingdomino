@@ -206,6 +206,10 @@ public class Spel {
 		return dominotegels.isEmpty();
 	}
 
+	public void skip() {
+		dominotegels.clear();
+	}
+
 	public void sorteerOpScore() {
 		spelers.sort(new utils.ScoreComparator());
 

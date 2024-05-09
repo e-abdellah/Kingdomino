@@ -35,6 +35,10 @@ public class DomeinController {
 		isEindeSpel = spel.isEindeSpel();
 	}
 
+	public void skip() {
+		spel.skip();
+	}
+
 	public void voegSpelersToe(List<SpelerDTO> spelerDTOS) {
 		for (SpelerDTO speler : spelerDTOS) {
 			spel.voegSpelersToe(new Speler(speler.gebruikersnaam(), speler.geboortejaar(), speler.aantalGewonnen(),

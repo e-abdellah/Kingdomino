@@ -80,6 +80,7 @@ public class SpelController {
 	private DomeinController dc;
 	private int aantalSpelers;
 	private final WelkomKDController kdController;
+	boolean isEindeSpel;
 	private List<DominotegelDTO> stapel;
 	private Deque<DominotegelDTO> startKolomTegels;
 	private Deque<DominotegelDTO> eindkolomTegels;
@@ -355,7 +356,16 @@ public class SpelController {
 	}
 
 	public void speelRonde(boolean toonBeideZijden, Deque<DominotegelDTO> list) {
-	    int aantalTeTrekkenTegels = Math.min(aantalSpelers, stapel.size()); // Only draw as many tiles as available
+		if (isEindeSpel || stapel.isEmpty()) {
+			showAlert("Einde spel", "Alle dominotegels zijn geplaats. \nKingdomino is beeindigt",
+					AlertType.INFORMATION);
+			return;
+		}
+		for (int i = 0; i < aantalSpelers; i++) {
+			DominotegelDTO tegel = stapel.get(0); // Haal de bovenste tegel van de stapel
+			stapel.remove(0);
+			list.offer(tegel);
+		}
 
 	    for (int i = 0; i < aantalTeTrekkenTegels; i++) {
 	        DominotegelDTO tegel = stapel.remove(0); // Remove the tile from the stack
@@ -864,12 +874,6 @@ public class SpelController {
 				dc.plaatsTegel(tegel, kolom, rij, !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler);
 				Vakje[][] koninkrijk = gevondenSpeler.koninkrijk();
 
-				for (int xx = 0; xx < koninkrijk.length; xx++) {
-					for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
-						System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
-					}
-					System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
-				}
 				hoeken.clear();
 			}
 
@@ -1009,7 +1013,9 @@ public class SpelController {
 
 	@FXML
 	private void handleSkipRondeBtnAction(ActionEvent event) {
-		ronde(); // Advance to the next round
+		dc.skip();
+		isEindeSpel = dc.isEindeSpel();
+		//		ronde(); // Advance to the next round
 	}
 
 }
