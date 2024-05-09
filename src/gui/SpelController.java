@@ -99,7 +99,6 @@ public class SpelController {
 	private Set<Integer> eindkolomSpelers = new HashSet<>();
 
 	private List<Node> spelers;
-	// private List<Node> tijdelijkeKolomSpelers;
 	private List<SpelerDTO> spelersDTO = new ArrayList<>();
 
 	private List<SpelerDTO> gekozenSpelers;
@@ -108,9 +107,8 @@ public class SpelController {
 
 	private int index = 0;
 	private int teller = 0;
-	private DominotegelDTO geselecteerdeTegel;
 	private Map<String, DominotegelDTO> tegelsEindkolomSpelers = new HashMap<>();
-	private boolean isEindeSpel = false;
+	private boolean isEindeSpel;
 
 	public SpelController() {
 		dc = DomeinController.getInstance();
@@ -126,6 +124,7 @@ public class SpelController {
 		gridRoos = new GridPane();
 		aantalSpelers = kdController.getAantalSpelersGekozen();
 		gekozenSpelers = dc.getSpelers();
+		isEindeSpel = dc.isEindeSpel();
 	}
 
 	public void initSpel() {
@@ -294,25 +293,17 @@ public class SpelController {
     private void toonEindSpelResultaten() {
         dc.berekenWinnaars();
 
-        StringBuilder resultaat = new StringBuilder("Scores van alle spelers:\n");
-        for (SpelerDTO speler : spelersDTO) {
-            if (speler.isWinnaar()) {
-                resultaat.append(String.format("%s met %d spelletjes gewonnen en %d spelletjes gespeeld met een score van %d\n",
-                        speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld(),
-                        speler.scores().get(0)));
-            }
-        }
+		final String[] scores = { "Scores van alle spelers:\n" }; // Using an array to hold the string because it needs to be effectively final
 
-        if (resultaat.length() == "Scores van alle spelers:\n".length()) {
-            resultaat.append("Geen winnaars dit spel.");
-        }
+		List<SpelerDTO> dtos = spelersDTO;
 
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Eindspel Resultaten");
-        alert.setHeaderText("Resultaten van het spel");
-        alert.setContentText(resultaat.toString());
-        alert.showAndWait();
-    }
+		dtos.stream().forEach(s -> {
+			scores[0] += s.gebruikersnaam() + " met " + s.aantalGewonnen() + " spelletjes gewonnen en "
+					+ s.aantalGespeeld() + " spelletjes gespeeld met een score van " + s.scores().get(0) + "\n";
+		});
+
+		showAlert("Het spel is gedaan", scores[0], AlertType.INFORMATION);
+	}
 
 
 
@@ -340,17 +331,8 @@ public class SpelController {
 		if (!stapel.isEmpty()) {
 
 			speelRonde(true, eindkolomTegels);
-		} else {
-
-			toonEindSpelResultaten();
-			return;
 		}
-
 		toonRugzijdeStapel();
-
-		if (dc.isEindeSpel()) {
-			toonEindSpelResultaten();
-		}
 	}
 
 	private void transferChildren(VBox source, VBox target, Deque<DominotegelDTO> targetTegels) {
@@ -386,10 +368,8 @@ public class SpelController {
 			isEindeSpel = true;
 			showAlert("Einde spel", "Alle dominotegels zijn geplaatst. \nKingdomino is beëindigd",
 					AlertType.INFORMATION);
-			//	        if (dc.isEindeSpel()) {
 			toonEindSpelResultaten();
-			return; // Exit the method to prevent further actions
-
+			return;
 		}
 
 		// Only proceed to show the dominos if there are tiles left or if it's part of the ongoing round logic
@@ -500,8 +480,6 @@ public class SpelController {
 		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
 		Color spelerKleur = getColorForName(kleurCode);
 
-		// System.out.println("clickOpTegel" + tegel.toString());
-
 		updateGridBorderKleur(kleurCode);
 		if (!isStartKolom) {
 			showAlert("DominotegelDTO plaatsten",
@@ -555,40 +533,6 @@ public class SpelController {
 		gekozenTegels.add(tegel);
 		spelerTegelMap.put(huidigeSpelerIndex, tegel);
 	}
-
-	// private void populateGekozenDominotegels() {
-	//
-	// Node node = gekozenDominotegels.getChildren().get(0);
-	//
-	// ImageView tegelImageView = null;
-	// // Aanmaken of hergebruiken van de ImageView voor de dominotegel
-	// if (tegelImageView == null) {
-	// tegelImageView = new ImageView(new Image(tegel.getVoorkantFotoPad()));
-	// tegelImageView.setFitWidth(90);
-	// tegelImageView.setFitHeight(45);
-	// // Voeg de ImageView toe aan de map
-	// tegelViews.put(tegel, tegelImageView);
-	// }
-	//
-	// // Zet de afbeelding van de tegel
-	// Image tegelAfbeelding = new Image(tegel.getVoorkantFotoPad());
-	// tegelImageView.setImage(tegelAfbeelding);
-	// tegelImageView.setFitWidth(90);
-	// tegelImageView.setFitHeight(45);
-	//
-	// tegelEnKleurBox = new HBox(5, kleurIndicator, tegelImageView);
-	// tegelEnKleurBox.setUserData(tegel);
-	//
-	// gekozenDominotegels.getChildren().add(tegelEnKleurBox);
-	//
-	// // Stel klik-handler in voor de tegel
-	// if (isVolgendeRonde) {
-	// tegelImageView.setOnMouseClicked(event -> {
-	// rotate(tegel);
-	// });
-	//
-	// }
-	// }
 
 	private void toonTegelEnKleur(DominotegelDTO tegel, Color spelerKleur, boolean isStartKolom, int spelerIndex,
 			boolean eindkolomTegelNietGeklikkd) {
@@ -765,9 +709,7 @@ public class SpelController {
 
 	public void toonRugzijdeStapel() {
 		if (!stapel.isEmpty()) {
-			DominotegelDTO bovensteTegel = stapel.get(0); // Verkrijg de bovenste tegel zonder deze te verwijderen
-			// bovensteTegel.genereerFotoPaden(); // Zorg ervoor dat de paden gegenereerd
-			// zijn
+			DominotegelDTO bovensteTegel = stapel.get(0);
 			Image rugzijdeImage = new Image(bovensteTegel.achterkantFotoPad());
 			stapelRugzijdeImageView.setImage(rugzijdeImage);
 		} else {
@@ -786,26 +728,12 @@ public class SpelController {
 		int numRows = gridPane.getRowConstraints().size();
 		int numColumns = gridPane.getColumnConstraints().size();
 
-		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
-		String spelerInfo = (String) gekozenSpelerNode.getUserData();
-
-		SpelerDTO gevondenSpeler = null;
-		for (Map.Entry<SpelerDTO, Integer> entry : indexSpelerDTO.entrySet()) {
-
-			if (spelerIndex == entry.getValue()) {
-				gevondenSpeler = entry.getKey();
-			}
-		}
-
 		for (int rij = 0; rij < numRows; rij++) {
 			for (int kolom = 0; kolom < numColumns; kolom++) {
 				final int finalRow = rij; // Create final copies of row
 				final int finalColumn = kolom; // and column for use in lambda
 
 				Pane pane = new Pane();
-				// System.out.println(kanPlaatsen(spelerTegel.get(spelerInfo), rij, kolom,
-				// !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler) + ":" + kolom + ":" +
-				// rij);
 				pane.setOnMouseClicked(event -> handleTegelPlaatsing(event, gridPane, finalRow, finalColumn,
 						spelerIndex, tegel, imageView));
 
@@ -879,7 +807,6 @@ public class SpelController {
 			// + kolom + ":" + rij);
 			if (kanPlaatsen(tegel, kolom, rij, !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler)) {
 				plaatsTegelInGrid(tegel, gekliktGridPane, rij, kolom, newTegelImg);
-				geselecteerdeTegel = null; // Reset na plaatsing
 				dc.plaatsTegel(tegel, kolom, rij, !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler);
 				Vakje[][] koninkrijk = gevondenSpeler.koninkrijk();
 
@@ -904,9 +831,6 @@ public class SpelController {
 			ImageView newTegelImg) {
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
 		String spelerInfo = (String) gekozenSpelerNode.getUserData();
-		// String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
-
-		// ImageView newTegelImg = new ImageView();
 
 		if (newTegelImg != null) {
 			doelGridPane.add(newTegelImg, kolom, rij); // rji en kolom = ints
@@ -979,11 +903,6 @@ public class SpelController {
 	private void handleStartRondeBtnAction(ActionEvent event) {
 		Button startRondeButton = (Button) event.getSource(); // Get the button that was clicked
 
-		if (spelerInformatieContainer.getChildren().isEmpty()) {
-			System.out.println("Er zijn geen spelers.");
-			return;
-		}
-
 		if (!spelers.isEmpty()) {
 			Node eersteSpelerKleur = spelers.get(0); // Assuming the first player starts
 			String eersteSpelerInfo = (String) eersteSpelerKleur.getUserData();
@@ -991,8 +910,6 @@ public class SpelController {
 			updateGridBorderKleur(firstPlayerColor);
 		}
 
-		// If it's the first click and not yet the next round, begin the first selection
-		// phase
 		if (!isVolgendeRonde) {
 			int i = indexSpelerDTO.values().iterator().next();
 			clickOpTegel(null, true, i, false);
@@ -1004,7 +921,6 @@ public class SpelController {
 	private void showAlert(String title, String message, AlertType alertType) { // helper meth
 		Alert alert = new Alert(alertType);
 		alert.setTitle(title);
-		alert.setHeaderText(null);
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
@@ -1016,10 +932,6 @@ public class SpelController {
 		ronde();
 		updateGridBorderKleur("");
 		showAlert("Kies opnieuw een tegel", "Kies opnieuw een tegel uit de eindkolom", AlertType.INFORMATION);
-	}
-
-	public String bepaalWinnaar() {
-		return null;
 	}
 
 	public void setSpelers(List<SpelerDTO> spelers) {
