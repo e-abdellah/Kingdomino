@@ -380,9 +380,16 @@ public class Speler {
 							// omliggende vakjes.
 		}
 
-		Vakje[][] tempKoninkrijk = koninkrijk;
-		tempKoninkrijk[x][y] = vakje1;
-		tempKoninkrijk[x2][y2] = vakje2;
+		Vakje[][] tempKoninkrijk = deepCopy2DVakjeArray(koninkrijk);
+		tempKoninkrijk[x][y] = new Vakje(Landschap.KASTEEL);
+		tempKoninkrijk[x2][y2] = new Vakje(Landschap.KASTEEL);
+
+		for (int xx = 0; xx < tempKoninkrijk.length; xx++) {
+			for (int yy = 0; yy < tempKoninkrijk[xx].length; yy++) {
+				System.out.printf("%10s", tempKoninkrijk[xx][yy] != null ? tempKoninkrijk[xx][yy].getLandschap() : "");
+			}
+			System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
+		}
 
 		// Controleert of het plaatsen van de tegel niet zou resulteren in een rij of
 		// kolom die langer is dan 5.
@@ -434,15 +441,6 @@ public class Speler {
 		// Doorloopt alle vakjes in de rij of kolom, afhankelijk van de waarde van
 		// 'isRij'.
 
-		System.out.println("index=" + index);
-
-		for (int xx = 0; xx < koninkrijk.length; xx++) {
-			for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
-				System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
-			}
-			System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
-		}
-
 		for (int i = 0; i < koninkrijk.length; i++) {
 			// Selecteert het vakje op basis van de waarde van 'isRij'.
 			Vakje huidig = null;
@@ -455,8 +453,8 @@ public class Speler {
 			}
 
 			// Als het huidige vakje niet null is, update dan de minI en maxI waarden.
-			System.out.println(huidig + "koninkrijk[index][i]" + koninkrijk[index][i] + "koninkrijk[i][index]"
-					+ koninkrijk[i][index]);
+			//			System.out.println(huidig + "true" + koninkrijk[index][i] + "false"
+			//					+ koninkrijk[i][index]);
 			if (huidig != null) {
 				minI = Math.min(minI, i); // Vindt de kleinste index van een niet-null vakje.
 				maxI = Math.max(maxI, i); // Vindt de grootste index van een niet-null vakje.

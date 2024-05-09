@@ -292,8 +292,23 @@ public class SpelController {
 	}
 
 	private void toonEindSpelResultaten() {
-		String resultaten = dc.geefSpelResultaten();
-		showAlert("Het spel is gedaan!", resultaten, AlertType.INFORMATION);
+		dc.berekenWinnaars();
+
+		String resultaat = "";
+		// Voeg de winnaar toe aan de resultaat string indien er een winnaar is
+		for (SpelerDTO speler : spelersDTO) {
+			if (speler.isWinnaar()) {
+				//				resultaat += String.format("Scores van alle spelers: \n%s met %d spelletjes gewonnen en %d spelletjes gespeeld met een score van %d",
+				//						speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld(),
+				//						speler.scores().get(0));
+				resultaat = String.format(
+						"Scores van alle spelers: \n%s met %d spelletjes gewonnen en %d spelletjes gespeeld met een score van %d",
+						speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld(),
+						speler.scores().get(0));
+			}
+		}
+		//		System.out.println(resultaat);
+		showAlert("Het spel is gedaan!", resultaat, AlertType.INFORMATION);
 	}
 
 	private void ronde() {
