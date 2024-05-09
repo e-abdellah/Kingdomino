@@ -80,7 +80,6 @@ public class SpelController {
 	private DomeinController dc;
 	private int aantalSpelers;
 	private final WelkomKDController kdController;
-	boolean isEindeSpel;
 	private List<DominotegelDTO> stapel;
 	private Deque<DominotegelDTO> startKolomTegels;
 	private Deque<DominotegelDTO> eindkolomTegels;
@@ -293,48 +292,47 @@ public class SpelController {
 	}
 
 	private void toonEindSpelResultaten() {
-		String resultaten = dc.geefSpelResultaten(); 
+		String resultaten = dc.geefSpelResultaten();
 		showAlert("Het spel is gedaan!", resultaten, AlertType.INFORMATION);
 	}
 
 	private void ronde() {
-	    // Reset de ronde omgeving
-	    startKolom.getChildren().clear();
-	    eindkolom.getChildren().clear();
-	    gekozenDominotegels.getChildren().clear();
-	    startKolomTegels.clear();
-	    eindkolomTegels.clear();
-	    gekozenTegels.clear();
-	    startkolomSpelers.clear();
-	    eindkolomSpelers.clear();
-	    startRondeBtn.setDisable(false);
-	    volgendeRondeBtn.setDisable(true);
+		// Reset de ronde omgeving
+		startKolom.getChildren().clear();
+		eindkolom.getChildren().clear();
+		gekozenDominotegels.getChildren().clear();
+		startKolomTegels.clear();
+		eindkolomTegels.clear();
+		gekozenTegels.clear();
+		startkolomSpelers.clear();
+		eindkolomSpelers.clear();
+		startRondeBtn.setDisable(false);
+		volgendeRondeBtn.setDisable(true);
 
-	    // Clear grids' visibility for new round
-	    gridBlauw.setGridLinesVisible(false);
-	    gridGroen.setGridLinesVisible(false);
-	    gridGeel.setGridLinesVisible(false);
-	    gridRoos.setGridLinesVisible(false);
+		// Clear grids' visibility for new round
+		gridBlauw.setGridLinesVisible(false);
+		gridGroen.setGridLinesVisible(false);
+		gridGeel.setGridLinesVisible(false);
+		gridRoos.setGridLinesVisible(false);
 
-	    transferChildren(gekozenDominotegelsEindKolom, gekozenDominotegels, gekozenTegelsStartkolom);
+		transferChildren(gekozenDominotegelsEindKolom, gekozenDominotegels, gekozenTegelsStartkolom);
 
-	    if (!stapel.isEmpty()) {
-	       
-	        speelRonde(true, eindkolomTegels); 
-	    } else {
-	       
-	        toonEindSpelResultaten();
-	        return;
-	    }
+		if (!stapel.isEmpty()) {
 
-	    toonRugzijdeStapel();
+			speelRonde(true, eindkolomTegels);
+		} else {
 
-	    if (dc.isEindeSpel()) {
-	        toonEindSpelResultaten();
-	    }
+			toonEindSpelResultaten();
+			return;
+		}
+
+		toonRugzijdeStapel();
+
+		if (dc.isEindeSpel()) {
+			toonEindSpelResultaten();
+		}
 	}
-	
-	
+
 	private void transferChildren(VBox source, VBox target, Deque<DominotegelDTO> targetTegels) {
 		List<Node> children = new ArrayList<>(source.getChildren());
 
@@ -356,45 +354,36 @@ public class SpelController {
 	}
 
 	public void speelRonde(boolean toonBeideZijden, Deque<DominotegelDTO> list) {
-		if (isEindeSpel || stapel.isEmpty()) {
-			showAlert("Einde spel", "Alle dominotegels zijn geplaats. \nKingdomino is beeindigt",
-					AlertType.INFORMATION);
-			return;
-		}
-		for (int i = 0; i < aantalSpelers; i++) {
-			DominotegelDTO tegel = stapel.get(0); // Haal de bovenste tegel van de stapel
-			stapel.remove(0);
+		int aantalTeTrekkenTegels = Math.min(aantalSpelers, stapel.size()); // Only draw as many tiles as available
+
+		for (int i = 0; i < aantalTeTrekkenTegels; i++) {
+			DominotegelDTO tegel = stapel.remove(0); // Remove the tile from the stack
 			list.offer(tegel);
 		}
 
-	    for (int i = 0; i < aantalTeTrekkenTegels; i++) {
-	        DominotegelDTO tegel = stapel.remove(0); // Remove the tile from the stack
-	        list.offer(tegel);
-	    }
+		// Check if the stack is empty after drawing the tiles
+		if (stapel.isEmpty()) {
+			isEindeSpel = true;
+			showAlert("Einde spel", "Alle dominotegels zijn geplaatst. \nKingdomino is beëindigd",
+					AlertType.INFORMATION);
+			//	        if (dc.isEindeSpel()) {
+			toonEindSpelResultaten();
+			return; // Exit the method to prevent further actions
 
-	    // Check if the stack is empty after drawing the tiles
-	    if (stapel.isEmpty()) {
-	    	isEindeSpel = true;
-	        showAlert("Einde spel", "Alle dominotegels zijn geplaatst. \nKingdomino is beëindigd", AlertType.INFORMATION);
-//	        if (dc.isEindeSpel()) {
-	            toonEindSpelResultaten();
-	            return; // Exit the method to prevent further actions
-	        
-	    }
+		}
 
-	    // Only proceed to show the dominos if there are tiles left or if it's part of the ongoing round logic
-	    if (!isVolgendeRonde || toonBeideZijden) {
-	        if (isVolgendeRonde) {
-	            huidigeSpelerIndex = 0;
-	            toonEindkolom(new ArrayList<>(list)); // Show tiles for the end column
-	        } else {
-	            toonStartKolom(new ArrayList<>(list)); // Show tiles for the start column
-	        }
-	    } else {
-	        // This else part can be used to handle scenarios where you don't want to show any tiles but need to perform other updates
-	    }
+		// Only proceed to show the dominos if there are tiles left or if it's part of the ongoing round logic
+		if (!isVolgendeRonde || toonBeideZijden) {
+			if (isVolgendeRonde) {
+				huidigeSpelerIndex = 0;
+				toonEindkolom(new ArrayList<>(list)); // Show tiles for the end column
+			} else {
+				toonStartKolom(new ArrayList<>(list)); // Show tiles for the start column
+			}
+		} else {
+			// This else part can be used to handle scenarios where you don't want to show any tiles but need to perform other updates
+		}
 	}
-
 
 	public void toonTegels(Deque<DominotegelDTO> dominotegels) {
 		startKolom.getChildren().clear();
@@ -874,6 +863,12 @@ public class SpelController {
 				dc.plaatsTegel(tegel, kolom, rij, !hoeken.isEmpty() ? hoeken.get(0) : 0, gevondenSpeler);
 				Vakje[][] koninkrijk = gevondenSpeler.koninkrijk();
 
+				for (int xx = 0; xx < koninkrijk.length; xx++) {
+					for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
+						System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
+					}
+					System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
+				}
 				hoeken.clear();
 			}
 
@@ -1013,9 +1008,7 @@ public class SpelController {
 
 	@FXML
 	private void handleSkipRondeBtnAction(ActionEvent event) {
-		dc.skip();
-		isEindeSpel = dc.isEindeSpel();
-		//		ronde(); // Advance to the next round
+		ronde(); // Advance to the next round
 	}
 
 }
