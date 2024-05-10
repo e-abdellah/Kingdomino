@@ -27,6 +27,11 @@ public class Vakje {
 		setAantalKronen(aantalKronen);
 	}
 
+	public Vakje(int aantalKronen, Landschap landschap) {
+		this.landschap = landschap;
+		setAantalKronen(aantalKronen);
+	}
+
 	public int getX() {
 		return x;
 	}

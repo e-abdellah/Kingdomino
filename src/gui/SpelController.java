@@ -791,11 +791,22 @@ public class SpelController {
 			showAlert("Verkeerde Grid", "Je kunt je tegel alleen in je eigen grid plaatsen.", AlertType.WARNING);
 		} else {
 
-			SpelerDTO gevondenSpeler = null;
+			SpelerDTO gevondenSpeler = dc.refreshSpeler().get(0);
+			Map<SpelerDTO, Integer> temp = new HashMap<>();
 			for (Map.Entry<SpelerDTO, Integer> entry : indexSpelerDTO.entrySet()) {
 
+				SpelerDTO tempDTO = null;
+
+				for (SpelerDTO dto : dc.refreshSpeler()) {
+
+					if (dto.gebruikersnaam() == entry.getKey().gebruikersnaam()) {
+						temp.put(dto, entry.getValue());
+						tempDTO = dto;
+					}
+				}
+
 				if (spelerIndex == entry.getValue()) {
-					gevondenSpeler = entry.getKey();
+					gevondenSpeler = tempDTO;
 				}
 			}
 			// System.out.println(
@@ -809,9 +820,11 @@ public class SpelController {
 
 				for (int xx = 0; xx < koninkrijk.length; xx++) {
 					for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
-						System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
+						System.out.printf("%10s",
+								koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getAantalKronen() : "");
 					}
 					System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
+
 				}
 				hoeken.clear();
 			}
@@ -836,6 +849,7 @@ public class SpelController {
 			System.out.println("Geen geldige tegel of ImageView gevonden voor speler: " + spelerInfo + "tegel: " + tegel
 					+ "Nimg: " + newTegelImg);
 		}
+
 		kiesTegel(tegel, false);
 
 		spelerTegel.put(spelerInfo, tegelsEindkolomSpelers.get(spelerInfo));

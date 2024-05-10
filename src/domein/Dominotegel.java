@@ -19,6 +19,14 @@ public class Dominotegel {
 		genereerFotoPaden();
 	}
 
+	public Dominotegel(Vakje vakje1, Vakje vakje2, int getal, int zijde) {
+		setVakje1(vakje1);
+		setVakje2(vakje2);
+		setGetal(getal);
+		setZijde(zijde);
+		genereerFotoPaden();
+	}
+
 	public Dominotegel() {
 		// TODO Auto-generated constructor stub
 	}

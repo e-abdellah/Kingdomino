@@ -218,6 +218,7 @@ public class Speler {
 
 		// Retourneert de lijst met scores, maximale gebiedsgrootte, en maximale aantal
 		// kronen.
+		System.out.println("returnwaarde" + returnwaarde);
 		return returnwaarde;
 	}
 
@@ -271,12 +272,23 @@ public class Speler {
 		} catch (IndexOutOfBoundsException ignored) {
 		}
 
+		for (int xx = 0; xx < koninkrijk.length; xx++) {
+			for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
+				// Controleer of het huidige vakje de starttegel is
+				// Toon het landschap op het huidige vakje, als het vakje niet leeg is
+				System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
+			}
+			System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
+		}
+		System.out.println("kronen" + kronen);
+
 		// Voegt het totale aantal vakjes en kronen toe aan de scorelijst.
 		score.add(aantal);
 		score.add(kronen);
 
 		// Retourneert de lijst met het totale aantal vakjes en het totale aantal kronen
 		// in dit gebied.
+		System.out.println(score);
 		return score;
 	}
 
@@ -325,7 +337,6 @@ public class Speler {
 	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int hoek) {
 
 		int dx = 0, dy = 0;
-		System.out.println("spelers" + hoek + "y:" + y + " x: " + x);
 		switch (hoek) {
 		case 90:
 			dx = +1;
@@ -344,7 +355,6 @@ public class Speler {
 		// bereken voor 2e vakje
 		int x2 = x + dx;
 		int y2 = y + dy;
-		System.out.println("y2: " + y2 + "x2: " + x2);
 
 		if (hoek == 180 || hoek == 270) {
 			int tempx2 = x2;
@@ -384,12 +394,10 @@ public class Speler {
 		tempKoninkrijk[x][y] = new Vakje(Landschap.ZAND);
 		tempKoninkrijk[x2][y2] = new Vakje(Landschap.ZAND);
 
-		System.out.println(tempKoninkrijk[x][y]);
-
 		// Controleert of het plaatsen van de tegel niet zou resulteren in een rij of
 		// kolom die langer is dan 5.
-		if (!isMaxVijfLang(tempKoninkrijk, y, true) || !isMaxVijfLang(tempKoninkrijk, y2, true)
-				|| !isMaxVijfLang(tempKoninkrijk, x, false) || !isMaxVijfLang(tempKoninkrijk, x2, false)) {
+		if (!isMaxVijfLang(tempKoninkrijk) || !isMaxVijfLang(tempKoninkrijk) || !isMaxVijfLang(tempKoninkrijk)
+				|| !isMaxVijfLang(tempKoninkrijk)) {
 			return false; // Retourneert false als het plaatsen de maximale lengte van rijen of kolommen
 							// zou overschrijden.
 		}
@@ -427,47 +435,42 @@ public class Speler {
 						// landschapstype heeft.
 	}
 
-	private static boolean isMaxVijfLang(Vakje[][] koninkrijk, int index, boolean isRij) {
+	private static boolean isMaxVijfLang(Vakje[][] koninkrijk) {
 		// Initialisatie van de minimum en maximum indices tot extreme waarden.
 		int minI = Integer.MAX_VALUE;
 		int maxI = Integer.MIN_VALUE;
-		int verschil = 0;
+		int minIK = Integer.MAX_VALUE;
+		int maxIK = Integer.MIN_VALUE;
+		int verschilRij = 0, verschilKolom = 0;
 
 		// Doorloopt alle vakjes in de rij of kolom, afhankelijk van de waarde van
 		// 'isRij'.
 
-		for (int i = 0; i < koninkrijk.length; i++) {
-			// Selecteert het vakje op basis van de waarde van 'isRij'.
-			Vakje huidig = null;
-			//			huidig = isRij ? koninkrijk[index][i] : koninkrijk[i][index];
+		for (int j = 0; j < koninkrijk.length; j++) {
+			for (int i = 0; i < koninkrijk.length; i++) {
+				// Selecteert het vakje op basis van de waarde van 'isRij'.
+				Vakje huidig = koninkrijk[j][i];
+				Vakje huidigK = koninkrijk[j][i];
 
-			if (!isRij) {
-				huidig = koninkrijk[index][i];
-				//				System.out.println(koninkrijk[index][i]);
-			} else {
-				huidig = koninkrijk[i][index];
-			}
-
-			// Als het huidige vakje niet null is, update dan de minI en maxI waarden.
-			//			System.out.println("huidig:" + huidig + "true" + koninkrijk[index][i] + "false" + koninkrijk[i][index]);
-			if (huidig != null) {
-				minI = Math.min(minI, i); // Vindt de kleinste index van een niet-null vakje.
-				maxI = Math.max(maxI, i); // Vindt de grootste index van een niet-null vakje.
-				verschil = Math.max(maxI - minI, verschil);
-				System.out.println(minI + "max=" + maxI + "huidig:" + huidig + "isrij: " + isRij);
+				// Als het huidige vakje niet null is, update dan de minI en maxI waarden.
+				//            System.out.println(huidig + "true" + koninkrijk[index][i] + "false"
+				//                    + koninkrijk[i][index]);
+				if (huidig != null) {
+					minI = Math.min(minI, i); // Vindt de kleinste index van een niet-null vakje.
+					maxI = Math.max(maxI, i); // Vindt de grootste index van een niet-null vakje.
+					verschilRij = Math.max(maxI - minI, verschilRij);//0 1 2 3 4 5 6
+				}
+				if (huidigK != null) {
+					minIK = Math.min(minI, i); // Vindt de kleinste index van een niet-null vakje.
+					maxIK = Math.max(maxI, i); // Vindt de grootste index van een niet-null vakje.
+					verschilKolom = Math.max(maxI - minI, verschilKolom);//0 1 2 3 4 5 6
+				}
 			}
 		}
-
-		//		for (int xx = 0; xx < koninkrijk.length; xx++) {
-		//			for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
-		//				System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
-		//			}
-		//			System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
-		//		}
 		// Retourneert true als de afstand tussen de verste niet-null vakjes minder is
 		// dan vijf.
-		//		return (maxI - minI < 5);
-		return verschil < 5;
+		//        return (maxI - minI < 5);
+		return verschilRij < 5 || verschilKolom < 5;
 	}
 
 }

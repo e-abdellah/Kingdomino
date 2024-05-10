@@ -85,54 +85,57 @@ public class Spel {
 
 	private void genereerAantalDominotegels() { // cijfer achterkant, aantal kronen, (0 = 0kronen, 1 = kronen links, 2 =
 												// kronen rechts)
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(ZAND), 1, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(ZAND), 2, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(BOS), 3, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(BOS), 4, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(BOS), 5, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(BOS), 6, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(WATER), 7, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(WATER), 8, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(WATER), 9, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(GRAS), new Vakje(GRAS), 10, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(GRAS), new Vakje(GRAS), 11, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(AARDE), new Vakje(AARDE), 12, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(BOS), 13, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(WATER), 14, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(GRAS), 15, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(AARDE), 16, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(WATER), 17, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(GRAS), 18, 0, 0));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(WATER), 19, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(BOS), 20, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(GRAS), 21, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(AARDE), 22, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(MIJN), 23, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(ZAND), 24, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(ZAND), 25, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(ZAND), 26, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(ZAND), 27, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(WATER), 28, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(BOS), new Vakje(GRAS), 29, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(ZAND), 30, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(ZAND), 31, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(BOS), 32, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(BOS), 33, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(BOS), 34, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(BOS), 35, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(GRAS), 36, 1, 2));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(GRAS), 37, 1, 2));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(AARDE), 38, 1, 2));
-		dominotegels.add(new Dominotegel(new Vakje(GRAS), new Vakje(AARDE), 39, 1, 2));
-		dominotegels.add(new Dominotegel(new Vakje(MIJN), new Vakje(ZAND), 40, 1, 1));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(GRAS), 41, 2, 2));
-		dominotegels.add(new Dominotegel(new Vakje(WATER), new Vakje(GRAS), 42, 2, 2));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(AARDE), 43, 2, 2));
-		dominotegels.add(new Dominotegel(new Vakje(GRAS), new Vakje(AARDE), 44, 2, 2));
-		dominotegels.add(new Dominotegel(new Vakje(MIJN), new Vakje(ZAND), 45, 2, 1));
-		dominotegels.add(new Dominotegel(new Vakje(AARDE), new Vakje(MIJN), 46, 2, 2));
-		dominotegels.add(new Dominotegel(new Vakje(AARDE), new Vakje(MIJN), 47, 2, 2));
-		dominotegels.add(new Dominotegel(new Vakje(ZAND), new Vakje(MIJN), 48, 3, 2));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(ZAND, 0), 1, 0));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(ZAND, 0), 2, 0));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 0), new Vakje(BOS, 0), 3, 0));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 0), new Vakje(BOS, 0), 4, 0));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 0), new Vakje(BOS, 0), 5, 0));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 0), new Vakje(BOS, 0), 6, 0));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 0), new Vakje(WATER, 0), 7, 0));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 0), new Vakje(WATER, 0), 8, 0));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 0), new Vakje(WATER, 0), 9, 0));
+		dominotegels.add(new Dominotegel(new Vakje(GRAS, 0), new Vakje(GRAS, 0), 10, 0));
+		dominotegels.add(new Dominotegel(new Vakje(GRAS, 0), new Vakje(GRAS, 0), 11, 0));
+		dominotegels.add(new Dominotegel(new Vakje(AARDE, 0), new Vakje(AARDE, 0), 12, 0));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(BOS, 0), 13, 0));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(WATER, 0), 14, 0));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(GRAS, 0), 15, 0));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(AARDE, 0), 16, 0));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 0), new Vakje(WATER, 0), 17, 0));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 0), new Vakje(GRAS, 0), 18, 0));
+
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 1), new Vakje(WATER, 0), 19, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 1), new Vakje(BOS, 0), 20, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 1), new Vakje(GRAS, 0), 21, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 1), new Vakje(AARDE, 0), 22, 1));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 1), new Vakje(MIJN, 0), 23, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 1), new Vakje(ZAND, 0), 24, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 1), new Vakje(ZAND, 0), 25, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 1), new Vakje(ZAND, 0), 26, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 1), new Vakje(ZAND, 0), 27, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 1), new Vakje(WATER, 0), 28, 1));
+		dominotegels.add(new Dominotegel(new Vakje(BOS, 1), new Vakje(GRAS, 0), 29, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 1), new Vakje(ZAND, 0), 30, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 1), new Vakje(ZAND, 0), 31, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 1), new Vakje(BOS, 0), 32, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 1), new Vakje(BOS, 0), 33, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 1), new Vakje(BOS, 0), 34, 1));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 1), new Vakje(BOS, 0), 35, 1));
+
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(GRAS, 1), 36, 2));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 0), new Vakje(GRAS, 1), 37, 2));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(AARDE, 1), 38, 2));
+		dominotegels.add(new Dominotegel(new Vakje(GRAS, 0), new Vakje(AARDE, 1), 39, 2));
+		dominotegels.add(new Dominotegel(new Vakje(MIJN, 1), new Vakje(ZAND, 0), 40, 1));
+
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(GRAS, 2), 41, 2));
+		dominotegels.add(new Dominotegel(new Vakje(WATER, 0), new Vakje(GRAS, 2), 42, 2));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(AARDE, 2), 43, 2));
+		dominotegels.add(new Dominotegel(new Vakje(GRAS, 0), new Vakje(AARDE, 2), 44, 2));
+		dominotegels.add(new Dominotegel(new Vakje(MIJN, 2), new Vakje(ZAND, 0), 45, 1));
+		dominotegels.add(new Dominotegel(new Vakje(AARDE, 0), new Vakje(MIJN, 2), 46, 2));
+		dominotegels.add(new Dominotegel(new Vakje(AARDE, 0), new Vakje(MIJN, 2), 47, 2));
+		dominotegels.add(new Dominotegel(new Vakje(ZAND, 0), new Vakje(MIJN, 3), 48, 2));
 
 	}
 
