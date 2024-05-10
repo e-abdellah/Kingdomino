@@ -3,6 +3,7 @@ package domein;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import dto.DominotegelDTO;
@@ -140,14 +141,21 @@ public class DomeinController {
 		spel.berekenWinnaars();
 	}
 
-	public List<SpelerDTO> refreshSpeler() {
-		List<SpelerDTO> dtos = new ArrayList<>();
-		for (Speler s : spel.getSpelers()) {
-			dtos.add(new SpelerDTO(s.getGebruikersnaam(), s.getGeboortejaar(), s.getAantalGewonnen(),
-					s.getAantalGespeeld(), s.getKoninkrijk(), s.getScores(), s.isWinnaar()));
+	public List<Speler> refreshSpeler() {
+
+		return spel.getSpelers();
+	}
+
+	public Speler geefScore() {
+		Map<Speler, List<Integer>> map = spel.geefScores();
+
+		Speler speler = null;
+
+		for (Map.Entry<Speler, List<Integer>> entry : map.entrySet()) {
+			speler = entry.getKey();
 		}
 
-		return dtos;
+		return speler;
 	}
 
 	public List<String> geefKleurenInTaal(Locale locale) {

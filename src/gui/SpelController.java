@@ -15,6 +15,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import domein.DomeinController;
+import domein.Speler;
 import domein.Vakje;
 import dto.DominotegelDTO;
 import dto.SpelerDTO;
@@ -295,14 +296,18 @@ public class SpelController {
 
 		final String[] scores = { "Scores van alle spelers:\n" }; // Using an array to hold the string because it needs to be effectively final
 
-		List<SpelerDTO> dtos = dc.refreshSpeler();
+		List<Speler> dtos = dc.refreshSpeler();
 
 		dtos.stream().forEach(s -> {
-			scores[0] += s.gebruikersnaam() + " met " + s.aantalGewonnen() + " spelletjes gewonnen en "
-					+ s.aantalGespeeld() + " spelletjes gespeeld met een score van " + s.scores() + "\n";
+			scores[0] += s.getGebruikersnaam() + " met " + s.getAantalGewonnen() + " spelletjes gewonnen en "
+					+ s.getAantalGespeeld() + " spelletjes gespeeld met een score van " + s.berekenScore() + "\n";
 		});
 
 		showAlert("Het spel is gedaan", scores[0], AlertType.INFORMATION);
+
+		//		showAlert("Winnaar",
+		//				"De winnar is" + dc.geefScore().getGebruikersnaam() + "met score + " + s.berekenScore(),
+		//				AlertType.INFORMATION);
 	}
 
 	private void ronde() {
