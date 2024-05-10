@@ -162,7 +162,7 @@ public class Speler {
 	 * eens hiermee rond backtraced hij voor degene die hij misste. Elk gecheckt
 	 * vakje word op null gezet hierdoor wordt niets dubbel geteld.
 	 */
-	private List<Integer> berekenScore() {
+	public List<Integer> berekenScore() {
 		// Een lijst die zal worden geretourneerd met de totale score, grootste gebied,
 		// en hoogste aantal kronen.
 		List<Integer> returnwaarde = new ArrayList<>();
@@ -381,15 +381,10 @@ public class Speler {
 		}
 
 		Vakje[][] tempKoninkrijk = deepCopy2DVakjeArray(koninkrijk);
-		tempKoninkrijk[x][y] = new Vakje(Landschap.KASTEEL);
-		tempKoninkrijk[x2][y2] = new Vakje(Landschap.KASTEEL);
+		tempKoninkrijk[x][y] = new Vakje(Landschap.ZAND);
+		tempKoninkrijk[x2][y2] = new Vakje(Landschap.ZAND);
 
-		for (int xx = 0; xx < tempKoninkrijk.length; xx++) {
-			for (int yy = 0; yy < tempKoninkrijk[xx].length; yy++) {
-				System.out.printf("%10s", tempKoninkrijk[xx][yy] != null ? tempKoninkrijk[xx][yy].getLandschap() : "");
-			}
-			System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
-		}
+		System.out.println(tempKoninkrijk[x][y]);
 
 		// Controleert of het plaatsen van de tegel niet zou resulteren in een rij of
 		// kolom die langer is dan 5.
@@ -446,22 +441,29 @@ public class Speler {
 			Vakje huidig = null;
 			//			huidig = isRij ? koninkrijk[index][i] : koninkrijk[i][index];
 
-			if (isRij) {
+			if (!isRij) {
 				huidig = koninkrijk[index][i];
+				//				System.out.println(koninkrijk[index][i]);
 			} else {
 				huidig = koninkrijk[i][index];
 			}
 
 			// Als het huidige vakje niet null is, update dan de minI en maxI waarden.
-			//			System.out.println(huidig + "true" + koninkrijk[index][i] + "false"
-			//					+ koninkrijk[i][index]);
+			//			System.out.println("huidig:" + huidig + "true" + koninkrijk[index][i] + "false" + koninkrijk[i][index]);
 			if (huidig != null) {
 				minI = Math.min(minI, i); // Vindt de kleinste index van een niet-null vakje.
 				maxI = Math.max(maxI, i); // Vindt de grootste index van een niet-null vakje.
-				verschil = Math.max(maxI - minI, verschil);//0 1 2 3 4 5 6
-				System.out.println(minI + "max=" + maxI);
+				verschil = Math.max(maxI - minI, verschil);
+				System.out.println(minI + "max=" + maxI + "huidig:" + huidig + "isrij: " + isRij);
 			}
 		}
+
+		//		for (int xx = 0; xx < koninkrijk.length; xx++) {
+		//			for (int yy = 0; yy < koninkrijk[xx].length; yy++) {
+		//				System.out.printf("%10s", koninkrijk[xx][yy] != null ? koninkrijk[xx][yy].getLandschap() : "");
+		//			}
+		//			System.out.println(); // Na elke rij van vakjes, een nieuwe regel toevoegen
+		//		}
 		// Retourneert true als de afstand tussen de verste niet-null vakjes minder is
 		// dan vijf.
 		//		return (maxI - minI < 5);

@@ -187,6 +187,7 @@ public class Spel {
 	}
 
 	public HashMap<Speler, List<Integer>> geefScores() {
+
 		// Creëert een nieuwe LinkedHashMap, waarin de volgorde van invoer van spelers
 		// behouden blijft.
 		HashMap<Speler, List<Integer>> spelerScores = new LinkedHashMap<>();
@@ -195,7 +196,7 @@ public class Spel {
 		for (Speler speler : spelers) {
 			// Voegt de speler toe aan de map 'spelerScores', met als waarde de lijst van
 			// scores van die speler.
-			spelerScores.put(speler, speler.getScores());
+			spelerScores.put(speler, speler.berekenScore());
 		}
 
 		// Retourneert de map die alle spelers en hun respectievelijke scores bevat.
@@ -212,7 +213,6 @@ public class Spel {
 
 	public void sorteerOpScore() {
 		spelers.sort(new utils.ScoreComparator());
-
 	}
 
 	public List<Dominotegel> geefBeginOfEindKolom() {

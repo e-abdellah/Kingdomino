@@ -290,22 +290,20 @@ public class SpelController {
 				AlertType.INFORMATION);
 	}
 
-    private void toonEindSpelResultaten() {
-        dc.berekenWinnaars();
+	private void toonEindSpelResultaten() {
+		dc.berekenWinnaars();
 
 		final String[] scores = { "Scores van alle spelers:\n" }; // Using an array to hold the string because it needs to be effectively final
 
-		List<SpelerDTO> dtos = spelersDTO;
+		List<SpelerDTO> dtos = dc.refreshSpeler();
 
 		dtos.stream().forEach(s -> {
 			scores[0] += s.gebruikersnaam() + " met " + s.aantalGewonnen() + " spelletjes gewonnen en "
-					+ s.aantalGespeeld() + " spelletjes gespeeld met een score van " + s.scores().get(0) + "\n";
+					+ s.aantalGespeeld() + " spelletjes gespeeld met een score van " + s.scores() + "\n";
 		});
 
 		showAlert("Het spel is gedaan", scores[0], AlertType.INFORMATION);
 	}
-
-
 
 	private void ronde() {
 		// Reset de ronde omgeving
@@ -470,8 +468,6 @@ public class SpelController {
 		if (handleNullTegel(tegel) || tegelIsAlGekozen(tegel)) {
 			return; // Als de tegel null is of al gekozen, stop de methode hier
 		}
-		// this.geselecteerdeTegel = tegel; // Sla de geklikte tegel op als de huidig
-		// geselecteerde tegel
 
 		// Haal de spelerNode op uit de geshuffelde lijst
 		Node gekozenSpelerNode = spelers.get(huidigeSpelerIndex);
@@ -482,7 +478,7 @@ public class SpelController {
 
 		updateGridBorderKleur(kleurCode);
 		if (!isStartKolom) {
-			showAlert("DominotegelDTO plaatsten",
+			showAlert("Dominotegel plaatsten",
 					"Draai uw tegel door erop te klikken\nVervolgens plaats de tegel in uw koninkrijk",
 					AlertType.INFORMATION);
 			toonTegelEnKleur(tegel, spelerKleur, isStartKolom, spelerIndex, true);
@@ -654,6 +650,7 @@ public class SpelController {
 		if (isStartKolom && isVolgendeRonde == false) {
 			startkolomSpelers.add(huidigeSpelerIndex);
 			if (startkolomSpelers.size() >= aantalSpelers) {
+				System.out.println(startkolomSpelers.size() + "#" + aantalSpelers);
 				startKolom.getChildren().clear();
 				huidigeSpelerIndex = -1; // Reset voor de eindkolom
 				toonEindkolom(new ArrayList<>(eindkolomTegels));

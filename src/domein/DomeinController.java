@@ -140,6 +140,16 @@ public class DomeinController {
 		spel.berekenWinnaars();
 	}
 
+	public List<SpelerDTO> refreshSpeler() {
+		List<SpelerDTO> dtos = new ArrayList<>();
+		for (Speler s : spel.getSpelers()) {
+			dtos.add(new SpelerDTO(s.getGebruikersnaam(), s.getGeboortejaar(), s.getAantalGewonnen(),
+					s.getAantalGespeeld(), s.getKoninkrijk(), s.getScores(), s.isWinnaar()));
+		}
+
+		return dtos;
+	}
+
 	public List<String> geefKleurenInTaal(Locale locale) {
 		// Laadt een ResourceBundle voor kleuren, gebaseerd op de opgegeven locale.
 		ResourceBundle colors = ResourceBundle.getBundle("utils.resource_bundle", locale);
