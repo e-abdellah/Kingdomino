@@ -291,24 +291,29 @@ public class SpelController {
 				AlertType.INFORMATION);
 	}
 
-	private void toonEindSpelResultaten() {
-		dc.berekenWinnaars();
+    private void toonEindSpelResultaten() {
+        dc.berekenWinnaars();
 
-		StringBuilder resultaat = new StringBuilder("Scores van alle spelers:\n");
-		for (SpelerDTO speler : spelersDTO) {
-			if (speler.isWinnaar()) {
-				resultaat.append(String.format("%s met %d spelletjes gewonnen en %d spelletjes gespeeld met een score van %d\n",
-						speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld(),
-						speler.scores().get(0)));
-			}
-		}
+        StringBuilder resultaat = new StringBuilder("Scores van alle spelers:\n");
+        for (SpelerDTO speler : spelersDTO) {
+            if (speler.isWinnaar()) {
+                resultaat.append(String.format("%s met %d spelletjes gewonnen en %d spelletjes gespeeld met een score van %d\n",
+                        speler.gebruikersnaam(), speler.aantalGewonnen(), speler.aantalGespeeld(),
+                        speler.scores().get(0)));
+            }
+        }
 
-		if (resultaat.length() == "Scores van alle spelers:\n".length()) {
-			resultaat.append("Geen winnaars dit spel.");
-		}
+        if (resultaat.length() == "Scores van alle spelers:\n".length()) {
+            resultaat.append("Geen winnaars dit spel.");
+        }
 
-		System.out.println(resultaat.toString());  // Of toon het resultaat in een GUI-element
-	}
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Eindspel Resultaten");
+        alert.setHeaderText("Resultaten van het spel");
+        alert.setContentText(resultaat.toString());
+        alert.showAndWait();
+    }
+
 
 
 	private void ronde() {
