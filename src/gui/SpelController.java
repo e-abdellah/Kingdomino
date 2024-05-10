@@ -300,7 +300,7 @@ public class SpelController {
 
 		dtos.stream().forEach(s -> {
 			scores[0] += s.getGebruikersnaam() + " met " + s.getAantalGewonnen() + " spelletjes gewonnen en "
-					+ s.getAantalGespeeld() + " spelletjes gespeeld met een score van " + s.berekenScore() + "\n";
+					+ s.getAantalGespeeld() + " spelletjes gespeeld met een score van " + s.berekenScore().get(0) + "\n";
 		});
 
 		showAlert("Het spel is gedaan", scores[0], AlertType.INFORMATION);
@@ -796,13 +796,13 @@ public class SpelController {
 			showAlert("Verkeerde Grid", "Je kunt je tegel alleen in je eigen grid plaatsen.", AlertType.WARNING);
 		} else {
 
-			SpelerDTO gevondenSpeler = dc.refreshSpeler().get(0);
+			SpelerDTO gevondenSpeler = dc.refreshSpelerDTO().get(0);
 			Map<SpelerDTO, Integer> temp = new HashMap<>();
 			for (Map.Entry<SpelerDTO, Integer> entry : indexSpelerDTO.entrySet()) {
 
 				SpelerDTO tempDTO = null;
 
-				for (SpelerDTO dto : dc.refreshSpeler()) {
+				for (SpelerDTO dto : dc.refreshSpelerDTO()) {
 
 					if (dto.gebruikersnaam() == entry.getKey().gebruikersnaam()) {
 						temp.put(dto, entry.getValue());

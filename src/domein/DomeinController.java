@@ -145,6 +145,16 @@ public class DomeinController {
 
 		return spel.getSpelers();
 	}
+	
+	public List<SpelerDTO> refreshSpelerDTO() {
+        List<SpelerDTO> dtos = new ArrayList<>();
+        for (Speler s : spel.getSpelers()) {
+            dtos.add(new SpelerDTO(s.getGebruikersnaam(), s.getGeboortejaar(), s.getAantalGewonnen(),
+                    s.getAantalGespeeld(), s.getKoninkrijk(), s.getScores(), s.isWinnaar()));
+        }
+
+        return dtos;
+    }
 
 	public Speler geefScore() {
 		Map<Speler, List<Integer>> map = spel.geefScores();
