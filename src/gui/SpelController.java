@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import domein.DomeinController;
 import domein.Speler;
@@ -42,6 +44,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
 
 public class SpelController {
+
+	//private ResourceBundle resourceBundle;
 
 	@FXML
 	private Label spelLabel;
@@ -77,6 +81,7 @@ public class SpelController {
 	private ImageView imageView;
 	@FXML
 	private Button skipRondeBtn;
+
 
 	private DomeinController dc;
 	private int aantalSpelers;
