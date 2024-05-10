@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.Locale;
 import java.util.ResourceBundle;
 
 import domein.DomeinController;
@@ -45,7 +44,7 @@ import javafx.scene.transform.Rotate;
 
 public class SpelController {
 
-	//private ResourceBundle resourceBundle;
+	private ResourceBundle resourceBundle;
 
 	@FXML
 	private Label spelLabel;
@@ -117,6 +116,7 @@ public class SpelController {
 	private boolean isEindeSpel;
 
 	public SpelController() {
+		resourceBundle = ResourceBundle.getBundle("messages");
 		dc = DomeinController.getInstance();
 		kdController = new WelkomKDController();
 		spelerKleuren = new ArrayList<>();
@@ -175,9 +175,17 @@ public class SpelController {
 	@FXML
 	// Methode om de anchorpane & achtergrond responsive te maken
 	private void initialize() {
+		loadText();
 		imageView.fitWidthProperty().bind(root.widthProperty());
 		imageView.fitHeightProperty().bind(root.heightProperty());
 		root.getStylesheets().add(getClass().getResource("/gui/style.css").toExternalForm());
+
+	}
+
+	private void loadText() {
+		spelLabel.setText(resourceBundle.getString("welkomMessage"));
+		startRondeBtn.setText(resourceBundle.getString("startButton"));
+		volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeAlertTitle"));
 
 	}
 
@@ -291,28 +299,20 @@ public class SpelController {
 		};
 	}
 
-	public void toonWelkomPopup() {
-		showAlert("Welkom bij Kingdomino!", "Welkom bij het spel! Klik op 'Kies Tegel' om het spel te beginnen.",
-				AlertType.INFORMATION);
+	private void toonWelkomPopup() {
+		showAlert("welkomAlertTitel", "welkomAlertContextText", Alert.AlertType.INFORMATION);
 	}
+
 
 	private void toonEindSpelResultaten() {
 		dc.berekenWinnaars();
-
-		final String[] scores = { "Scores van alle spelers:\n" }; // Using an array to hold the string because it needs to be effectively final
-
-		List<Speler> dtos = dc.refreshSpeler();
-
-		dtos.stream().forEach(s -> {
-			scores[0] += s.getGebruikersnaam() + " met " + s.getAantalGewonnen() + " spelletjes gewonnen en "
-					+ s.getAantalGespeeld() + " spelletjes gespeeld met een score van " + s.berekenScore().get(0) + "\n";
-		});
-
-		showAlert("Het spel is gedaan", scores[0], AlertType.INFORMATION);
-
-		//		showAlert("Winnaar",
-		//				"De winnar is" + dc.geefScore().getGebruikersnaam() + "met score + " + s.berekenScore(),
-		//				AlertType.INFORMATION);
+		List<Speler> winners = dc.refreshSpeler();
+		StringBuilder scores = new StringBuilder(resourceBundle.getString("finalScoresMessage"));
+		for (Speler winner : winners) {
+			scores.append(String.format(resourceBundle.getString("scoreFormat"),
+					winner.getGebruikersnaam(), winner.getAantalGewonnen(), winner.getAantalGespeeld(), winner.berekenScore().get(0)));
+		}
+		showAlert("eindeSpelAlertTitle", scores.toString(), Alert.AlertType.INFORMATION);
 	}
 
 	private void ronde() {
@@ -683,29 +683,23 @@ public class SpelController {
 		vraagVolgendeSpeler();
 	}
 
-	private void vraagVolgendeSpeler() {
+	public void vraagVolgendeSpeler() {
 		if (spelers.isEmpty()) {
-			resetSpelersLijst(); // Vul de spelerslijst opnieuw als alle spelers geweest zijn
+			resetSpelersLijst(); // Fill the player list again if all players are done
 		}
-		Node gekozenSpeler = spelers.get(huidigeSpelerIndex);
-		String spelerInfo = (String) gekozenSpeler.getUserData();
-		String spelerNaam = spelerInfo.split("-")[0].trim();
-		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
-		Color spelerKleur = getColorForName(kleurCode);
-		updateGridBorderKleur(kleurCode);
+		int currentPlayerIndex = 0;
+		Node chosenPlayer = spelers.get(currentPlayerIndex);
+		String playerInfo = (String) chosenPlayer.getUserData();
+		String playerName = playerInfo.split("-")[0].trim();
+		String colorCode = playerInfo.split("-")[1].trim().toLowerCase();
 
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle("Kies een Tegel");
-		alert.setGraphic(new Circle(10, spelerKleur)); // Set the graphic manually here
-		if (startkolomSpelers.size() == aantalSpelers || isVolgendeRonde) {
-			alert.setContentText("Het is aan uw beurt speler: " + spelerNaam
-					+ "\nKies één van de beschikbare tegels uit de eindkolom.");
-		} else {
-			alert.setContentText("Het is aan uw beurt speler: " + spelerNaam
-					+ "\nKies één van de beschikbare tegels uit de startkolom.");
-		}
+		alert.setTitle(resourceBundle.getString("kiesTegelAlertTitle"));
+		alert.setGraphic(new Circle(10, getColorForName(colorCode))); // Manually set graphic here
+		alert.setContentText(resourceBundle.getString("beurtAlert") + playerName + "\n" + resourceBundle.getString("chooseTileAlert"));
 		alert.showAndWait();
 	}
+
 
 	private void resetSpelersLijst() {
 		spelers = new ArrayList<>(spelerInformatieContainer.getChildren());
@@ -939,10 +933,10 @@ public class SpelController {
 		}
 	}
 
-	private void showAlert(String title, String message, AlertType alertType) { // helper meth
+	private void showAlert(String title, String message, Alert.AlertType alertType) {
 		Alert alert = new Alert(alertType);
-		alert.setTitle(title);
-		alert.setContentText(message);
+		alert.setTitle(resourceBundle.getString(title));
+		alert.setContentText(resourceBundle.getString(message));
 		alert.showAndWait();
 	}
 
