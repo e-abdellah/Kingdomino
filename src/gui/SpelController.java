@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -29,6 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -422,7 +424,7 @@ public class SpelController {
 	public void toonStartKolom(List<DominotegelDTO> dominotegels) {
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
-		VBox vboxVoorkant = new VBox(20); // Een beetje spacing voor esthetiek
+		VBox vboxVoorkant = new VBox(50); // Een beetje spacing voor esthetiek
 		// VBox vboxAchterkant = new VBox(5);
 
 		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
@@ -455,7 +457,7 @@ public class SpelController {
 
 		HBox hbox = new HBox(10); // Gebruik een kleine spacing tussen de VBoxen
 
-		VBox vboxVoorkant = new VBox(20); // Een beetje spacing voor esthetiek
+		VBox vboxVoorkant = new VBox(50); // Een beetje spacing voor esthetiek
 		// VBox vboxAchterkant = new VBox(5);
 
 		// Sorteer de lijst met dominotegels op het getal attribuut voordat je ze toont
@@ -976,6 +978,30 @@ public class SpelController {
 	private void handleSkipRondeBtnAction(ActionEvent event) {
 		ronde(); // Advance to the next round
 	}
+	
+    @FXML
+    private void handleExitBtnAction(ActionEvent event) {
+        // Creëert een bevestigingsdialoog om de gebruiker te vragen of ze echt willen afsluiten.
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Bevestig afsluiten"); // Set the title of the dialog.
+        alert.setContentText("Weet u zeker dat u wilt afsluiten?"); // Set the content of the message.
+
+        // Toont de dialoog en wacht op de reactie van de gebruiker.
+        Optional<ButtonType> result = alert.showAndWait();
+
+        // Controleert of de gebruiker op OK heeft geklikt.
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Print een logboodschap (optioneel) voordat de applicatie sluit.
+            System.out.println("Afsluiten bevestigd.");
+
+            // Sluit het platform/application af.
+            Platform.exit();
+        } else { // Als de gebruiker kiest om te annuleren, wordt het event geconsumeerd.
+            event.consume();
+        }
+    }
+
+
 
 	public void setTaal(String taal) {
 

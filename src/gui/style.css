@@ -1,50 +1,77 @@
 .vbox-style {
-    -fx-padding: 50 0 50 0; /* top right bottom left */
-    -fx-spacing: 20;
-    -fx-effect: innershadow(three-pass-box, rgba(0,0,0,0.8), 10, 0.0, 0, 2);
+    -fx-padding: 50.0 0.0 50.0 0.0; /* top right bottom left */
+    -fx-spacing: 50.0;
+    -fx-effect: innershadow(three-pass-box, rgba(0.0,0.0,0.0,0.8), 10.0, 0.0, 0.0, 2.0);
 }
 
 .grid-inactive {
     -fx-border-color: gray;
-     -fx-border-width: 3px;
+     -fx-border-width: 3.0px;
     -fx-border-style: solid;
-    -fx-padding: 5;
-    -fx-border-radius: 5px; 
-    -fx-border-insets: -1 5 0 -5 /* top right bottom left */
+    -fx-padding: 5.0;
+    -fx-border-radius: 5.0px; 
+    -fx-border-insets: -1.0 5.0 0.0 -5.0 /* top right bottom left */
 }
 
 .grid-blue {
     -fx-border-color: blue;
-    -fx-border-width: 3px;
+    -fx-border-width: 3.0px;
     -fx-border-style: solid;
-    -fx-padding: 5;
-    -fx-border-radius: 5px; 
-    -fx-border-insets: -1 5 0 -5 /* top right bottom left */
+    -fx-padding: 5.0;
+    -fx-border-radius: 5.0px; 
+    -fx-border-insets: -1.0 5.0 0.0 -5.0 /* top right bottom left */
 }
 
 .grid-green {
     -fx-border-color: green;
-    -fx-border-width: 3px;
+    -fx-border-width: 3.0px;
     -fx-border-style: solid;
-    -fx-padding: 5;
-    -fx-border-radius: 5px; 
-    -fx-border-insets: -1 5 0 -5 /* top right bottom left */
+    -fx-padding: 5.0;
+    -fx-border-radius: 5.0px; 
+    -fx-border-insets: -1.0 5.0 0.0 -5.0 /* top right bottom left */
 }
 
 .grid-yellow {
     -fx-border-color: yellow;
-    -fx-border-width: 3px;
+    -fx-border-width: 3.0px;
     -fx-border-style: solid;
-    -fx-padding: 5;
-    -fx-border-radius: 5px; 
-    -fx-border-insets: -1 5 0 -5 /* top right bottom left */ 
+    -fx-padding: 5.0;
+    -fx-border-radius: 5.0px; 
+    -fx-border-insets: -1.0 5.0 0.0 -5.0 /* top right bottom left */ 
 }
 
 .grid-pink {
     -fx-border-color: pink;
-    -fx-border-width: 3px;
+    -fx-border-width: 3.0px;
     -fx-border-style: solid;
-    -fx-padding: 5;
-    -fx-border-radius: 5px; 
-    -fx-border-insets: -1 5 0 -5 /* top right bottom left */
+    -fx-padding: 5.0;
+    -fx-border-radius: 5.0px; 
+    -fx-border-insets: -1.0 5.0 0.0 -5.0 /* top right bottom left */
 }
+
+.spelButtonSkip {
+    -fx-background-color: #CCBCA3; /* Gradient from lighter to the base brown */
+    -fx-text-fill: #070000;
+    -fx-font-size: 14.0px; /* Adjust font size as needed */ /* Rounded corners */
+    -fx-background-radius: 10.0; /* Ensure the background also has rounded corners */
+    -fx-padding: 10.0 35.0 10.0 35.0; /* Top, right, bottom, left padding for better text visibility */
+   }
+   
+.spelButtonKiesEnVolgende {
+    -fx-background-color: #CCBCA3; /* Gradient from lighter to the base brown */
+    -fx-text-fill: #070000;
+    -fx-font-size: 14.0px; /* Adjust font size as needed */
+    -fx-background-radius: 10.0; /* Ensure the background also has rounded corners */
+    -fx-padding: 10.0 55.0 10.0 55.0; /* Top, right, bottom, left padding for better text visibility */
+    -fx-min-width: 200.0px; /* Sets a minimum width for the button */
+}
+   
+   
+.spelButtonAfsluiten {
+    -fx-background-color: #CCBCA3; /* Gradient from lighter to the base brown */
+    -fx-text-fill: #070000;
+    -fx-font-size: 14.0px; /* Adjust font size as needed */ /* Rounded corners */
+    -fx-background-radius: 10.0; /* Ensure the background also has rounded corners */
+    -fx-padding: 10.0 53.0 10.0 53.0; /* Top, right, bottom, left padding for better text visibility */
+   }
+   
