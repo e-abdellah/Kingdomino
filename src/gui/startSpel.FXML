@@ -11,189 +11,344 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="root" prefHeight="1080.0" prefWidth="1920.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.SpelController">
+
+<AnchorPane fx:id="root" prefHeight="1080.0"
+	prefWidth="1920.0" stylesheets="@../style.css"
+	xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="gui.SpelController">
 	<children>
-		<ImageView fx:id="imageView" fitHeight="1080.0" fitWidth="1920.0" preserveRatio="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+		<ImageView fx:id="imageView" fitHeight="1080.0"
+			fitWidth="1920.0" preserveRatio="false" AnchorPane.bottomAnchor="0.0"
+			AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+			AnchorPane.topAnchor="0.0">
 			<image>
 				<Image url="@../imgs/KDBG6.jpg" />
 			</image>
 		</ImageView>
-		<Rectangle arcHeight="20.0" arcWidth="20.0" height="1059.0" layoutX="8.0" layoutY="9.0" opacity="0.17" stroke="BLACK" strokeType="INSIDE" width="1700.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="9.0" />
-			   <Rectangle arcHeight="20.0" arcWidth="20.0" height="855.0" layoutX="437.0" layoutY="19.0" opacity="0.3" stroke="BLACK" strokeLineCap="ROUND" strokeType="OUTSIDE" width="456.0" />
-		<ImageView fx:id="stapelRugzijdeImageView" fitHeight="103.0" fitWidth="272.0" layoutX="708.0" layoutY="118.0" preserveRatio="true" AnchorPane.bottomAnchor="950.0" AnchorPane.rightAnchor="760.0" AnchorPane.topAnchor="88.0">
+		<Rectangle arcHeight="20.0" arcWidth="20.0" height="1059.0"
+			layoutX="8.0" layoutY="9.0" opacity="0.17" stroke="BLACK"
+			strokeType="INSIDE" width="1700.0" AnchorPane.bottomAnchor="62.0"
+			AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="210.0"
+			AnchorPane.topAnchor="9.0" />
+		<Rectangle arcHeight="20.0" arcWidth="20.0" height="855.0"
+			layoutX="437.0" layoutY="19.0" opacity="0.3" stroke="BLACK"
+			strokeLineCap="ROUND" strokeType="OUTSIDE" width="456.0" />
+		<ImageView fx:id="stapelRugzijdeImageView" fitHeight="103.0"
+			fitWidth="272.0" layoutX="708.0" layoutY="118.0" preserveRatio="true"
+			AnchorPane.bottomAnchor="950.0" AnchorPane.rightAnchor="760.0"
+			AnchorPane.topAnchor="88.0">
 			<effect>
 				<DropShadow />
 			</effect>
 		</ImageView>
-		 <HBox layoutX="496.0" layoutY="367.0" prefHeight="730.0" prefWidth="572.0" spacing="10" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="430.0" AnchorPane.rightAnchor="836.0" AnchorPane.topAnchor="267.0">
-            <children>
-                <!-- Vertical Box for chosen tiles (start column) -->
-                <VBox fx:id="gekozenDominotegels" prefHeight="283.0" prefWidth="122.0" spacing="40" style="-fx-padding: 10;" styleClass="vbox-style">
-                    <effect>
-                        <DropShadow />
-                    </effect>
-                </VBox>
-                <VBox fx:id="startKolom" prefHeight="283.0" prefWidth="130.0" spacing="40" style="-fx-padding: 10;" styleClass="vbox-style">
-                    <effect>
-                        <DropShadow />
-                    </effect>
-                </VBox>
-                <!-- VBox for end column -->
-                <VBox fx:id="eindkolom" prefHeight="283.0" prefWidth="260.0" spacing="40" style="-fx-padding: 10;" styleClass="vbox-style">
-                    <effect>
-                        <DropShadow />
-                    </effect>
-                </VBox>
-                <!-- Vertical Box for chosen tiles (end column) -->
-                <VBox fx:id="gekozenDominotegelsEindKolom" prefHeight="283.0" prefWidth="130.0" spacing="40" style="-fx-padding: 10;" styleClass="vbox-style">
-                    <effect>
-                        <DropShadow />
-                    </effect>
-                </VBox>
-            </children>
-        </HBox>
-		<GridPane fx:id="gridBlauw" maxHeight="405.0" maxWidth="405.0" minHeight="45.0" minWidth="45.0" prefHeight="405.0" prefWidth="405.0" styleClass="grid-blue" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+		<HBox layoutX="496.0" layoutY="367.0" prefHeight="730.0"
+			prefWidth="572.0" spacing="10" AnchorPane.bottomAnchor="10.0"
+			AnchorPane.leftAnchor="430.0" AnchorPane.rightAnchor="836.0"
+			AnchorPane.topAnchor="267.0">
+			<children>
+				<!-- Vertical Box for chosen tiles (start column) -->
+				<VBox fx:id="gekozenDominotegels" prefHeight="283.0"
+					prefWidth="122.0" spacing="40" style="-fx-padding: 10;"
+					styleClass="vbox-style">
+					<effect>
+						<DropShadow />
+					</effect>
+				</VBox>
+				<VBox fx:id="startKolom" prefHeight="283.0" prefWidth="130.0"
+					spacing="40" style="-fx-padding: 10;" styleClass="vbox-style">
+					<effect>
+						<DropShadow />
+					</effect>
+				</VBox>
+				<!-- VBox for end column -->
+				<VBox fx:id="eindkolom" prefHeight="283.0" prefWidth="260.0"
+					spacing="40" style="-fx-padding: 10;" styleClass="vbox-style">
+					<effect>
+						<DropShadow />
+					</effect>
+				</VBox>
+				<!-- Vertical Box for chosen tiles (end column) -->
+				<VBox fx:id="gekozenDominotegelsEindKolom" prefHeight="283.0"
+					prefWidth="130.0" spacing="40" style="-fx-padding: 10;"
+					styleClass="vbox-style">
+					<effect>
+						<DropShadow />
+					</effect>
+				</VBox>
+			</children>
+		</HBox>
+		<GridPane fx:id="gridBlauw" maxHeight="405.0"
+			maxWidth="405.0" minHeight="45.0" minWidth="45.0" prefHeight="405.0"
+			prefWidth="405.0" styleClass="grid-blue" AnchorPane.leftAnchor="20.0"
+			AnchorPane.topAnchor="20.0">
 			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="20.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="20.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
-				<ImageView fitHeight="65.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="4">
+				<ImageView fitHeight="65.0" fitWidth="45.0"
+					pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4"
+					GridPane.rowIndex="4">
 					<image>
 						<Image url="@../imgs/starttegel_blauw.png" />
 					</image>
 				</ImageView>
 			</children>
 		</GridPane>
-		<GridPane fx:id="gridGroen" minHeight="405.0" minWidth="405.0" prefHeight="405.0" prefWidth="405.0" styleClass="grid-green" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0">
+		<GridPane fx:id="gridGroen" minHeight="405.0"
+			minWidth="405.0" prefHeight="405.0" prefWidth="405.0"
+			styleClass="grid-green" AnchorPane.bottomAnchor="20.0"
+			AnchorPane.leftAnchor="20.0">
 			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
-				<ImageView fitHeight="150.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="4">
+				<ImageView fitHeight="150.0" fitWidth="45.0"
+					pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4"
+					GridPane.rowIndex="4">
 					<image>
 						<Image url="@../imgs/starttegel_groen.png" />
 					</image>
 				</ImageView>
 			</children>
 		</GridPane>
-		<GridPane fx:id="gridRoos" minHeight="405.0" minWidth="405.0" prefHeight="405.0" prefWidth="405.0" styleClass="grid-pink" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="220.0">
+		<GridPane fx:id="gridRoos" minHeight="405.0" minWidth="405.0"
+			prefHeight="405.0" prefWidth="405.0" styleClass="grid-pink"
+			AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="220.0">
 			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
-				<ImageView fitHeight="150.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="4">
+				<ImageView fitHeight="150.0" fitWidth="45.0"
+					pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4"
+					GridPane.rowIndex="4">
 					<image>
 						<Image url="@../imgs/starttegel_roos.png" />
 					</image>
 				</ImageView>
 			</children>
 		</GridPane>
-		<GridPane fx:id="gridGeel" minHeight="405.0" minWidth="405.0" prefHeight="405.0" prefWidth="405.0" styleClass="grid-yellow" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="20.0">
+		<GridPane fx:id="gridGeel" minHeight="405.0" minWidth="405.0"
+			prefHeight="405.0" prefWidth="405.0" styleClass="grid-yellow"
+			AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="20.0">
 			<columnConstraints>
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-				<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
+				<ColumnConstraints hgrow="SOMETIMES"
+					minWidth="10.0" prefWidth="100.0" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-				<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
+				<RowConstraints minHeight="10.0" prefHeight="30.0"
+					vgrow="SOMETIMES" />
 			</rowConstraints>
 			<children>
-				<ImageView fitHeight="150.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4" GridPane.rowIndex="4">
+				<ImageView fitHeight="150.0" fitWidth="45.0"
+					pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4"
+					GridPane.rowIndex="4">
 					<image>
 						<Image url="@../imgs/starttegel_geel.png" />
 					</image>
 				</ImageView>
 			</children>
 		</GridPane>
-	        <HBox alignment="CENTER" layoutX="744.0" layoutY="1021.0" spacing="30.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="443.0">
-            <children>
-                <Button fx:id="startRondeBtn" onAction="#handleStartRondeBtnAction" styleClass="spelButtonKiesEnVolgende" text="Kies Tegel" />
-                <Button fx:id="volgendeRondeBtn" onAction="#handleVolgendeRondeBtn" styleClass="spelButtonKiesEnVolgende" text="Volgende Ronde" />
-            </children>
-        </HBox>
-		<Rectangle arcHeight="20.0" arcWidth="20.0" height="1066.0" layoutX="1713.0" layoutY="10.0" opacity="0.17" stroke="BLACK" strokeType="INSIDE" width="200.0" AnchorPane.bottomAnchor="59.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
-		<VBox fx:id="spelerInformatieContainer" prefHeight="832.0" prefWidth="200" spacing="20" style="-fx-padding: 20;" AnchorPane.bottomAnchor="278.0" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="20">
+		<HBox alignment="CENTER" layoutX="744.0" layoutY="1021.0"
+			spacing="30.0" AnchorPane.bottomAnchor="25.0"
+			AnchorPane.leftAnchor="443.0">
+			<children>
+				<Button fx:id="startRondeBtn"
+					onAction="#handleStartRondeBtnAction"
+					styleClass="spelButtonKiesEnVolgende" text="Kies Tegel" />
+				<Button fx:id="volgendeRondeBtn"
+					onAction="#handleVolgendeRondeBtn"
+					styleClass="spelButtonKiesEnVolgende" text="Volgende Ronde" />
+			</children>
+		</HBox>
+		<Rectangle arcHeight="20.0" arcWidth="20.0" height="1066.0"
+			layoutX="1713.0" layoutY="10.0" opacity="0.17" stroke="BLACK"
+			strokeType="INSIDE" width="200.0" AnchorPane.bottomAnchor="59.0"
+			AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+		<VBox fx:id="spelerInformatieContainer" prefHeight="832.0"
+			prefWidth="200" spacing="20" style="-fx-padding: 20;"
+			AnchorPane.bottomAnchor="278.0" AnchorPane.rightAnchor="10"
+			AnchorPane.topAnchor="20">
 			<!-- Labels for players and colors will be added programmatically here -->
 		</VBox>
 
-             <VBox alignment="CENTER" layoutX="1795.0" layoutY="960.0" spacing="10.0" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="20.0">
-            <children>
-                <Button fx:id="skipRondeBtn" onAction="#handleSkipRondeBtnAction" styleClass="spelButtonSkip" text="Sla ronde over" />
-                <Button fx:id="exitBtn" onAction="#handleExitBtnAction" styleClass="spelButtonAfsluiten " text="Afsluiten" />
-            </children>
-        </VBox>
+		<VBox alignment="CENTER" layoutX="1795.0" layoutY="960.0"
+			spacing="10.0" AnchorPane.bottomAnchor="40.0"
+			AnchorPane.rightAnchor="20.0">
+			<children>
+				<Button fx:id="skipRondeBtn"
+					onAction="#handleSkipRondeBtnAction" styleClass="spelButtonSkip"
+					text="Sla ronde over" />
+				<Button fx:id="exitBtn" onAction="#handleExitBtnAction"
+					styleClass="spelButtonAfsluiten " text="Afsluiten" />
+			</children>
+		</VBox>
+
+		<StackPane layoutX="441.0" layoutY="207.0"
+			styleClass="column-header" prefWidth="141" prefHeight="40">
+			<children>
+				<Text text="Gekozen tegels startkolom" wrappingWidth="141" />
+			</children>
+		</StackPane>
+
+		<StackPane layoutX="592.0" layoutY="207.0"
+			styleClass="column-header" prefWidth="141" prefHeight="40">
+			<children>
+				<Text text="Startkolom / Eindkolom" wrappingWidth="141" />
+			</children>
+		</StackPane>
+
+		<StackPane layoutX="743.0" layoutY="207.0"
+			styleClass="column-header" prefWidth="141" prefHeight="40">
+			<children>
+				<Text text="Gekozen tegels eindkolom" wrappingWidth="141" />
+			</children>
+		</StackPane>
 
 
 	</children>

@@ -31,6 +31,25 @@
     -fx-border-insets: -1.0 5.0 0.0 -5.0 /* top right bottom left */
 }
 
+
+.column-header {
+    -fx-background-color: #CCBCA3; /* Light grey background */
+    -fx-padding: 1px; /* Padding around the text */
+    -fx-background-radius: 5px; /* Rounded corners */
+    -fx-border-color: #ccc; /* Light grey border for some visual separation */
+    -fx-border-width: 0px; /* Border width */
+    -fx-border-radius: 5px; /* Match the background radius */
+    -fx-alignment: center; /* Center the text within the StackPane */
+}
+
+.column-header > Text {
+    -fx-fill: #070000; /* Dark grey text color */
+    -fx-font-size: 12px; /* Font size */ 
+    -fx-text-alignment: center;
+    
+}
+
+
 .grid-yellow {
     -fx-border-color: yellow;
     -fx-border-width: 3.0px;
