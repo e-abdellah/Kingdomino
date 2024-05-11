@@ -303,33 +303,31 @@ public class SpelController {
 	}
 
 	private void toonEindSpelResultaten() {
-	    dc.berekenWinnaars();
+		dc.berekenWinnaars();
 
-	    final String[] scores = { "Eindscores:\n\n" };
+		final String[] scores = { "Eindscores:\n\n" };
 
-	    List<Speler> dtos = dc.refreshSpeler();
+		List<Speler> dtos = dc.refreshSpeler();
 
-	    Speler winnaar = null; // This will hold the winning player
+		Speler winnaar = null;
 
-	    for (Speler speler : dtos) {
-	        // Append each player's score to the message
-	        scores[0] += speler.getGebruikersnaam() + " met een score van " + speler.berekenScore() + "\n"
-	                + "met " + speler.getAantalGespeeld() + " spellen gespeeld en " + speler.getAantalGewonnen() + " spellen gewonnen\n\n";
+		for (Speler speler : dtos) {
 
-	        // Check if the player is marked as the winner
-	        if (speler.isWinnaar()) {
-	            winnaar = speler; // Set the winner
-	        }
-	    }
+			scores[0] += speler.getGebruikersnaam() + " met een score van " + speler.berekenScore() + "\n" + "met "
+					+ speler.getAantalGespeeld() + " spellen gespeeld en " + speler.getAantalGewonnen()
+					+ " spellen gewonnen\n\n";
 
-	    // Check if a winner has been identified and append it to the message
-	    if (winnaar != null) {
-	        scores[0] += "De winnaar is: " + winnaar.getGebruikersnaam() + "!\n";
-	    }
+			if (speler.isWinnaar()) {
+				winnaar = speler;
+			}
+		}
 
-	    showAlert(resourceBundle.getString("eindeSpelBereikt"), scores[0], AlertType.INFORMATION);
+		if (winnaar != null) {
+			scores[0] += "De winnaar is: " + winnaar.getGebruikersnaam() + "!\n";
+		}
+
+		showAlert(resourceBundle.getString("eindeSpelBereikt"), scores[0], AlertType.INFORMATION);
 	}
-	
 
 	private void ronde() {
 		// Reset de ronde omgeving
@@ -986,31 +984,30 @@ public class SpelController {
 	private void handleSkipRondeBtnAction(ActionEvent event) {
 		ronde(); // Advance to the next round
 	}
-	
-    @FXML
-    private void handleExitBtnAction(ActionEvent event) {
-        // Create a confirmation dialog to ask the user if they really want to exit.
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(resourceBundle.getString("afsluitBtnTitle")); // Set the title from the resource bundle
-        alert.setHeaderText(null); // Optional: clear the header text
-        alert.setContentText(resourceBundle.getString("afsluitBtnText")); // Set the content text from the resource bundle
 
-        // Display the dialog and wait for the user's response.
-        Optional<ButtonType> result = alert.showAndWait();
+	@FXML
+	private void handleExitBtnAction(ActionEvent event) {
+		// Create a confirmation dialog to ask the user if they really want to exit.
+		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+		alert.setTitle(resourceBundle.getString("afsluitBtnTitle")); // Set the title from the resource bundle
+		alert.setHeaderText(null); // Optional: clear the header text
+		alert.setContentText(resourceBundle.getString("afsluitBtnText")); // Set the content text from the resource
+																			// bundle
 
-        // Check if the user clicked OK.
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Optionally print a log message before the application exits.
-            System.out.println("Afsluiten bevestigd.");
+		// Display the dialog and wait for the user's response.
+		Optional<ButtonType> result = alert.showAndWait();
 
-            // Exit the application/platform.
-            Platform.exit();
-        } else { // If the user chooses to cancel, consume the event.
-            event.consume();
-        }
-    }
+		// Check if the user clicked OK.
+		if (result.isPresent() && result.get() == ButtonType.OK) {
+			// Optionally print a log message before the application exits.
+			System.out.println("Afsluiten bevestigd.");
 
-
+			// Exit the application/platform.
+			Platform.exit();
+		} else { // If the user chooses to cancel, consume the event.
+			event.consume();
+		}
+	}
 
 	public void setTaal(String taal) {
 
@@ -1031,7 +1028,7 @@ public class SpelController {
 			volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeBtn"));
 			exitBtn.setText(resourceBundle.getString("exitButton"));
 			skipRondeBtn.setText(resourceBundle.getString("skipButton"));
-			
+
 			break;
 		default:
 			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_NL");
