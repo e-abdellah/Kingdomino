@@ -81,7 +81,6 @@ public class SpelController {
 	@FXML
 	private Button skipRondeBtn;
 
-
 	private DomeinController dc;
 	private int aantalSpelers;
 	private final WelkomKDController kdController;
@@ -115,8 +114,10 @@ public class SpelController {
 	private Map<String, DominotegelDTO> tegelsEindkolomSpelers = new HashMap<>();
 	private boolean isEindeSpel;
 
+	private String taal;
+
 	public SpelController() {
-		resourceBundle = ResourceBundle.getBundle("messages");
+		setTaal("nl");
 		dc = DomeinController.getInstance();
 		kdController = new WelkomKDController();
 		spelerKleuren = new ArrayList<>();
@@ -134,6 +135,7 @@ public class SpelController {
 	}
 
 	public void initSpel() {
+
 		shuffleSpelers();
 		initialiseerMap();
 		setupAantalKingdoms();
@@ -175,17 +177,9 @@ public class SpelController {
 	@FXML
 	// Methode om de anchorpane & achtergrond responsive te maken
 	private void initialize() {
-		loadText();
 		imageView.fitWidthProperty().bind(root.widthProperty());
 		imageView.fitHeightProperty().bind(root.heightProperty());
 		root.getStylesheets().add(getClass().getResource("/gui/style.css").toExternalForm());
-
-	}
-
-	private void loadText() {
-		spelLabel.setText(resourceBundle.getString("welkomMessage"));
-		startRondeBtn.setText(resourceBundle.getString("startButton"));
-		volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeAlertTitle"));
 
 	}
 
@@ -202,16 +196,16 @@ public class SpelController {
 		gridRoos.getStyleClass().add("grid-inactive");
 
 		switch (gridBorderSpelerKleur) {
-		case "groen":
+		case "groen", "green", "vert":
 			gridGroen.getStyleClass().add("grid-green");
 			break;
-		case "blauw":
+		case "blauw", "blue", "bleu":
 			gridBlauw.getStyleClass().add("grid-blue");
 			break;
-		case "geel":
+		case "geel", "yellow", "jaune":
 			gridGeel.getStyleClass().add("grid-yellow");
 			break;
-		case "roos":
+		case "roos", "pink", "rose":
 			gridRoos.getStyleClass().add("grid-pink");
 			break;
 		default:
@@ -242,16 +236,16 @@ public class SpelController {
 
 		for (String color : spelerKleuren) {
 			switch (color.toLowerCase().trim()) {
-			case "groen":
+			case "groen", "green", "vert":
 				gridGroen.setVisible(true);
 				break;
-			case "blauw":
+			case "blauw", "blue", "bleu":
 				gridBlauw.setVisible(true);
 				break;
-			case "geel":
+			case "geel", "yellow", "jaune":
 				gridGeel.setVisible(true);
 				break;
-			case "roos":
+			case "roos", "pink", "rose":
 				gridRoos.setVisible(true);
 				break;
 			}
@@ -291,28 +285,40 @@ public class SpelController {
 
 	private Color getColorForName(String colorName) {
 		return switch (colorName) {
-		case "groen", "green" -> Color.GREEN;
-		case "geel", "yellow" -> Color.YELLOW;
-		case "roos", "pink" -> Color.PINK;
-		case "blauw", "blue" -> Color.BLUE;
+		case "groen", "green", "vert" -> Color.GREEN;
+		case "geel", "yellow", "jaune" -> Color.YELLOW;
+		case "roos", "pink", "rose" -> Color.PINK;
+		case "blauw", "blue", "bleu" -> Color.BLUE;
 		default -> Color.WHITE;
 		};
 	}
 
 	private void toonWelkomPopup() {
-		showAlert("welkomAlertTitel", "welkomAlertContextText", Alert.AlertType.INFORMATION);
+		showAlert(resourceBundle.getString("welkomSchermTitel"), resourceBundle.getString("welkomAlertContextText"),
+				Alert.AlertType.INFORMATION);
 	}
-
 
 	private void toonEindSpelResultaten() {
 		dc.berekenWinnaars();
-		List<Speler> winners = dc.refreshSpeler();
-		StringBuilder scores = new StringBuilder(resourceBundle.getString("finalScoresMessage"));
-		for (Speler winner : winners) {
-			scores.append(String.format(resourceBundle.getString("scoreFormat"),
-					winner.getGebruikersnaam(), winner.getAantalGewonnen(), winner.getAantalGespeeld(), winner.berekenScore().get(0)));
-		}
-		showAlert("eindeSpelAlertTitle", scores.toString(), Alert.AlertType.INFORMATION);
+
+		final String[] scores = { resourceBundle.getString("finalScoresMessage") }; // Using an array to hold the string
+																					// because it needs to be
+																					// effectively final
+
+		List<Speler> dtos = dc.refreshSpeler();
+
+		dtos.stream().forEach(s -> {
+			scores[0] += s.getGebruikersnaam() + " " + resourceBundle.getString("met") + s.getAantalGewonnen() + " "
+					+ resourceBundle.getString("spelletjesWin") + " " + s.getAantalGespeeld() + " "
+					+ resourceBundle.getString("SpeelPlusScore") + s.berekenScore() + "\n";
+		});
+
+		showAlert(resourceBundle.getString("eindeSpelBereikt"), scores[0], AlertType.INFORMATION);
+
+		// showAlert("Winnaar",
+		// "De winnar is" + dc.geefScore().getGebruikersnaam() + "met score + " +
+		// s.berekenScore(),
+		// AlertType.INFORMATION);
 	}
 
 	private void ronde() {
@@ -374,13 +380,14 @@ public class SpelController {
 		// Check if the stack is empty after drawing the tiles
 		if (stapel.isEmpty()) {
 			isEindeSpel = true;
-			showAlert("Einde spel", "Alle dominotegels zijn geplaatst. \nKingdomino is beëindigd",
-					AlertType.INFORMATION);
+//			showAlert("Einde spel", "Alle dominotegels zijn geplaatst. \nKingdomino is beëindigd",
+//					AlertType.INFORMATION);
 			toonEindSpelResultaten();
 			return;
 		}
 
-		// Only proceed to show the dominos if there are tiles left or if it's part of the ongoing round logic
+		// Only proceed to show the dominos if there are tiles left or if it's part of
+		// the ongoing round logic
 		if (!isVolgendeRonde || toonBeideZijden) {
 			if (isVolgendeRonde) {
 				huidigeSpelerIndex = 0;
@@ -389,7 +396,8 @@ public class SpelController {
 				toonStartKolom(new ArrayList<>(list)); // Show tiles for the start column
 			}
 		} else {
-			// This else part can be used to handle scenarios where you don't want to show any tiles but need to perform other updates
+			// This else part can be used to handle scenarios where you don't want to show
+			// any tiles but need to perform other updates
 		}
 	}
 
@@ -488,8 +496,7 @@ public class SpelController {
 
 		updateGridBorderKleur(kleurCode);
 		if (!isStartKolom) {
-			showAlert("Dominotegel plaatsten",
-					"Draai uw tegel door erop te klikken\nVervolgens plaats de tegel in uw koninkrijk",
+			showAlert(resourceBundle.getString("TegelPLaatsen"), resourceBundle.getString("DraaiEnPLaats"),
 					AlertType.INFORMATION);
 			toonTegelEnKleur(tegel, spelerKleur, isStartKolom, spelerIndex, true);
 
@@ -529,7 +536,7 @@ public class SpelController {
 
 	private boolean tegelIsAlGekozen(DominotegelDTO tegel) {
 		if (gekozenTegels.contains(tegel)) {
-			showAlert("Tegel Al Gekozen", "Deze tegel is al gekozen. Kies een andere tegel.", AlertType.WARNING);
+			showAlert(resourceBundle.getString("ALGekozen"), resourceBundle.getString("KiesAndere"), AlertType.WARNING);
 			return true;
 		}
 		return false;
@@ -671,7 +678,7 @@ public class SpelController {
 			if (eindkolomSpelers.size() >= aantalSpelers) {
 				// startVolgendeRonde();
 				toonResultaatVanRonde();
-				showAlert("Volgende ronde", "Deze ronde is klaar. Klik op de volgende ronde knop",
+				showAlert(resourceBundle.getString("VolgendeRondeTitle"), resourceBundle.getString("VolgendeRondeText"),
 						AlertType.INFORMATION);
 				volgendeRondeBtn.setDisable(false);
 				return; // Voorkomt het dubbel aanroepen van vraagVolgendeSpeler.
@@ -683,23 +690,33 @@ public class SpelController {
 		vraagVolgendeSpeler();
 	}
 
-	public void vraagVolgendeSpeler() {
+	private void vraagVolgendeSpeler() {
 		if (spelers.isEmpty()) {
-			resetSpelersLijst(); // Fill the player list again if all players are done
+			resetSpelersLijst(); // Vul de spelerslijst opnieuw als alle spelers geweest zijn
 		}
-		int currentPlayerIndex = 0;
-		Node chosenPlayer = spelers.get(currentPlayerIndex);
-		String playerInfo = (String) chosenPlayer.getUserData();
-		String playerName = playerInfo.split("-")[0].trim();
-		String colorCode = playerInfo.split("-")[1].trim().toLowerCase();
+		Node gekozenSpeler = spelers.get(huidigeSpelerIndex);
+		String spelerInfo = (String) gekozenSpeler.getUserData();
+		String spelerNaam = spelerInfo.split("-")[0].trim();
+		String kleurCode = spelerInfo.split("-")[1].trim().toLowerCase();
+		Color spelerKleur = getColorForName(kleurCode);
+		updateGridBorderKleur(kleurCode);
 
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(resourceBundle.getString("kiesTegelAlertTitle"));
-		alert.setGraphic(new Circle(10, getColorForName(colorCode))); // Manually set graphic here
-		alert.setContentText(resourceBundle.getString("beurtAlert") + playerName + "\n" + resourceBundle.getString("chooseTileAlert"));
+		alert.setTitle(resourceBundle.getString("Beurt"));
+		alert.setGraphic(new Circle(10, spelerKleur)); // Set the graphic manually here
+
+		alert.setContentText(
+				resourceBundle.getString("Beurt") + spelerNaam + " " + resourceBundle.getString("KiesNieuweTegel")
+						+ (startkolomSpelers.size() == aantalSpelers || isVolgendeRonde
+								? resourceBundle.getString("eindkolom")
+								: resourceBundle.getString("startkolom")));
+
+//        } else {
+//            alert.setContentText("Het is aan uw beurt speler: " + spelerNaam
+//                    + "\nKies één van de beschikbare tegels uit de startkolom.");
+//        }
 		alert.showAndWait();
 	}
-
 
 	private void resetSpelersLijst() {
 		spelers = new ArrayList<>(spelerInformatieContainer.getChildren());
@@ -792,7 +809,8 @@ public class SpelController {
 		}
 
 		if (spelerGridPane != gekliktGridPane) {
-			showAlert("Verkeerde Grid", "Je kunt je tegel alleen in je eigen grid plaatsen.", AlertType.WARNING);
+			showAlert(resourceBundle.getString("VerkeerdeGrid"), resourceBundle.getString("KiesAnderGrid"),
+					AlertType.WARNING);
 		} else {
 
 			SpelerDTO gevondenSpeler = dc.refreshSpelerDTO().get(0);
@@ -898,10 +916,10 @@ public class SpelController {
 	}
 
 	private void toonResultaatVanRonde() {
-		showAlert("Resultaat van de ronde",
-				"De ronde is afgelopen.\n\n" + "Spelers: "
+		showAlert(resourceBundle.getString("ResultaatTitel"),
+				resourceBundle.getString("ResultaatText") + " "
 						+ spelersDTO.stream().map(SpelerDTO::gebruikersnaam).collect(Collectors.toList()) + "\n\n"
-						+ "Resterende tegels in de stapel: " + stapel.size(),
+						+ resourceBundle.getString("ResultaatResterendeTegel") + " " + stapel.size(),
 				AlertType.INFORMATION);
 
 	}
@@ -935,8 +953,8 @@ public class SpelController {
 
 	private void showAlert(String title, String message, Alert.AlertType alertType) {
 		Alert alert = new Alert(alertType);
-		alert.setTitle(resourceBundle.getString(title));
-		alert.setContentText(resourceBundle.getString(message));
+		alert.setTitle(title);
+		alert.setContentText(message);
 		alert.showAndWait();
 	}
 
@@ -946,7 +964,8 @@ public class SpelController {
 		teller++;
 		ronde();
 		updateGridBorderKleur("");
-		showAlert("Kies opnieuw een tegel", "Kies opnieuw een tegel uit de eindkolom", AlertType.INFORMATION);
+		showAlert(resourceBundle.getString("KiesTegelTitel"), resourceBundle.getString("KiesTegelText"),
+				AlertType.INFORMATION);
 	}
 
 	public void setSpelers(List<SpelerDTO> spelers) {
@@ -956,6 +975,35 @@ public class SpelController {
 	@FXML
 	private void handleSkipRondeBtnAction(ActionEvent event) {
 		ronde(); // Advance to the next round
+	}
+
+	public void setTaal(String taal) {
+
+		switch (taal) {
+		case "nl":
+			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_NL");
+//			startRondeBtn.setText(resourceBundle.getString("startButton"));
+//			volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeBtn"));
+			break;
+		case "fr":
+			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_FR");
+//			startRondeBtn.setText(resourceBundle.getString("startButton"));
+//			volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeBtn"));
+			break;
+		case "en":
+			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_EN");
+			startRondeBtn.setText(resourceBundle.getString("startButton"));
+			volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeBtn"));
+			break;
+		default:
+			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_NL");
+			break;
+		}
+
+//		this.taal=taal;
+		// This line might not be necessary unless you need to change the `taal`
+		// attribute to something else.
+		// taal = resourceBundle.toString();
 	}
 
 }

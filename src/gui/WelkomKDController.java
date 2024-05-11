@@ -36,6 +36,7 @@ public class WelkomKDController {
 	private DomeinController dc = DomeinController.getInstance();;
 	private SpelerDTO dto;
 	private List<SpelerDTO> spelers = new ArrayList<>();
+	private String taal;
 
 	@FXML
 	private ImageView imageView;
@@ -112,7 +113,7 @@ public class WelkomKDController {
 
 		// Laadt de ResourceBundle die taalspecifieke strings bevat voor UI-componenten.
 		resourceBundle = ResourceBundle.getBundle("utils.resource_bundle", locale);
-
+		taal = locale.toString();
 		// Update de tekst van de UI knoppen met de vertaalde waarden uit de
 		// ResourceBundle.
 		registreerBtn.setText(resourceBundle.getString("registreerButton"));
@@ -213,20 +214,17 @@ public class WelkomKDController {
 
 	@FXML
 	private void startSpel() {
-		
 
-	    // Pakt alle spelers uit de database
-	    List<SpelerDTO> beschikbareSpelers = dc.geefOverzichtSpelers();
-	    
-	    // Gaat na of er minstens 3 spelers in de database zitten
-	    if (beschikbareSpelers.size() < 3) {
-	        showAlert("Insufficient Players", "There are less than three registered players. Please register more players before starting a game.");
-	        return; // Exit als er geen 3 of meer spelers in de database zitten
-	    }
-	    
-	    
-		
-		
+		// Pakt alle spelers uit de database
+		List<SpelerDTO> beschikbareSpelers = dc.geefOverzichtSpelers();
+
+		// Gaat na of er minstens 3 spelers in de database zitten
+		if (beschikbareSpelers.size() < 3) {
+			showAlert("Insufficient Players",
+					"There are less than three registered players. Please register more players before starting a game.");
+			return; // Exit als er geen 3 of meer spelers in de database zitten
+		}
+
 		List<String> keuzes = Arrays.asList("3", "4");
 		ChoiceDialog<String> aantalSpelersDialog = new ChoiceDialog<>("4", keuzes);
 		aantalSpelersDialog.setTitle(resourceBundle.getString("aantalSpelersDialogTitel"));
@@ -300,6 +298,8 @@ public class WelkomKDController {
 
 			// Roept een initialisatiemethode aan op de controller om het spel op te zetten.
 			spelController.initSpel();
+			System.out.println(taal);
+			spelController.setTaal(taal);
 
 			// Creëert een nieuwe scene met de geladen root en zet deze op een nieuw Stage
 			Scene scene = new Scene(root);
@@ -356,5 +356,14 @@ public class WelkomKDController {
 	public List<SpelerDTO> getSpelers() {
 		return spelers;
 	}
+
+	public String getTaal() {
+		return taal;
+	}
+	
+	 public void setTaal(String taal) {
+	        this.taal = taal;
+	    }
+	
 
 }
