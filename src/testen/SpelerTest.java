@@ -46,7 +46,7 @@ class SpelerTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "abcdef", "ABCDGF", "HBCJBHCJSBbckdkcsdv", "a bcs dcefw 1213", "123456789", "123456  8" })
+	@ValueSource(strings = { "abcdef", "ABCDGF", "HBCJBkdkcsdv", "a bcs dce 1213", "123456789", "123456  8" })
 	void maakGebruiker_juisteGebruikersnaam_MaakGebruiker(String gebruikersnaam) throws Exception {
 		Speler s = new Speler(gebruikersnaam, 2012);
 		assertEquals(gebruikersnaam, s.getGebruikersnaam());
