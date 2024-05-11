@@ -65,6 +65,8 @@ public class SpelController {
 	@FXML
 	private Button volgendeRondeBtn;
 	@FXML
+	private Button exitBtn;
+	@FXML
 	private VBox gekozenDominotegels;
 	@FXML
 	private VBox gekozenDominotegelsEindKolom;
@@ -981,22 +983,23 @@ public class SpelController {
 	
     @FXML
     private void handleExitBtnAction(ActionEvent event) {
-        // Creëert een bevestigingsdialoog om de gebruiker te vragen of ze echt willen afsluiten.
+        // Create a confirmation dialog to ask the user if they really want to exit.
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Bevestig afsluiten"); // Set the title of the dialog.
-        alert.setContentText("Weet u zeker dat u wilt afsluiten?"); // Set the content of the message.
+        alert.setTitle(resourceBundle.getString("afsluitBtnTitle")); // Set the title from the resource bundle
+        alert.setHeaderText(null); // Optional: clear the header text
+        alert.setContentText(resourceBundle.getString("afsluitBtnText")); // Set the content text from the resource bundle
 
-        // Toont de dialoog en wacht op de reactie van de gebruiker.
+        // Display the dialog and wait for the user's response.
         Optional<ButtonType> result = alert.showAndWait();
 
-        // Controleert of de gebruiker op OK heeft geklikt.
+        // Check if the user clicked OK.
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Print een logboodschap (optioneel) voordat de applicatie sluit.
+            // Optionally print a log message before the application exits.
             System.out.println("Afsluiten bevestigd.");
 
-            // Sluit het platform/application af.
+            // Exit the application/platform.
             Platform.exit();
-        } else { // Als de gebruiker kiest om te annuleren, wordt het event geconsumeerd.
+        } else { // If the user chooses to cancel, consume the event.
             event.consume();
         }
     }
@@ -1020,6 +1023,9 @@ public class SpelController {
 			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_EN");
 			startRondeBtn.setText(resourceBundle.getString("startButton"));
 			volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeBtn"));
+			exitBtn.setText(resourceBundle.getString("exitButton"));
+			skipRondeBtn.setText(resourceBundle.getString("skipButton"));
+			
 			break;
 		default:
 			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_NL");
