@@ -303,27 +303,33 @@ public class SpelController {
 	}
 
 	private void toonEindSpelResultaten() {
-		dc.berekenWinnaars();
+	    dc.berekenWinnaars();
 
-		final String[] scores = { resourceBundle.getString("finalScoresMessage") }; // Using an array to hold the string
-																					// because it needs to be
-																					// effectively final
+	    final String[] scores = { "Eindscores:\n\n" };
 
-		List<Speler> dtos = dc.refreshSpeler();
+	    List<Speler> dtos = dc.refreshSpeler();
 
-		dtos.stream().forEach(s -> {
-			scores[0] += s.getGebruikersnaam() + " " + resourceBundle.getString("met") + s.getAantalGewonnen() + " "
-					+ resourceBundle.getString("spelletjesWin") + " " + s.getAantalGespeeld() + " "
-					+ resourceBundle.getString("SpeelPlusScore") + s.berekenScore() + "\n";
-		});
+	    Speler winnaar = null; // This will hold the winning player
 
-		showAlert(resourceBundle.getString("eindeSpelBereikt"), scores[0], AlertType.INFORMATION);
+	    for (Speler speler : dtos) {
+	        // Append each player's score to the message
+	        scores[0] += speler.getGebruikersnaam() + " met een score van " + speler.berekenScore() + "\n"
+	                + "met " + speler.getAantalGespeeld() + " spellen gespeeld en " + speler.getAantalGewonnen() + " spellen gewonnen\n\n";
 
-		// showAlert("Winnaar",
-		// "De winnar is" + dc.geefScore().getGebruikersnaam() + "met score + " +
-		// s.berekenScore(),
-		// AlertType.INFORMATION);
+	        // Check if the player is marked as the winner
+	        if (speler.isWinnaar()) {
+	            winnaar = speler; // Set the winner
+	        }
+	    }
+
+	    // Check if a winner has been identified and append it to the message
+	    if (winnaar != null) {
+	        scores[0] += "De winnaar is: " + winnaar.getGebruikersnaam() + "!\n";
+	    }
+
+	    showAlert(resourceBundle.getString("eindeSpelBereikt"), scores[0], AlertType.INFORMATION);
 	}
+	
 
 	private void ronde() {
 		// Reset de ronde omgeving
