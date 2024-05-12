@@ -20,6 +20,11 @@ import java.util.stream.Collectors;
 
 import dto.SpelerDTO;
 
+/**
+ * De klasse Spel beheert het dominospel, inclusief de spelers, de dominotegels, en de logica voor het spelverloop.
+ * Deze klasse zorgt voor het aanmaken van de dominotegels, het toevoegen van spelers, het schudden van tegels,
+ * het toekennen van scores, en het bepalen van winnaars.
+ */
 public class Spel {
 
 	private List<SpelerDTO> aantalSpelers = new ArrayList<>();
@@ -30,6 +35,17 @@ public class Spel {
 
 	protected static final int MAX_LENGTE = 4;
 
+	/**
+	 * Constructor voor het spel met een vooraf bepaalde lijst van spelers en dominotegels.
+	 * Deze constructor initialiseert het spel met de gegeven lijsten en genereert een standaard
+	 * set van dominotegels.
+	 * 
+	 * @param aantalSpelers Een lijst van SpelerDTO objecten die de deelnemers van het spel vertegenwoordigen.
+	 * @param dominotegels Een lijst van Dominotegel objecten die in het spel gebruikt zullen worden.
+	 * @param getallen Een set van unieke getallen die gebruikt worden in het spel.
+	 * @param startKolom Een lijst van Dominotegel objecten die als startkolom dient bij het begin van het spel.
+	 * @param isEindeSpel Een boolean die aangeeft of het spel beëindigd is.
+	 */
 	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels, Set<Integer> getallen,
 			List<Dominotegel> startKolom, boolean isEindeSpel) {
 		setAantalSpelers(aantalSpelers);
@@ -37,51 +53,76 @@ public class Spel {
 		dominotegels = new ArrayList<>();
 		genereerAantalDominotegels();
 	}
+	
+	public Spel() {
+		
+	}
 
+	/**
+	 * Voegt een speler toe aan het spel.
+	 * 
+	 * @param speler De speler die aan het spel wordt toegevoegd.
+	 */
 	public final void voegSpelersToe(Speler speler) {
 		spelers.add(speler);
 	}
 
-	public Spel(List<SpelerDTO> aantalSpelers, List<Dominotegel> dominotegels) {
-		setAantalSpelers(aantalSpelers);
-		setDominotegels(dominotegels);
-		Set<Integer> getallen = new HashSet<>(36);
-	}
-
-	public Spel() {
-		setAantalSpelers(aantalSpelers);
-	}
-
+	/**
+	 * Geeft de lijst van spelers terug die momenteel deelnemen aan het spel.
+	 * 
+	 * @return Een lijst van Speler objecten die deelnemen aan het spel.
+	 */
 	public List<Speler> getSpelers() {
 		return spelers;
 	}
 
+	/**
+	 * Geeft de lijst van SpelerDTO's die deelnemen aan het spel.
+	 * 
+	 * @return Een lijst van SpelerDTO objecten.
+	 */
 	public List<SpelerDTO> getAantalSpelers() {
 		return aantalSpelers;
 	}
 
+	/**
+	 * Stelt de lijst van spelers in die deelnemen aan het spel.
+	 * 
+	 * @param aantalSpelers2 Een lijst van SpelerDTO's die de spelers voor het spel definiëren.
+	 */
 	private void setAantalSpelers(List<SpelerDTO> aantalSpelers2) {
-		// if (aantalSpelers.size() < 3 || aantalSpelers.size() > 4)
-		// throw new IllegalArgumentException(
-		// "Het aantal spelers moet minstens 3 spelers en maximum 4 spelers bevatten");
 		this.aantalSpelers = aantalSpelers2;
 	}
 
+	/**
+	 * Geeft de lijst van dominotegels terug die momenteel beschikbaar zijn in het spel.
+	 * 
+	 * @return Een lijst van Dominotegel objecten.
+	 */
 	public List<Dominotegel> getDominotegels() {
 		return dominotegels;
 	}
 
+	/**
+	 * Stelt de lijst van dominotegels in gebaseerd op het aantal spelers.
+	 * Als het aantal spelers 3 is, wordt een lijst van 36 tegels geïnitialiseerd.
+	 * Als het aantal spelers 4 is, wordt een lijst van 48 tegels geïnitialiseerd.
+	 * 
+	 * @param dominotegels Een lijst van Dominotegel objecten.
+	 */
 	public void setDominotegels(List<Dominotegel> dominotegels) {
-		// Controleert of het aantal spelers gelijk is aan 3.
-		if (aantalSpelers.size() == 3)
-			// Initialiseert de lijst 'dominotegels' met een capaciteit voor 36 tegels,
+		if (aantalSpelers.size() == 3) {
 			this.dominotegels = new ArrayList<>(36);
-
-		// Controleert of het aantal spelers gelijk is aan 4.
-		if (aantalSpelers.size() == 4)
-			// Initialiseert de lijst 'dominotegels' met een capaciteit voor 48 tegels,
+		}
+		if (aantalSpelers.size() == 4) {
 			this.dominotegels = new ArrayList<>(48);
+		}
 	}
+
+	/**
+	 * Genereert een standaard set van dominotegels voor het spel.
+	 * Deze methode creëert een gespecificeerde hoeveelheid dominotegels met variërende landschappen en kronen.
+	 */
 
 	private void genereerAantalDominotegels() { // cijfer achterkant, aantal kronen, (0 = 0kronen, 1 = kronen links, 2 =
 												// kronen rechts)
@@ -139,6 +180,11 @@ public class Spel {
 
 	}
 
+	/**
+	 * Schudt de dominotegels en maakt een selectie op basis van het aantal spelers.
+	 * 
+	 * @param aantalSpelers Het aantal spelers bepaalt hoeveel tegels er nodig zijn voor het spel.
+	 */
 	public void schudDominotegels(int aantalSpelers) {
 		if (dominotegels == null || dominotegels.isEmpty()) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
@@ -160,6 +206,12 @@ public class Spel {
 		}
 	}
 
+	/**
+	* Haalt een gespecificeerd aantal dominotegels op uit de lijst.
+	* 
+	* @param aantal Het aantal dominotegels dat opgehaald moet worden.
+	* @return Een lijst van Dominotegel objecten.
+	*/
 	public List<Dominotegel> geefTegels(int aantal) {
 		if (dominotegels == null || dominotegels.isEmpty()) {
 			// Log een fout, initialiseer de lijst, of gooi een exception
@@ -182,13 +234,21 @@ public class Spel {
 		return opgehaaldeTegels;
 	}
 
-	// Plaats de genomen tegels in de startkolom, gesorteerd volgens hun nummer met
-	// hun landschapszijde naar boven
+	/**
+	* Sorteert de dominotegels en plaatst ze in een startkolom gebaseerd op hun nummer.
+	* 
+	* @return Een gesorteerde lijst van Dominotegel objecten.
+	*/
 	public List<Dominotegel> plaatsTegelsInStartkolom() {
 		return geefTegels(aantalSpelers.size()).stream().sorted(Comparator.comparing(Dominotegel::getGetal))
 				.collect(Collectors.toList());
 	}
 
+	/**
+	* Bereken en retourneer de scores voor alle spelers.
+	* 
+	* @return Een HashMap waarbij elke speler gekoppeld is aan hun scores.
+	*/
 	public HashMap<Speler, List<Integer>> geefScores() {
 
 		// Creëert een nieuwe LinkedHashMap, waarin de volgorde van invoer van spelers
@@ -206,14 +266,25 @@ public class Spel {
 		return spelerScores;
 	}
 
+	/**
+	* Controleert of het spel is beëindigd.
+	* 
+	* @return True als er geen dominotegels meer zijn, anders false.
+	*/
 	public boolean isEindeSpel() {
 		return dominotegels.isEmpty();
 	}
 
+	/**
+	* Slaat een ronde over door alle resterende dominotegels te verwijderen.
+	*/
 	public void skip() {
 		dominotegels.clear();
 	}
 
+	/**
+	* Sorteert de spelers op basis van hun score in aflopende volgorde.
+	*/
 	public void sorteerOpScore() {
 		spelers.sort(new utils.ScoreComparator());
 	}
@@ -244,6 +315,9 @@ public class Spel {
 		return kolom;
 	}
 
+	/**
+	* Berekent de winnaars van het spel en markeert de hoogst scorende spelers.
+	*/
 	public void berekenWinnaars() {
 		// Sorteert de lijst van spelers op score in afnemende volgorde.
 		sorteerOpScore();
@@ -276,6 +350,15 @@ public class Spel {
 		}
 	}
 
+	/**
+	 * Plaatst een dominotegel op het speelbord op basis van de opgegeven coördinaten en hoek.
+	 * 
+	 * @param tegel De dominotegel die geplaatst moet worden.
+	 * @param y De y-coördinaat voor de plaatsing.
+	 * @param x De x-coördinaat voor de plaatsing.
+	 * @param hoek De hoek waarin de tegel geplaatst moet worden.
+	 * @param spelerDTO De gegevens van de speler die de tegel plaatst.
+	 */
 	public void plaatsTegel(Dominotegel tegel, int y, int x, int hoek, SpelerDTO spelerDTO) {
 		// Creëert een nieuwe lijst om de vakjes van de dominotegel in op te slaan.
 		List<Vakje> vakjes = new ArrayList<>();
@@ -334,6 +417,16 @@ public class Spel {
 		}
 	}
 
+	/**
+	* Controleert of het mogelijk is een dominotegel te plaatsen op de opgegeven positie en hoek.
+	* 
+	* @param tegel De dominotegel die geplaatst moet worden.
+	* @param y De y-coördinaat voor de plaatsing.
+	* @param x De x-coördinaat voor de plaatsing.
+	* @param hoek De hoek waarin de tegel geplaatst moet worden.
+	* @param spelerDTO De gegevens van de speler die de tegel wil plaatsen.
+	* @return True als de tegel geplaatst kan worden, anders false.
+	*/
 	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int hoek, SpelerDTO spelerDTO) {
 		// Initieel wordt 'kan' ingesteld op false, wat betekent dat de tegel niet
 		// geplaatst kan worden

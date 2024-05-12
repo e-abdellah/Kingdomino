@@ -3,6 +3,11 @@ package domein;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * De klasse Speler beheert de informatie en functionaliteiten van een speler in een dominospel.
+ * Deze klasse bevat gegevens zoals de gebruikersnaam, geboortejaar, en de spelstatus (aantal gewonnen, aantal gespeeld),
+ * evenals de functionaliteiten om een tegel te plaatsen, scores te berekenen, en de plaatsingsmogelijkheden te controleren.
+ */
 public class Speler {
 	private String gebruikersnaam;
 	private int geboortejaar;
@@ -23,24 +28,54 @@ public class Speler {
 	// private int koning = 1;
 	// private int kasteel = 1;
 
+	/**
+	 * Geeft de gebruikersnaam van de speler terug.
+	 * 
+	 * @return De gebruikersnaam als String.
+	 */
 	public Vakje[][] getKoninkrijk() {
 		return koninkrijk;
 	}
 
+	/**
+	 * Stelt het koninkrijk van de speler in met een 2D-array van vakjes en initialiseert het centrale kasteelvakje.
+	 * 
+	 * @param koninkrijk Een 2D-array van Vakje objecten die het nieuwe koninkrijk van de speler voorstellen.
+	 */
 	public void setKoninkrijk(Vakje[][] koninkrijk) {
 		this.koninkrijk = koninkrijk;
 		this.koninkrijk[MAX_LENGTE][MAX_LENGTE] = new Vakje(Landschap.KASTEEL);
 	}
 
+	/**
+	 * Constructor voor Speler die de basisgegevens initialiseert.
+	 * 
+	 * @param gebruikersnaam De gebruikersnaam van de speler.
+	 * @param geboortejaar Het geboortejaar van de speler.
+	 */
 	public Speler(String gebruikersnaam, int geboortejaar) {
 		setGebruikersnaam(gebruikersnaam);
 		setGeboortejaar(geboortejaar);
 	}
 
+	/**
+	 * Constructor voor Speler die alleen de gebruikersnaam initialiseert, bedoeld voor tests of tijdelijke spelers.
+	 * 
+	 * @param gebruikersnaam De gebruikersnaam van de speler.
+	 */
 	public Speler(String gebruikersnaam) {
 		setGebruikersnaam(gebruikersnaam);
 	}
 
+	/**
+	 * Constructor voor Speler die alle gegevens initialiseert, inclusief een gegeven koninkrijk.
+	 * 
+	 * @param gebruikersnaam De gebruikersnaam van de speler.
+	 * @param geboortejaar Het geboortejaar van de speler.
+	 * @param aantalGewonnen Het aantal spellen dat de speler heeft gewonnen.
+	 * @param aantalGespeeld Het totaal aantal spellen dat de speler heeft gespeeld.
+	 * @param koninkrijk Een 2D-array van Vakje-objecten die het koninkrijk van de speler voorstellen.
+	 */
 	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld,
 			Vakje[][] koninkrijk) {
 		setGebruikersnaam(gebruikersnaam);
@@ -52,6 +87,11 @@ public class Speler {
 		setScores();
 	}
 
+	/**
+	 * Geeft het koninkrijk van de speler terug.
+	 * 
+	 * @return Een 2D-array van Vakje-objecten die het koninkrijk voorstellen.
+	 */
 	public Speler(String gebruikersnaam, int geboortejaar, int aantalGewonnen, int aantalGespeeld, Vakje[][] koninkrijk,
 			List<Integer> scores, boolean isWinnaar) {
 		setGebruikersnaam(gebruikersnaam);
@@ -83,6 +123,11 @@ public class Speler {
 		setScores();
 	}
 
+	/**
+	 * Haalt de gebruikersnaam van de speler op.
+	 * 
+	 * @return De gebruikersnaam van de speler als een String.
+	 */
 	public String getGebruikersnaam() {
 		return gebruikersnaam;
 	}
@@ -97,26 +142,55 @@ public class Speler {
 
 	}
 
+	/**
+	 * Controleert of de speler de winnaar is van het huidige spel.
+	 * 
+	 * @return True als de speler de winnaar is, anders false.
+	 */
 	public boolean isWinnaar() {
 		return isWinnaar;
 	}
 
+	/**
+	 * Stelt de winnaarstatus van de speler in.
+	 * 
+	 * @param isWinnaar De winnaarstatus voor de speler.
+	 */
 	public final void setIsWinnaar(boolean isWinnaar) {
 		this.isWinnaar = isWinnaar;
 	}
 
+	/**
+	 * Haalt de lijst van scores van de speler op.
+	 * 
+	 * @return Een lijst van integers die de scores van de speler voorstelt.
+	 */
 	public List<Integer> getScores() {
 		return scores;
 	}
 
+	/**
+	 * Bereken de scores van de speler op basis van hun koninkrijk en stel deze in.
+	 */
 	public final void setScores() {
 		this.scores = berekenScore();
 	}
 
+	/**
+	 * Haalt het geboortejaar van de speler op.
+	 * 
+	 * @return Het geboortejaar van de speler als een integer.
+	 */
 	public int getGeboortejaar() {
 		return geboortejaar;
 	}
 
+	/**
+	 * Stelt het geboortejaar van de speler in en controleert of het binnen de geldige grenzen valt.
+	 * 
+	 * @param geboortejaar Het nieuwe geboortejaar van de speler.
+	 * @throws IllegalArgumentException Als het geboortejaar buiten de geldige grenzen valt.
+	 */
 	public final void setGeboortejaar(int geboortejaar) {
 		if (geboortejaar < MAX_GEBOORTEJAAR || geboortejaar > MIN_GEBOORTEJAAR) {
 			throw new IllegalArgumentException(
@@ -126,41 +200,76 @@ public class Speler {
 		this.geboortejaar = geboortejaar;
 	}
 
+	/**
+	 * Haalt het totaal aantal gewonnen spellen van de speler op.
+	 * 
+	 * @return Het aantal gewonnen spellen als een integer.
+	 */
 	public int getAantalGewonnen() {
 		return aantalGewonnen;
 	}
 
+	/**
+	 * Stelt het totaal aantal gewonnen spellen van de speler in.
+	 * 
+	 * @param aantalGewonnen Het nieuwe totaal aantal gewonnen spellen voor de speler.
+	 */
 	public final void setAantalGewonnen(int aantalGewonnen) {
 		this.aantalGewonnen = aantalGewonnen;
 	}
 
+	/**
+	 * Haalt het totaal aantal gespeelde spellen van de speler op.
+	 * 
+	 * @return Het aantal gespeelde spellen als een integer.
+	 */
 	public int getAantalGespeeld() {
 		return aantalGespeeld;
 	}
 
+	/**
+	 * Stelt het totaal aantal gespeelde spellen van de speler in.
+	 * 
+	 * @param aantalGespeeld Het nieuwe totaal aantal gespeelde spellen voor de speler.
+	 */
 	public final void setAantalGespeeld(int aantalGespeeld) {
 		this.aantalGespeeld = aantalGespeeld;
 	}
 
+	/**
+	 * Stelt de starttegel van de speler in.
+	 * 
+	 * @param starttegel Het nummer van de starttegel voor de speler.
+	 */
 	private void setStarttegel(int starttegel) {
 		this.starttegel = starttegel;
 	}
 
+	/**
+	 * Geeft de kleur terug die geassocieerd wordt met de speler.
+	 * 
+	 * @return De kleur van de speler als een String.
+	 */
 	public String getKleur() {
 		return kleur;
 	}
 
+	/**
+	 * Stelt de kleur in die geassocieerd wordt met de speler.
+	 * 
+	 * @param kleur De kleur van de speler.
+	 */
 	public final void setKleur(String kleur) {
 		this.kleur = kleur;
 	}
 
-	/*
-	 * Uitleg score berekening Eerst word gelooped over het veld beginnende
-	 * linksboven, checkt elk vakje en kijkt wat er ligt, indien er iets ligt gaat
-	 * hij in de 2e functie waar hij rond zich checkt of er nog liggen met hetzelfde
-	 * landschap, indien wel roept hij zichzelf op en checkt hij op dat vakje alles,
-	 * eens hiermee rond backtraced hij voor degene die hij misste. Elk gecheckt
-	 * vakje word op null gezet hierdoor wordt niets dubbel geteld.
+	/**
+	 * Bereken de score voor de speler op basis van de configuratie van hun koninkrijk.
+	 * Deze methode gebruikt een recursieve strategie om elk vakje in het koninkrijk te beoordelen,
+	 * rekening houdend met aangrenzende vakjes van hetzelfde landschapstype en het aantal kronen.
+	 * 
+	 * @return Een lijst van Integer waarin de eerste index de totale score, de tweede index de grootte van het grootste gebied,
+	 * en de derde index het aantal kronen in het grootste gebied bevat.
 	 */
 	public List<Integer> berekenScore() {
 		// Een lijst die zal worden geretourneerd met de totale score, grootste gebied,
@@ -222,6 +331,14 @@ public class Speler {
 		return returnwaarde;
 	}
 
+	/**
+	 * Hulpmethode om de score recursief te berekenen vanuit een specifiek vakje binnen het koninkrijk.
+	 * 
+	 * @param x De x-coördinaat van het startvakje.
+	 * @param y De y-coördinaat van het startvakje.
+	 * @param koninkrijk Een 2D-array van vakjes die het koninkrijk voorstellen waarvan de score berekend wordt.
+	 * @return Een lijst van Integer waar de eerste waarde het aantal vakjes in het gebied is, en de tweede waarde het aantal kronen.
+	 */
 	private List<Integer> berekenScoreRecursief(int x, int y, Vakje[][] koninkrijk) {
 		// Creëert een lijst om het aantal vakjes in het gebied en het aantal kronen op
 		// te slaan.
@@ -292,6 +409,11 @@ public class Speler {
 		return score;
 	}
 
+	/**
+	 * Plaatst een lijst van vakjes (onderdeel van een dominotegel) in het koninkrijk van de speler op de gespecificeerde coördinaten.
+	 * 
+	 * @param vakjes De lijst van vakjes die geplaatst moeten worden.
+	 */
 	public void plaatsTegel(List<Vakje> vakjes) {
 		// Doorloopt elk vakje in de meegegeven lijst 'vakjes'.
 		for (Vakje vakje : vakjes) {
@@ -301,6 +423,12 @@ public class Speler {
 		}
 	}
 
+	/**
+	 * Maakt een diepe kopie van een 2D Vakje-array.
+	 * 
+	 * @param original Het originele 2D-array van Vakje-objecten dat gekopieerd moet worden.
+	 * @return Een nieuw 2D-array van Vakje-objecten dat een diepe kopie is van het originele array.
+	 */
 	public static Vakje[][] deepCopy2DVakjeArray(Vakje[][] original) {
 		// Controleert of de oorspronkelijke array null is, zo ja, dan retourneert het
 		// null.
@@ -334,6 +462,15 @@ public class Speler {
 		return copy;
 	}
 
+	/**
+	 * Bepaalt of een dominotegel geplaatst kan worden op de gegeven coördinaten en in de gegeven hoek.
+	 * 
+	 * @param tegel De dominotegel die geplaatst moet worden.
+	 * @param y De y-coördinaat van het beginvakje van de tegel.
+	 * @param x De x-coördinaat van het beginvakje van de tegel.
+	 * @param hoek De hoek waarin de tegel geplaatst moet worden.
+	 * @return True als de tegel geplaatst kan worden, anders false.
+	 */
 	public boolean kanPlaatsen(Dominotegel tegel, int y, int x, int hoek) {
 
 		int dx = 0, dy = 0;
@@ -405,6 +542,14 @@ public class Speler {
 		return true; // Retourneert true als aan alle voorwaarden is voldaan.
 	}
 
+	/**
+	 * Controleert de aangrenzende vakjes rond een specifiek vakje om te bepalen of het deel kan uitmaken van het koninkrijk.
+	 * 
+	 * @param vakje Het vakje waarvan de omliggende vakjes gecontroleerd worden.
+	 * @param y De y-coördinaat van het vakje.
+	 * @param x De x-coördinaat van het vakje.
+	 * @return True als de omliggende vakjes aan de voorwaarden voldoen, anders false.
+	 */
 	private boolean checkOmliggende(Vakje vakje, int y, int x) {
 		// Verkrijgt het landschapstype van het gegeven vakje.
 		Landschap landschap = vakje.getLandschap();
@@ -435,6 +580,12 @@ public class Speler {
 						// landschapstype heeft.
 	}
 
+	/**
+	 * Controleert of de lengte van rijen en kolommen binnen het koninkrijk niet groter is dan 5.
+	 * 
+	 * @param koninkrijk Het 2D-array van vakjes die het koninkrijk voorstellen.
+	 * @return True als geen van de rijen of kolommen langer is dan 5 vakjes, anders false.
+	 */
 	private static boolean isMaxVijfLang(Vakje[][] koninkrijk) {
 		// Initialisatie van de minimum en maximum indices tot extreme waarden.
 		int minI = Integer.MAX_VALUE;
