@@ -10,6 +10,11 @@ import dto.DominotegelDTO;
 import dto.SpelerDTO;
 import exceptions.GebruikersnaamInGebruikException;
 
+/**
+ * De {@code DomeinController} klasse beheert de spellogica en de staat van een spel.
+ * Het biedt methoden voor het beheren van spelers, het afhandelen van speelbeurten, en het volgen van de voortgang van het spel.
+ */
+
 public class DomeinController {
 
 	private final SpelerRepository spelerRepository;
