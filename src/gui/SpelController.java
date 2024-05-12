@@ -307,29 +307,78 @@ public class SpelController {
 	private void toonEindSpelResultaten() {
 	    dc.berekenWinnaars();
 
-	    String scores = resourceBundle.getString("ResultaatTitel") + ":\n\n";  // "Eindscores:\n\n"
-
+	    String scores = resourceBundle.getString("ResultaatTitel") + ":\n\n";  
 	    List<Speler> dtos = dc.refreshSpeler();
 	    Speler winnaar = null;
+	    List<Speler> mogelijkeWinnaars = new ArrayList<>();
+	    int hoogsteScore = 0;  // Variabele om de hoogste score bij te houden
 
 	    for (Speler speler : dtos) {
-	        scores += speler.getGebruikersnaam() + " " + resourceBundle.getString("met") + ""
-	        		+ "een score van " + speler.berekenScore() + "\n" +
+	        // Verkrijg de score van de huidige speler
+	        List<Integer> scoreDetails = speler.berekenScore();
+	        int spelerScore = scoreDetails.get(0);  // De score is het eerste element in de lijst geretourneerd door berekenScore()
+
+	        scores += speler.getGebruikersnaam() + " " + resourceBundle.getString("met") + "" +
+	                  "een score van " + spelerScore + " " +
+	                  scoreDetails + "\n" +
 	                  resourceBundle.getString("met") + "" + speler.getAantalGespeeld() + " " + resourceBundle.getString("SpeelPlusScore") + " en " + speler.getAantalGewonnen() +
 	                  " " + resourceBundle.getString("spelletjesWin") + "\n\n";
 
-	        if (speler.isWinnaar()) {
-	            winnaar = speler;
+	        // Controleer of de huidige speler de hoogste score heeft
+	        if (spelerScore > hoogsteScore) {
+	            hoogsteScore = spelerScore;
+	            mogelijkeWinnaars.clear();
+	            mogelijkeWinnaars.add(speler);
+	        } else if (spelerScore == hoogsteScore) {
+	            mogelijkeWinnaars.add(speler);
 	        }
 	    }
 
+	    // Als er gelijkspel is
+	    if (mogelijkeWinnaars.size() > 1) {
+	        winnaar = mogelijkeWinnaars.get(0);
+	        List<Integer> hoogsteDetails = winnaar.berekenScore();
+
+	        for (Speler mogelijkeWinnaar : mogelijkeWinnaars) {
+	            List<Integer> scoreDetails = mogelijkeWinnaar.berekenScore();
+	            // Vergelijk de gebiedsgrootte (tweede getal)
+	            if (scoreDetails.get(1) > hoogsteDetails.get(1)) {
+	                winnaar = mogelijkeWinnaar;
+	                hoogsteDetails = scoreDetails;
+	            } else if (scoreDetails.get(1) == hoogsteDetails.get(1)) {
+	                // Vergelijk het aantal kronen (derde getal)
+	                if (scoreDetails.get(2) > hoogsteDetails.get(2)) {
+	                    winnaar = mogelijkeWinnaar;
+	                    hoogsteDetails = scoreDetails;
+	                }
+	            }
+	        }
+
+	        // Controleer of de winnaar is bepaald of dat er nog steeds een gelijkspel is
+	        List<Speler> definitieveWinnaars = new ArrayList<>();
+	        for (Speler mogelijkeWinnaar : mogelijkeWinnaars) {
+	            if (mogelijkeWinnaar.berekenScore().equals(hoogsteDetails)) {
+	                definitieveWinnaars.add(mogelijkeWinnaar);
+	            }
+	        }
+
+	        if (definitieveWinnaars.size() == 1) {
+	            winnaar = definitieveWinnaars.get(0);
+	        } else {
+	            winnaar = null;  // Er is een gelijkspel
+	        }
+	    } else if (mogelijkeWinnaars.size() == 1) {
+	        winnaar = mogelijkeWinnaars.get(0);
+	    }
+
 	    if (winnaar != null) {
-	        scores += resourceBundle.getString("finalScoresMessage") + ": " + winnaar.getGebruikersnaam() + "!\n";  // "De winnaar is: [player]\n"
+	        scores += resourceBundle.getString("finalScoresMessage") + ": " + winnaar.getGebruikersnaam() + "!\n";  // "De winnaar is: [speler]\n"
+	    } else {
+	        scores += resourceBundle.getString("drawMessage") + "\n";  // "Er is een gelijkspel!\n"
 	    }
 
 	    showAlert(resourceBundle.getString("eindeSpelBereikt"), scores, AlertType.INFORMATION);  // "Het spel is afgelopen"
 	}
-
 
 	private void ronde() {
 		// Reset de ronde omgeving
