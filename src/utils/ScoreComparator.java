@@ -13,15 +13,15 @@ public class ScoreComparator implements Comparator<Speler> {
         List<Integer> scoresO1 = o1.getScores();
         List<Integer> scoresO2 = o2.getScores();
 
-        // Compare score
+        // Vergelijk score
         int scoreCompare = Integer.compare(scoresO1.get(0), scoresO2.get(0));
         if (scoreCompare != 0) return scoreCompare;
 
-        // Compare gebied
+        // Vergelijk gebied
         int gebiedCompare = Integer.compare(scoresO1.get(1), scoresO2.get(1));
         if (gebiedCompare != 0) return gebiedCompare;
 
-        // Compare kronen
+        // Vergelijk kronen
         return Integer.compare(scoresO1.get(2), scoresO2.get(2));
     }
 }

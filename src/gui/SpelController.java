@@ -11,10 +11,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.ResourceBundle;
 
 import domein.DomeinController;
 import domein.Speler;
@@ -140,6 +140,10 @@ public class SpelController {
 		isEindeSpel = dc.isEindeSpel();
 	}
 
+	/**
+	 * Initialiseert het spel door verschillende setup functies aan te roepen,
+	 * de spelers te schudden, en de spelinterface voor te bereiden.
+	 */
 	public void initSpel() {
 
 		shuffleSpelers();
@@ -164,6 +168,10 @@ public class SpelController {
 
 	}
 
+	/**
+	 * Initialiseert de mapping van spelers naar hun UI componenten,
+	 * en synchroniseert de interne datastructuur met de UI.
+	 */
 	private void initialiseerMap() {
 
 		for (int i = 0; i < spelers.size(); i++) {
@@ -219,6 +227,10 @@ public class SpelController {
 		}
 	}
 
+	/**
+	 * Shufflet de lijst van spelers om een willekeurige startvolgorde te genereren.
+	 * Deze nieuwe volgorde wordt toegepast op de UI componenten.
+	 */
 	private void shuffleSpelers() {
 		// Sla de huidige volgorde op in de 'spelers' lijst
 		spelers = new ArrayList<>(spelerInformatieContainer.getChildren());
@@ -258,6 +270,7 @@ public class SpelController {
 		}
 	}
 
+	// Verwerkt spelerinformatie om UI componenten dynamisch te genereren voor elke speler.
 	public void setSpelerInfo(List<String> spelerEnKleurInformatie) {
 
 		for (String info : spelerEnKleurInformatie) {
@@ -266,20 +279,20 @@ public class SpelController {
 				String naam = parts[0].trim();
 				String kleur = parts[1].trim();
 
-				// Create a label for the player name
 				Label label = new Label(naam);
+				// Stel de tekststijl in voor de label
 				label.setStyle("-fx-text-fill: white; -fx-opacity: 0.95");
 
-				// Create a circle with the player's color
-				Circle circle = new Circle(10); // Circle with radius 10
-				circle.setFill(getColorForName(kleur.toLowerCase().trim())); // Use a method to get the color
+				Circle circle = new Circle(10);
+				// Bepaal de vulkleur van de cirkel op basis van de spelerkleur
+				circle.setFill(getColorForName(kleur.toLowerCase().trim()));
 
-				spelerKleuren.add(kleur); // Store player color in the list
+				spelerKleuren.add(kleur);
 
-				// Hboxes with player information for the game screen
 				HBox hbox = new HBox(60, circle, label);
 				hbox.setAlignment(Pos.CENTER_LEFT);
 				hbox.setPadding(new Insets(5, 10, 60, 10));
+				// Stel de rand en achtergrond van de HBox in
 				hbox.setStyle(
 						"-fx-border-color: black; -fx-border-width: 1; -fx-background-color: rgba(0, 0, 0, 0.1); -fx-border-radius: 5;");
 				hbox.setMaxWidth(Double.MAX_VALUE);
@@ -289,6 +302,7 @@ public class SpelController {
 		}
 	}
 
+	// Bepaalt de kleur voor de GUI op basis van een kleurnaam.
 	private Color getColorForName(String colorName) {
 		return switch (colorName) {
 		case "groen", "green", "vert" -> Color.GREEN;
@@ -299,89 +313,92 @@ public class SpelController {
 		};
 	}
 
+	// Toont een welkomstpopup met gebruik van resources voor internationalisatie.
 	private void toonWelkomPopup() {
 		showAlert(resourceBundle.getString("welkomSchermTitel"), resourceBundle.getString("welkomAlertContextText"),
 				Alert.AlertType.INFORMATION);
 	}
 
+	// Verwerkt de resultaten aan het eind van het spel en toont deze.
 	private void toonEindSpelResultaten() {
-	    dc.berekenWinnaars();
+		dc.berekenWinnaars(); // Roept logica aan om de winnaars te bepalen
 
-	    String scores = resourceBundle.getString("ResultaatTitel") + ":\n\n";  
-	    List<Speler> dtos = dc.refreshSpeler();
-	    Speler winnaar = null;
-	    List<Speler> mogelijkeWinnaars = new ArrayList<>();
-	    int hoogsteScore = 0;  // Variabele om de hoogste score bij te houden
+		String scores = resourceBundle.getString("ResultaatTitel") + ":\n\n";
+		List<Speler> dtos = dc.refreshSpeler();
+		Speler winnaar = null;
+		List<Speler> mogelijkeWinnaars = new ArrayList<>();
+		int hoogsteScore = 0; // Variabele om de hoogste score bij te houden
 
-	    for (Speler speler : dtos) {
-	        // Verkrijg de score van de huidige speler
-	        List<Integer> scoreDetails = speler.berekenScore();
-	        int spelerScore = scoreDetails.get(0);  // De score is het eerste element in de lijst geretourneerd door berekenScore()
+		for (Speler speler : dtos) {
+			// Verkrijg de score van de huidige speler
+			List<Integer> scoreDetails = speler.berekenScore();
+			int spelerScore = scoreDetails.get(0); // De score is het eerste element in de lijst geretourneerd door berekenScore()
 
-	        scores += speler.getGebruikersnaam() + " " + resourceBundle.getString("met") + "" +
-	                  "een score van " + spelerScore + " " +
-	                  scoreDetails + "\n" +
-	                  resourceBundle.getString("met") + "" + speler.getAantalGespeeld() + " " + resourceBundle.getString("SpeelPlusScore") + " en " + speler.getAantalGewonnen() +
-	                  " " + resourceBundle.getString("spelletjesWin") + "\n\n";
+			// Formatteert en voegt score informatie toe aan de resultaten string
+			scores += speler.getGebruikersnaam() + " " + resourceBundle.getString("met") + "" + "een score van "
+					+ spelerScore + " " + scoreDetails + "\n" + resourceBundle.getString("met") + ""
+					+ speler.getAantalGespeeld() + " " + resourceBundle.getString("SpeelPlusScore") + " en "
+					+ speler.getAantalGewonnen() + " " + resourceBundle.getString("spelletjesWin") + "\n\n";
 
-	        // Controleer of de huidige speler de hoogste score heeft
-	        if (spelerScore > hoogsteScore) {
-	            hoogsteScore = spelerScore;
-	            mogelijkeWinnaars.clear();
-	            mogelijkeWinnaars.add(speler);
-	        } else if (spelerScore == hoogsteScore) {
-	            mogelijkeWinnaars.add(speler);
-	        }
-	    }
+			// Update de lijst van mogelijke winnaars gebaseerd op de score
+			if (spelerScore > hoogsteScore) {
+				hoogsteScore = spelerScore;
+				mogelijkeWinnaars.clear();
+				mogelijkeWinnaars.add(speler);
+			} else if (spelerScore == hoogsteScore) {
+				mogelijkeWinnaars.add(speler);
+			}
+		}
 
-	    // Als er gelijkspel is
-	    if (mogelijkeWinnaars.size() > 1) {
-	        winnaar = mogelijkeWinnaars.get(0);
-	        List<Integer> hoogsteDetails = winnaar.berekenScore();
+		// Beslis en toon wie de uiteindelijke winnaar is
+		if (mogelijkeWinnaars.size() > 1) {
+			// Meerdere winnaars, meer logica nodig om de definitieve winnaar te bepalen
+			winnaar = mogelijkeWinnaars.get(0);
+			List<Integer> hoogsteDetails = winnaar.berekenScore();
 
-	        for (Speler mogelijkeWinnaar : mogelijkeWinnaars) {
-	            List<Integer> scoreDetails = mogelijkeWinnaar.berekenScore();
-	            // Vergelijk de gebiedsgrootte (tweede getal)
-	            if (scoreDetails.get(1) > hoogsteDetails.get(1)) {
-	                winnaar = mogelijkeWinnaar;
-	                hoogsteDetails = scoreDetails;
-	            } else if (scoreDetails.get(1) == hoogsteDetails.get(1)) {
-	                // Vergelijk het aantal kronen (derde getal)
-	                if (scoreDetails.get(2) > hoogsteDetails.get(2)) {
-	                    winnaar = mogelijkeWinnaar;
-	                    hoogsteDetails = scoreDetails;
-	                }
-	            }
-	        }
+			for (Speler mogelijkeWinnaar : mogelijkeWinnaars) {
+				List<Integer> scoreDetails = mogelijkeWinnaar.berekenScore();
+				// Vergelijk de gebiedsgrootte (tweede getal)
+				if (scoreDetails.get(1) > hoogsteDetails.get(1)) {
+					winnaar = mogelijkeWinnaar;
+					hoogsteDetails = scoreDetails;
+				} else if (scoreDetails.get(1) == hoogsteDetails.get(1)) {
+					// Vergelijk het aantal kronen (derde getal)
+					if (scoreDetails.get(2) > hoogsteDetails.get(2)) {
+						winnaar = mogelijkeWinnaar;
+						hoogsteDetails = scoreDetails;
+					}
+				}
+			}
 
-	        // Controleer of de winnaar is bepaald of dat er nog steeds een gelijkspel is
-	        List<Speler> definitieveWinnaars = new ArrayList<>();
-	        for (Speler mogelijkeWinnaar : mogelijkeWinnaars) {
-	            if (mogelijkeWinnaar.berekenScore().equals(hoogsteDetails)) {
-	                definitieveWinnaars.add(mogelijkeWinnaar);
-	            }
-	        }
+			// Controleer of de winnaar is bepaald of dat er nog steeds een gelijkspel is
+			List<Speler> definitieveWinnaars = new ArrayList<>();
+			for (Speler mogelijkeWinnaar : mogelijkeWinnaars) {
+				if (mogelijkeWinnaar.berekenScore().equals(hoogsteDetails)) {
+					definitieveWinnaars.add(mogelijkeWinnaar);
+				}
+			}
 
-	        if (definitieveWinnaars.size() == 1) {
-	            winnaar = definitieveWinnaars.get(0);
-	        } else {
-	            winnaar = null;  // Er is een gelijkspel
-	        }
-	    } else if (mogelijkeWinnaars.size() == 1) {
-	        winnaar = mogelijkeWinnaars.get(0);
-	    }
+			if (definitieveWinnaars.size() == 1) {
+				winnaar = definitieveWinnaars.get(0);
+			} else {
+				winnaar = null; // Er is een gelijkspel
+			}
+		} else if (mogelijkeWinnaars.size() == 1) {
+			winnaar = mogelijkeWinnaars.get(0);
+		}
 
-	    if (winnaar != null) {
-	        scores += resourceBundle.getString("finalScoresMessage") + ": " + winnaar.getGebruikersnaam() + "!\n";  // "De winnaar is: [speler]\n"
-	    } else {
-	        scores += resourceBundle.getString("drawMessage") + "\n";  // "Er is een gelijkspel!\n"
-	    }
+		if (winnaar != null) {
+			scores += resourceBundle.getString("finalScoresMessage") + ": " + winnaar.getGebruikersnaam() + "!\n"; // "De winnaar is: [speler]\n"
+		} else {
+			scores += resourceBundle.getString("drawMessage") + "\n"; // "Er is een gelijkspel!\n"
+		}
 
-	    showAlert(resourceBundle.getString("eindeSpelBereikt"), scores, AlertType.INFORMATION);  // "Het spel is afgelopen"
+		showAlert(resourceBundle.getString("eindeSpelBereikt"), scores, AlertType.INFORMATION); // "Het spel is afgelopen"
 	}
 
 	private void ronde() {
-		// Reset de ronde omgeving
+		// Verwijder alle kinderen van de kolommen om de UI voor de nieuwe ronde schoon te maken
 		startKolom.getChildren().clear();
 		eindkolom.getChildren().clear();
 		gekozenDominotegels.getChildren().clear();
@@ -393,70 +410,62 @@ public class SpelController {
 		startRondeBtn.setDisable(false);
 		volgendeRondeBtn.setDisable(true);
 
-		// Clear grids' visibility for new round
 		gridBlauw.setGridLinesVisible(false);
 		gridGroen.setGridLinesVisible(false);
 		gridGeel.setGridLinesVisible(false);
 		gridRoos.setGridLinesVisible(false);
 
+		// Verplaats kinderen van het ene VBox-element naar het andere en werk de tegeldeque bij
 		transferChildren(gekozenDominotegelsEindKolom, gekozenDominotegels, gekozenTegelsStartkolom);
 
+		// Als er nog tegels in de stapel zijn, speel de ronde
 		if (!stapel.isEmpty()) {
 
 			speelRonde(true, eindkolomTegels);
 		}
+		// Toon de rugzijde van de stapel tegels
 		toonRugzijdeStapel();
 	}
 
 	private void transferChildren(VBox source, VBox target, Deque<DominotegelDTO> targetTegels) {
+	    // Maak een tijdelijke lijst van alle kinderen van de bron
 		List<Node> children = new ArrayList<>(source.getChildren());
 
-		// Clear the source to detach all children
+	    // Maak de bron VBox leeg
 		source.getChildren().clear();
-
-		// Prepare to populate the Deque with DominotegelDTO objects
+	    // Voor elk kind, haal de gekoppelde tegel op en voeg deze toe aan de nieuwe locatie en deque
 		for (Node child : children) {
-			// Assuming each child Node has its associated DominotegelDTO stored as user
-			// data
 			DominotegelDTO tegel = (DominotegelDTO) child.getUserData();
 			if (tegel != null) {
 				targetTegels.offer(tegel);
 			}
 		}
 
-		// Add all detached children to the target
 		target.getChildren().addAll(children);
 	}
 
 	public void speelRonde(boolean toonBeideZijden, Deque<DominotegelDTO> list) {
-		int aantalTeTrekkenTegels = Math.min(aantalSpelers, stapel.size()); // Only draw as many tiles as available
+		int aantalTeTrekkenTegels = Math.min(aantalSpelers, stapel.size());
 
 		for (int i = 0; i < aantalTeTrekkenTegels; i++) {
-			DominotegelDTO tegel = stapel.remove(0); // Remove the tile from the stack
+			DominotegelDTO tegel = stapel.remove(0);
 			list.offer(tegel);
 		}
 
-		// Check if the stack is empty after drawing the tiles
 		if (stapel.isEmpty()) {
 			isEindeSpel = true;
-//			showAlert("Einde spel", "Alle dominotegels zijn geplaatst. \nKingdomino is beëindigd",
-//					AlertType.INFORMATION);
 			toonEindSpelResultaten();
 			return;
 		}
 
-		// Only proceed to show the dominos if there are tiles left or if it's part of
-		// the ongoing round logic
 		if (!isVolgendeRonde || toonBeideZijden) {
 			if (isVolgendeRonde) {
 				huidigeSpelerIndex = 0;
-				toonEindkolom(new ArrayList<>(list)); // Show tiles for the end column
+				toonEindkolom(new ArrayList<>(list));
 			} else {
-				toonStartKolom(new ArrayList<>(list)); // Show tiles for the start column
+				toonStartKolom(new ArrayList<>(list));
 			}
 		} else {
-			// This else part can be used to handle scenarios where you don't want to show
-			// any tiles but need to perform other updates
 		}
 	}
 
@@ -503,7 +512,7 @@ public class SpelController {
 		}
 		index = 0;
 
-		hbox.getChildren().addAll(vboxVoorkant /* , vboxAchterkant */);
+		hbox.getChildren().addAll(vboxVoorkant);
 		startKolom.getChildren().clear();
 		startKolom.getChildren().add(hbox);
 	}
@@ -760,17 +769,15 @@ public class SpelController {
 		Color spelerKleur = getColorForName(kleurCode);
 		updateGridBorderKleur(kleurCode);
 
-	    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	    alert.setTitle(resourceBundle.getString("kiesTegelAlertTitle"));
-	    alert.setGraphic(new Circle(10, spelerKleur));  // Manually set the graphic here
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle(resourceBundle.getString("kiesTegelAlertTitle"));
+		alert.setGraphic(new Circle(10, spelerKleur));
 
-	    String kolom = (startkolomSpelers.size() == aantalSpelers || isVolgendeRonde) ? "eindkolom" : "startkolom";
-	    alert.setContentText(
-	        resourceBundle.getString("KiesNieuweTegel") + " " + spelerNaam + "\n" +
-	        resourceBundle.getString("Beurt") + " " + resourceBundle.getString(kolom)
-	    );
+		String kolom = (startkolomSpelers.size() == aantalSpelers || isVolgendeRonde) ? "eindkolom" : "startkolom";
+		alert.setContentText(resourceBundle.getString("KiesNieuweTegel") + " " + spelerNaam + "\n"
+				+ resourceBundle.getString("Beurt") + " " + resourceBundle.getString(kolom));
 
-	    alert.showAndWait();
+		alert.showAndWait();
 	}
 
 	private void resetSpelersLijst() {
@@ -803,8 +810,8 @@ public class SpelController {
 
 		for (int rij = 0; rij < numRows; rij++) {
 			for (int kolom = 0; kolom < numColumns; kolom++) {
-				final int finalRow = rij; // Create final copies of row
-				final int finalColumn = kolom; // and column for use in lambda
+				final int finalRow = rij; // Maak een definitieve kopie van rij voor gebruik in lambda
+				final int finalColumn = kolom; // Maak een definitieve kopie van kolom voor gebruik
 
 				Pane pane = new Pane();
 				pane.setOnMouseClicked(event -> handleTegelPlaatsing(event, gridPane, finalRow, finalColumn,
@@ -989,37 +996,41 @@ public class SpelController {
 
 	@FXML
 	private void handleStartRondeBtnAction(ActionEvent event) {
-		Button startRondeButton = (Button) event.getSource(); // Get the button that was clicked
+		Button startRondeButton = (Button) event.getSource(); // Haal de geklikte knop op
 
+		// Controleer of er spelers in de lijst zijn
 		if (!spelers.isEmpty()) {
-			Node eersteSpelerKleur = spelers.get(0); // Assuming the first player starts
+			Node eersteSpelerKleur = spelers.get(0); // Ga uit van start door de eerste speler
 			String eersteSpelerInfo = (String) eersteSpelerKleur.getUserData();
-			String firstPlayerColor = eersteSpelerInfo.split("-")[1].trim().toLowerCase();
-			updateGridBorderKleur(firstPlayerColor);
+			String firstPlayerColor = eersteSpelerInfo.split("-")[1].trim().toLowerCase(); // Haal de kleur van de
+																							// eerste speler
+			updateGridBorderKleur(firstPlayerColor); // Update de randkleur van het grid naar de kleur van de eerste
+														// speler
 		}
 
+		// Controleer of het niet de volgende ronde is
 		if (!isVolgendeRonde) {
-			int i = indexSpelerDTO.values().iterator().next();
-			clickOpTegel(null, true, i, false);
-			toonStartKolom(new ArrayList<>(startKolomTegels)); // Display the start column with tegels
-			startRondeButton.setDisable(true); // Deactiveer de knop
+			int i = indexSpelerDTO.values().iterator().next(); // Haal de index van de eerste DTO op
+			clickOpTegel(null, true, i, false); // Simuleer een tegel klik actie voor de startkolom
+			toonStartKolom(new ArrayList<>(startKolomTegels)); // Toon de startkolom met tegels
+			startRondeButton.setDisable(true); // Deactiveer de start ronde knop na gebruik
 		}
 	}
 
 	private void showAlert(String title, String message, Alert.AlertType alertType) {
-	    Alert alert = new Alert(alertType);
-	    alert.setTitle(title);
-	    alert.setHeaderText(null); // Optionally, remove header text
-	    alert.setContentText(message);
+		Alert alert = new Alert(alertType);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(message);
 
-	    DialogPane dialogPane = alert.getDialogPane();
-	    dialogPane.getStylesheets().add(getClass().getResource("/gui/style.css").toExternalForm()); // Adjust the path to your CSS file
-	    dialogPane.getStyleClass().add("dialog-pane");
+		DialogPane dialogPane = alert.getDialogPane();
+		dialogPane.getStylesheets().add(getClass().getResource("/gui/style.css").toExternalForm()); // Adjust the path
+																									// to your CSS file
+		dialogPane.getStyleClass().add("dialog-pane");
 
-	    
-	    ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().clear();
+		((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().clear();
 
-	    alert.showAndWait();
+		alert.showAndWait();
 	}
 
 	@FXML
@@ -1038,29 +1049,29 @@ public class SpelController {
 
 	@FXML
 	private void handleSkipRondeBtnAction(ActionEvent event) {
-		ronde(); // Advance to the next round
+		ronde(); // Ga naar de volgende ronde
 	}
 
 	@FXML
 	private void handleExitBtnAction(ActionEvent event) {
-		// Create a confirmation dialog to ask the user if they really want to exit.
+		// Maak een bevestigingsdialoog aan.
 		Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-		alert.setTitle(resourceBundle.getString("afsluitBtnTitle")); // Set the title from the resource bundle
-		alert.setHeaderText(null); // Optional: clear the header text
-		alert.setContentText(resourceBundle.getString("afsluitBtnText")); // Set the content text from the resource
-																			// bundle
+		alert.setTitle(resourceBundle.getString("afsluitBtnTitle")); // Stel de titel in via de resourcebundel
+		alert.setHeaderText(null); // Optioneel: maak de koptekst leeg
+		alert.setContentText(resourceBundle.getString("afsluitBtnText")); // Stel de inhoudstekst in via de
+																			// resourcebundel
 
-		// Display the dialog and wait for the user's response.
+		// Toon de dialoog en wacht op de reactie van de gebruiker.
 		Optional<ButtonType> result = alert.showAndWait();
 
-		// Check if the user clicked OK.
+		// Controleer of de gebruiker op OK heeft geklikt.
 		if (result.isPresent() && result.get() == ButtonType.OK) {
-			// Optionally print a log message before the application exits.
+			// Optioneel: log een bericht voor het afsluiten van de applicatie.
 			System.out.println("Afsluiten bevestigd.");
 
-			// Exit the application/platform.
+			// Sluit de applicatie/platform af.
 			Platform.exit();
-		} else { // If the user chooses to cancel, consume the event.
+		} else { // Als de gebruiker kiest om te annuleren, consumeer het event.
 			event.consume();
 		}
 	}
@@ -1070,13 +1081,11 @@ public class SpelController {
 		switch (taal) {
 		case "nl":
 			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_NL");
-//			startRondeBtn.setText(resourceBundle.getString("startButton"));
-//			volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeBtn"));
+
 			break;
 		case "fr":
 			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_FR");
-//			startRondeBtn.setText(resourceBundle.getString("startButton"));
-//			volgendeRondeBtn.setText(resourceBundle.getString("volgendeRondeBtn"));
+
 			break;
 		case "en":
 			resourceBundle = ResourceBundle.getBundle("utils.resource_bundle_EN");
@@ -1091,10 +1100,6 @@ public class SpelController {
 			break;
 		}
 
-//		this.taal=taal;
-		// This line might not be necessary unless you need to change the `taal`
-		// attribute to something else.
-		// taal = resourceBundle.toString();
 	}
 
 }
