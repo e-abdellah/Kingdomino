@@ -31,6 +31,34 @@
     -fx-border-insets: -1.0 5.0 0.0 -5.0 /* top right bottom left */
 }
 
+.dialog-pane {
+    -fx-background-color: #CCBCA3; /* Transparent grey background */
+}
+
+.showAlertButton {
+    -fx-background-color: #f4f4f4; /* Light gray background for the button */
+    -fx-border-color: black; /* Black border color */
+    -fx-border-width: 10px; /* Border width */
+}
+
+.showAlertButton:hover {
+    -fx-background-color: #e2e2e2; 
+}
+
+
+.dialog-pane .header-panel .label {
+    -fx-graphic: null; 
+}
+
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: transparent; 
+    -fx-min-height: 0; 
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
+
+
 
 .column-header {
     -fx-background-color: #CCBCA3; /* Light grey background */
@@ -69,28 +97,71 @@
 }
 
 .spelButtonSkip {
-    -fx-background-color: #CCBCA3; /* Gradient from lighter to the base brown */
+    -fx-background-color: #CCBCA3;
     -fx-text-fill: #070000;
-    -fx-font-size: 14.0px; /* Adjust font size as needed */ /* Rounded corners */
-    -fx-background-radius: 10.0; /* Ensure the background also has rounded corners */
-    -fx-padding: 10.0 35.0 10.0 35.0; /* Top, right, bottom, left padding for better text visibility */
-   }
-   
+    -fx-font-size: 14.0px;
+    -fx-background-radius: 10.0;
+    -fx-padding: 10.0 35.0 10.0 35.0;
+}
+
+.spelButtonSkip:hover {
+    -fx-background-color: #9D917D;
+
+}
+
+
 .spelButtonKiesEnVolgende {
-    -fx-background-color: #CCBCA3; /* Gradient from lighter to the base brown */
+    -fx-background-color: #CCBCA3;
     -fx-text-fill: #070000;
-    -fx-font-size: 14.0px; /* Adjust font size as needed */
-    -fx-background-radius: 10.0; /* Ensure the background also has rounded corners */
-    -fx-padding: 10.0 55.0 10.0 55.0; /* Top, right, bottom, left padding for better text visibility */
-    -fx-min-width: 200.0px; /* Sets a minimum width for the button */
+    -fx-font-size: 14.0px;
+    -fx-background-radius: 10.0;
+    -fx-padding: 10.0 55.0 10.0 55.0;
+    -fx-min-width: 200.0px;
+}
+
+.spelButtonKiesEnVolgende:hover {
+    -fx-background-color: #9D917D;
+   
+}
+
+/* Style for the 'Close' button */
+.spelButtonAfsluiten {
+    -fx-background-color: #CCBCA3;
+    -fx-text-fill: #070000;
+    -fx-font-size: 14.0px;
+    -fx-background-radius: 10.0;
+    -fx-padding: 10.0 53.0 10.0 53.0;
+}
+
+.spelButtonAfsluiten:hover {
+    -fx-background-color: #9D917D;
+ 
+}
+
+.welkomschermBtn {
+    -fx-background-color: #CCBCA3;
+    -fx-text-fill: #070000;
+    -fx-font-size: 28.0px;
+    -fx-background-radius: 10.0;
+    -fx-padding: 10.0 20.0 10.0 20.0;
+   
+
+}
+
+.welkomschermBtn:hover {
+ -fx-background-color: #9D917D;
 }
    
-   
-.spelButtonAfsluiten {
-    -fx-background-color: #CCBCA3; /* Gradient from lighter to the base brown */
+
+.welkomschermLanguageBtn {
+    -fx-background-color: #CCBCA3;
     -fx-text-fill: #070000;
-    -fx-font-size: 14.0px; /* Adjust font size as needed */ /* Rounded corners */
-    -fx-background-radius: 10.0; /* Ensure the background also has rounded corners */
-    -fx-padding: 10.0 53.0 10.0 53.0; /* Top, right, bottom, left padding for better text visibility */
-   }
+    -fx-font-size: 14.0px;
+    -fx-background-radius: 10.0;
+
+}
+
+.welkomschermLanguageBtn:hover {
+ -fx-background-color: #9D917D;
+}
    

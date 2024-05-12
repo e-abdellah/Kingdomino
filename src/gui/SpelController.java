@@ -31,6 +31,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,6 +44,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 
 public class SpelController {
 
@@ -303,31 +305,30 @@ public class SpelController {
 	}
 
 	private void toonEindSpelResultaten() {
-		dc.berekenWinnaars();
+	    dc.berekenWinnaars();
 
-		final String[] scores = { "Eindscores:\n\n" };
+	    String scores = resourceBundle.getString("ResultaatTitel") + ":\n\n";  // "Eindscores:\n\n"
 
-		List<Speler> dtos = dc.refreshSpeler();
+	    List<Speler> dtos = dc.refreshSpeler();
+	    Speler winnaar = null;
 
-		Speler winnaar = null;
+	    for (Speler speler : dtos) {
+	        scores += speler.getGebruikersnaam() + " " + resourceBundle.getString("met") + " een score van " + speler.berekenScore() + "\n" +
+	                  resourceBundle.getString("met") + " " + speler.getAantalGespeeld() + " " + resourceBundle.getString("SpeelPlusScore") + " en " + speler.getAantalGewonnen() +
+	                  " " + resourceBundle.getString("spelletjesWin") + "\n\n";
 
-		for (Speler speler : dtos) {
+	        if (speler.isWinnaar()) {
+	            winnaar = speler;
+	        }
+	    }
 
-			scores[0] += speler.getGebruikersnaam() + " met een score van " + speler.berekenScore() + "\n" + "met "
-					+ speler.getAantalGespeeld() + " spellen gespeeld en " + speler.getAantalGewonnen()
-					+ " spellen gewonnen\n\n";
+	    if (winnaar != null) {
+	        scores += resourceBundle.getString("finalScoresMessage") + ": " + winnaar.getGebruikersnaam() + "!\n";  // "De winnaar is: [player]\n"
+	    }
 
-			if (speler.isWinnaar()) {
-				winnaar = speler;
-			}
-		}
-
-		if (winnaar != null) {
-			scores[0] += "De winnaar is: " + winnaar.getGebruikersnaam() + "!\n";
-		}
-
-		showAlert(resourceBundle.getString("eindeSpelBereikt"), scores[0], AlertType.INFORMATION);
+	    showAlert(resourceBundle.getString("eindeSpelBereikt"), scores, AlertType.INFORMATION);  // "Het spel is afgelopen"
 	}
+
 
 	private void ronde() {
 		// Reset de ronde omgeving
@@ -709,21 +710,17 @@ public class SpelController {
 		Color spelerKleur = getColorForName(kleurCode);
 		updateGridBorderKleur(kleurCode);
 
-		Alert alert = new Alert(Alert.AlertType.INFORMATION);
-		alert.setTitle(resourceBundle.getString("Beurt"));
-		alert.setGraphic(new Circle(10, spelerKleur)); // Set the graphic manually here
+	    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	    alert.setTitle(resourceBundle.getString("kiesTegelAlertTitle"));
+	    alert.setGraphic(new Circle(10, spelerKleur));  // Manually set the graphic here
 
-		alert.setContentText(
-				resourceBundle.getString("Beurt") + spelerNaam + " " + resourceBundle.getString("KiesNieuweTegel")
-						+ (startkolomSpelers.size() == aantalSpelers || isVolgendeRonde
-								? resourceBundle.getString("eindkolom")
-								: resourceBundle.getString("startkolom")));
+	    String kolom = (startkolomSpelers.size() == aantalSpelers || isVolgendeRonde) ? "eindkolom" : "startkolom";
+	    alert.setContentText(
+	        resourceBundle.getString("KiesNieuweTegel") + " " + spelerNaam + "\n" +
+	        resourceBundle.getString("Beurt") + " " + resourceBundle.getString(kolom)
+	    );
 
-//        } else {
-//            alert.setContentText("Het is aan uw beurt speler: " + spelerNaam
-//                    + "\nKies één van de beschikbare tegels uit de startkolom.");
-//        }
-		alert.showAndWait();
+	    alert.showAndWait();
 	}
 
 	private void resetSpelersLijst() {
@@ -960,10 +957,19 @@ public class SpelController {
 	}
 
 	private void showAlert(String title, String message, Alert.AlertType alertType) {
-		Alert alert = new Alert(alertType);
-		alert.setTitle(title);
-		alert.setContentText(message);
-		alert.showAndWait();
+	    Alert alert = new Alert(alertType);
+	    alert.setTitle(title);
+	    alert.setHeaderText(null); // Optionally, remove header text
+	    alert.setContentText(message);
+
+	    DialogPane dialogPane = alert.getDialogPane();
+	    dialogPane.getStylesheets().add(getClass().getResource("/gui/style.css").toExternalForm()); // Adjust the path to your CSS file
+	    dialogPane.getStyleClass().add("dialog-pane");
+
+	    
+	    ((Stage) alert.getDialogPane().getScene().getWindow()).getIcons().clear();
+
+	    alert.showAndWait();
 	}
 
 	@FXML

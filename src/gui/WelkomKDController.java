@@ -102,6 +102,7 @@ public class WelkomKDController {
 
 		// Om te zorgen dat het beeld de beschikbare ruimte volledig vult
 		imageView.setPreserveRatio(false);
+		 root.getStylesheets().add(getClass().getResource("/gui/style.css").toExternalForm());
 	}
 
 	public void setLanguage(String language) {
