@@ -313,8 +313,9 @@ public class SpelController {
 	    Speler winnaar = null;
 
 	    for (Speler speler : dtos) {
-	        scores += speler.getGebruikersnaam() + " " + resourceBundle.getString("met") + " een score van " + speler.berekenScore() + "\n" +
-	                  resourceBundle.getString("met") + " " + speler.getAantalGespeeld() + " " + resourceBundle.getString("SpeelPlusScore") + " en " + speler.getAantalGewonnen() +
+	        scores += speler.getGebruikersnaam() + " " + resourceBundle.getString("met") + ""
+	        		+ "een score van " + speler.berekenScore() + "\n" +
+	                  resourceBundle.getString("met") + "" + speler.getAantalGespeeld() + " " + resourceBundle.getString("SpeelPlusScore") + " en " + speler.getAantalGewonnen() +
 	                  " " + resourceBundle.getString("spelletjesWin") + "\n\n";
 
 	        if (speler.isWinnaar()) {
