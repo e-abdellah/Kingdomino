@@ -32,7 +32,7 @@
 }
 
 .dialog-pane {
-    -fx-background-color: #CCBCA3; /* Transparent grey background */
+    -fx-background-color: #F1E0C6; /* Transparent grey background */
 }
 
 .showAlertButton {
@@ -124,7 +124,7 @@
    
 }
 
-/* Style for the 'Close' button */
+
 .spelButtonAfsluiten {
     -fx-background-color: #CCBCA3;
     -fx-text-fill: #070000;
@@ -139,7 +139,7 @@
 }
 
 .welkomschermBtn {
-    -fx-background-color: #CCBCA3;
+    -fx-background-color: #E8D6BC;
     -fx-text-fill: #070000;
     -fx-font-size: 28.0px;
     -fx-background-radius: 10.0;
@@ -154,7 +154,7 @@
    
 
 .welkomschermLanguageBtn {
-    -fx-background-color: #CCBCA3;
+    -fx-background-color: #E8D6BC;
     -fx-text-fill: #070000;
     -fx-font-size: 14.0px;
     -fx-background-radius: 10.0;
